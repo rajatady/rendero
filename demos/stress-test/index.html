@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rendero — Stress Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; overflow: hidden; }
+        #hud {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+            display: flex; align-items: center; gap: 24px;
+            padding: 12px 20px; background: rgba(10,10,10,0.92); backdrop-filter: blur(8px);
+            border-bottom: 1px solid #222;
+        }
+        #hud h1 { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; }
+        .stat { font-size: 13px; color: #888; }
+        .stat b { color: #4fc3f7; font-variant-numeric: tabular-nums; }
+        .stat.fps b { color: #66bb6a; }
+        .stat.warn b { color: #ffa726; }
+        .stat.bad b { color: #ef5350; }
+        #controls { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+        #controls label { font-size: 13px; color: #aaa; }
+        #node-slider { width: 200px; accent-color: #4fc3f7; }
+        #node-target { font-size: 13px; color: #4fc3f7; font-weight: 600; width: 50px; text-align: right; }
+        button.run-btn {
+            padding: 6px 14px; border: 1px solid #4fc3f7; background: transparent;
+            color: #4fc3f7; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;
+        }
+        button.run-btn:hover { background: rgba(79,195,247,0.1); }
+        button.run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        canvas { display: block; width: 100vw; height: 100vh; cursor: grab; }
+        canvas:active { cursor: grabbing; }
+        #results-panel {
+            position: fixed; bottom: 16px; right: 16px; z-index: 10;
+            background: rgba(10,10,10,0.95); border: 1px solid #333; border-radius: 8px;
+            padding: 12px 16px; min-width: 340px; display: none;
+        }
+        #results-panel h3 { font-size: 13px; color: #fff; margin-bottom: 8px; }
+        #results-panel table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        #results-panel th { text-align: left; color: #888; padding: 3px 8px; border-bottom: 1px solid #333; }
+        #results-panel td { padding: 3px 8px; color: #ccc; font-variant-numeric: tabular-nums; }
+        #results-panel td.good { color: #66bb6a; }
+        #results-panel td.ok { color: #ffa726; }
+        #results-panel td.slow { color: #ef5350; }
+        #loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #0a0a0a; z-index: 100; }
+        #loading span { font-size: 16px; color: #888; }
+    </style>
+</head>
+<body>
+    <div id="loading"><span>Loading WASM engine...</span></div>
+    <div id="hud">
+        <h1>Rendero Stress Test</h1>
+        <span class="stat fps" id="fps-stat">FPS: <b>—</b></span>
+        <span class="stat" id="frame-stat">Frame: <b>—</b></span>
+        <span class="stat" id="nodes-stat">Nodes: <b>—</b></span>
+        <span class="stat" id="drawn-stat">Drawn: <b>—</b></span>
+        <span class="stat" id="create-stat">Create: <b>—</b></span>
+        <div id="controls">
+            <label>Nodes:</label>
+            <input type="range" id="node-slider" min="0" max="6" step="1" value="2">
+            <span id="node-target">10K</span>
+            <button class="run-btn" id="generate-btn">Generate</button>
+            <button class="run-btn" id="benchmark-btn">Run Benchmark</button>
+        </div>
+    </div>
+    <canvas id="canvas"></canvas>
+    <div id="results-panel">
+        <h3>Benchmark Results</h3>
+        <table>
+            <thead><tr><th>Nodes</th><th>Create (ms)</th><th>FPS</th><th>Frame (ms)</th></tr></thead>
+            <tbody id="results-body"></tbody>
+        </table>
+    </div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

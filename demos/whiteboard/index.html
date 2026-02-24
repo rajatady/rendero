@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rendero — Whiteboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --toolbar-bg: #1a1a2e;
+            --toolbar-w: 56px;
+            --colorbar-h: 48px;
+            --accent: #5b8af5;
+            --text: #c8c8d0;
+            --text-dim: #6e6e7a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f8f8f6; overflow: hidden; font-family: 'DM Sans', system-ui; }
+
+        /* Toolbar */
+        #toolbar {
+            position: fixed; left: 0; top: 0; bottom: var(--colorbar-h);
+            width: var(--toolbar-w); background: var(--toolbar-bg);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 12px 0; gap: 4px; z-index: 10;
+        }
+        .tbtn {
+            width: 40px; height: 40px; border: none; background: transparent;
+            color: var(--text-dim); border-radius: 8px; cursor: pointer;
+            font-size: 18px; display: flex; align-items: center; justify-content: center;
+            transition: all 0.12s;
+        }
+        .tbtn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+        .tbtn.active { background: var(--accent); color: #fff; }
+        .tbtn-sep { width: 28px; height: 1px; background: rgba(255,255,255,0.1); margin: 4px 0; }
+        .stroke-group { display: flex; flex-direction: column; gap: 2px; margin-top: auto; }
+        .stroke-btn {
+            width: 40px; height: 26px; border: none; background: transparent;
+            cursor: pointer; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            transition: background 0.12s;
+        }
+        .stroke-btn:hover { background: rgba(255,255,255,0.08); }
+        .stroke-btn.active { background: rgba(91,138,245,0.3); }
+        .stroke-line { background: #ccc; border-radius: 1px; }
+
+        /* Color bar */
+        #colorbar {
+            position: fixed; left: var(--toolbar-w); right: 0; bottom: 0;
+            height: var(--colorbar-h); background: var(--toolbar-bg);
+            display: flex; align-items: center; gap: 8px; padding: 0 16px; z-index: 10;
+        }
+        .cswatch {
+            width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent;
+            cursor: pointer; transition: border-color 0.12s, transform 0.12s;
+        }
+        .cswatch:hover { transform: scale(1.15); }
+        .cswatch.active { border-color: #fff; transform: scale(1.15); }
+        #color-picker { width: 28px; height: 28px; border: none; padding: 0; cursor: pointer; border-radius: 50%; background: transparent; }
+
+        /* HUD */
+        #hud {
+            position: fixed; top: 10px; right: 12px; z-index: 10;
+            font-size: 11px; color: #666; font-family: monospace;
+            background: rgba(255,255,255,0.85); padding: 4px 10px; border-radius: 6px;
+        }
+
+        canvas {
+            position: fixed;
+            left: var(--toolbar-w); top: 0; right: 0; bottom: var(--colorbar-h);
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <button class="tbtn active" data-tool="select" title="Select (V)">&#9099;</button>
+        <button class="tbtn" data-tool="pencil" title="Pencil (P)">&#9998;</button>
+        <button class="tbtn" data-tool="rect" title="Rectangle (R)">&#9634;</button>
+        <button class="tbtn" data-tool="ellipse" title="Ellipse (O)">&#9679;</button>
+        <button class="tbtn" data-tool="text" title="Text (T)">T</button>
+        <div class="tbtn-sep"></div>
+        <button class="tbtn" data-tool="eraser" title="Eraser (X)">&#10060;</button>
+        <div class="stroke-group">
+            <button class="stroke-btn active" data-stroke="2" title="Thin"><div class="stroke-line" style="width:16px;height:1px"></div></button>
+            <button class="stroke-btn" data-stroke="4" title="Medium"><div class="stroke-line" style="width:16px;height:3px"></div></button>
+            <button class="stroke-btn" data-stroke="8" title="Thick"><div class="stroke-line" style="width:16px;height:5px"></div></button>
+        </div>
+    </div>
+    <div id="colorbar">
+        <div class="cswatch active" data-color="#1a1a2e" style="background:#1a1a2e"></div>
+        <div class="cswatch" data-color="#e05555" style="background:#e05555"></div>
+        <div class="cswatch" data-color="#f0983a" style="background:#f0983a"></div>
+        <div class="cswatch" data-color="#f0d43a" style="background:#f0d43a"></div>
+        <div class="cswatch" data-color="#4eca7a" style="background:#4eca7a"></div>
+        <div class="cswatch" data-color="#5b8af5" style="background:#5b8af5"></div>
+        <div class="cswatch" data-color="#a855f7" style="background:#a855f7"></div>
+        <div class="cswatch" data-color="#888888" style="background:#888888"></div>
+        <input type="color" id="color-picker" value="#1a1a2e" title="Custom color">
+    </div>
+    <div id="hud">loading...</div>
+    <canvas id="canvas"></canvas>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

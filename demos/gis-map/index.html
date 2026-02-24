@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rendero — GIS Map Viewer</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #e8e6e1; overflow: hidden; font-family: 'DM Sans', system-ui; }
+        canvas { display: block; width: 100vw; height: 100vh; cursor: grab; }
+        canvas:active { cursor: grabbing; }
+
+        #hud {
+            position: fixed; top: 12px; left: 12px; z-index: 10;
+            background: rgba(20,20,24,0.88); color: #c8c8d0; padding: 10px 14px;
+            border-radius: 8px; font-size: 12px; font-family: 'JetBrains Mono', monospace;
+            line-height: 1.6; backdrop-filter: blur(8px);
+        }
+        #hud b { color: #5b8af5; }
+        #hud .title { font-family: 'DM Sans', system-ui; font-weight: 600; font-size: 14px; color: #fff; margin-bottom: 4px; }
+
+        #legend {
+            position: fixed; bottom: 12px; left: 12px; z-index: 10;
+            background: rgba(20,20,24,0.88); color: #c8c8d0; padding: 10px 14px;
+            border-radius: 8px; font-size: 11px; backdrop-filter: blur(8px);
+        }
+        .legend-row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+
+        #loading {
+            position: fixed; inset: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; background: #e8e6e1; z-index: 100;
+        }
+        #loading .title { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px; }
+        #loading .progress { font-size: 13px; color: #888; font-family: 'JetBrains Mono', monospace; }
+
+        #tooltip {
+            display: none; position: fixed; z-index: 20;
+            background: rgba(20,20,24,0.92); color: #e0e0e0; padding: 8px 12px;
+            border-radius: 6px; font-size: 12px; pointer-events: none;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="title">Generating city...</div>
+        <div class="progress" id="progress">0 / 50,000 buildings</div>
+    </div>
+    <div id="hud">
+        <div class="title">GIS Building Map</div>
+        <div>Nodes: <b id="hud-nodes">0</b></div>
+        <div>Drawn: <b id="hud-drawn">0</b></div>
+        <div>FPS: <b id="hud-fps">0</b></div>
+        <div>Zoom: <b id="hud-zoom">1.0</b></div>
+    </div>
+    <div id="legend">
+        <div class="legend-row"><div class="legend-dot" style="background:#c8a882"></div> Residential</div>
+        <div class="legend-row"><div class="legend-dot" style="background:#6b9bd2"></div> Commercial</div>
+        <div class="legend-row"><div class="legend-dot" style="background:#8a8a8a"></div> Industrial</div>
+        <div class="legend-row"><div class="legend-dot" style="background:#6abf69"></div> Park</div>
+    </div>
+    <div id="tooltip"></div>
+    <canvas id="canvas"></canvas>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+# Build artifacts
+/target/
+/pkg/
+*.wasm
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Demo data (generated/large binary files)
+demos/*/data/*.bin
+demos/*/data/*.json
+!demos/*/data/.gitkeep
+
+# Claude
+.claude/
+
+# Misc
+*.bak
+*.tmp
+.env

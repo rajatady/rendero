@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rendero — High-Performance WASM Canvas Engine</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --border: #222;
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --accent: #4fc3f7;
+            --accent2: #66bb6a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 80px 24px 60px;
+            border-bottom: 1px solid var(--border);
+        }
+        header h1 {
+            font-size: 56px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+        }
+        header h1 span { color: var(--accent); }
+        header p.tagline {
+            font-size: 22px;
+            color: var(--text-dim);
+            max-width: 680px;
+            margin: 0 auto 32px;
+        }
+
+        /* Stats bar */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-bottom: 40px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-item .value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent2);
+            font-variant-numeric: tabular-nums;
+        }
+        .stat-item .label {
+            font-size: 13px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Quick start */
+        .quickstart {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        .quickstart a {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: background 0.2s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+        }
+        .btn-primary:hover { background: #81d4fa; }
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+        .btn-secondary:hover { background: rgba(79,195,247,0.1); }
+
+        /* Demos grid */
+        .demos-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+        .demos-section h2 {
+            font-size: 32px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .demos-section p.subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+        .demos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+        }
+        .demo-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            text-decoration: none;
+            color: var(--text);
+            transition: border-color 0.2s, transform 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        .demo-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .demo-card .icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        .demo-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .demo-card p {
+            font-size: 14px;
+            color: var(--text-dim);
+            flex: 1;
+        }
+        .demo-card .badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(79,195,247,0.15);
+            color: var(--accent);
+        }
+
+        /* Code snippet */
+        .code-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+        .code-section h2 {
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        pre {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.7;
+            font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+        }
+        pre .comment { color: #666; }
+        pre .keyword { color: #c792ea; }
+        pre .string { color: #c3e88d; }
+        pre .function { color: #82aaff; }
+        pre .number { color: #f78c6c; }
+
+        /* Features */
+        .features {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .feature {
+            padding: 20px;
+        }
+        .feature h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--accent);
+        }
+        .feature p {
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+        footer a { color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 36px; }
+            .stats { flex-direction: column; gap: 16px; }
+            .demos-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><span>Rendero</span></h1>
+        <p class="tagline">Open-source high-performance WASM canvas engine. Render 2 million interactive nodes at 60+ FPS in a browser.</p>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="value">2M</div>
+                <div class="label">Interactive Nodes</div>
+            </div>
+            <div class="stat-item">
+                <div class="value">127</div>
+                <div class="label">FPS (Peak)</div>
+            </div>
+            <div class="stat-item">
+                <div class="value">~12K</div>
+                <div class="label">Lines of Rust</div>
+            </div>
+            <div class="stat-item">
+                <div class="value">494KB</div>
+                <div class="label">WASM Size (gzip)</div>
+            </div>
+        </div>
+        <div class="quickstart">
+            <a href="../demos/stress-test/" class="btn-primary">Run Stress Test</a>
+            <a href="https://github.com/nickhash/rendero" class="btn-secondary">GitHub</a>
+        </div>
+    </header>
+
+    <section class="demos-section">
+        <h2>Demos</h2>
+        <p class="subtitle">See what you can build with Rendero. Each demo runs entirely in the browser.</p>
+        <div class="demos-grid">
+            <a href="../demos/stress-test/" class="demo-card">
+                <div class="icon">&#9889;</div>
+                <h3>Stress Test</h3>
+                <p>Push the engine to its limits. Generate 1K to 2M nodes and benchmark rendering performance in real-time with an auto-benchmark suite.</p>
+                <span class="badge">Up to 2M nodes</span>
+            </a>
+            <a href="../demos/design-tool/" class="demo-card">
+                <div class="icon">&#9998;</div>
+                <h3>Design Tool</h3>
+                <p>A Figma-like vector design editor with layers, properties, pen tool, boolean operations, grouping, and .fig file import.</p>
+                <span class="badge">Full Editor</span>
+            </a>
+            <a href="../demos/gis-map/" class="demo-card">
+                <div class="icon">&#127758;</div>
+                <h3>GIS Map Viewer</h3>
+                <p>Render 50,000 building footprints with color-coded types. Pan and zoom through a procedurally generated city at interactive frame rates.</p>
+                <span class="badge">50K Buildings</span>
+            </a>
+            <a href="../demos/earthquake-explorer/" class="demo-card">
+                <div class="icon">&#127744;</div>
+                <h3>Earthquake Explorer</h3>
+                <p>Live USGS seismic data on a real map. Two-canvas architecture: CartoDB Dark Matter tiles behind WebGL2 point clouds. Pan, zoom, and filter by magnitude and time range.</p>
+                <span class="badge">Real-Time Data + Map Tiles</span>
+            </a>
+            <a href="../demos/point-cloud/" class="demo-card">
+                <div class="icon">&#11044;</div>
+                <h3>Interactive Point Cloud</h3>
+                <p>Generate up to 500K selectable, draggable, groupable nodes. Five patterns (clusters, grid, spiral, galaxy, random) with full scene graph editing — layers, properties, undo/redo.</p>
+                <span class="badge">500K Interactive Nodes</span>
+            </a>
+            <a href="../demos/whiteboard/" class="demo-card">
+                <div class="icon">&#128394;</div>
+                <h3>Whiteboard</h3>
+                <p>Infinite canvas whiteboard with freehand drawing, shape tools, text, and eraser. Showcases the real-time interaction state machine.</p>
+                <span class="badge">Freehand + Shapes</span>
+            </a>
+            <a href="../demos/level-editor/" class="demo-card">
+                <div class="icon">&#127918;</div>
+                <h3>Level Editor</h3>
+                <p>2D tile-based game world builder with paint, erase, and fill tools. Multiple layers, large grid support, and a tile palette.</p>
+                <span class="badge">Tile Grid</span>
+            </a>
+            <a href="../demos/circuit-viewer/" class="demo-card">
+                <div class="icon">&#9889;</div>
+                <h3>Circuit Viewer</h3>
+                <p>PCB/logic gate layout viewer with color-coded copper layers, component inspection, and trace highlighting.</p>
+                <span class="badge">PCB Layout</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="code-section">
+        <h2>Quick Start</h2>
+        <pre><code><span class="comment">// 1. Build the WASM package</span>
+<span class="comment">// wasm-pack build crates/wasm --target web --out-dir pkg</span>
+
+<span class="comment">// 2. Import and initialize</span>
+<span class="keyword">import</span> init, { CanvasEngine } <span class="keyword">from</span> <span class="string">'./pkg/rendero.js'</span>;
+<span class="keyword">await</span> <span class="function">init</span>();
+
+<span class="comment">// 3. Create an engine and canvas</span>
+<span class="keyword">const</span> engine = <span class="keyword">new</span> <span class="function">CanvasEngine</span>(<span class="string">"My Canvas"</span>, <span class="number">1</span>);
+<span class="keyword">const</span> ctx = canvas.<span class="function">getContext</span>(<span class="string">'2d'</span>);
+engine.<span class="function">set_viewport</span>(<span class="number">1920</span>, <span class="number">1080</span>);
+
+<span class="comment">// 4. Add shapes</span>
+engine.<span class="function">add_frame</span>(<span class="string">"Card"</span>, <span class="number">100</span>, <span class="number">100</span>, <span class="number">400</span>, <span class="number">300</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>);
+engine.<span class="function">add_text</span>(<span class="string">"Title"</span>, <span class="string">"Hello Rendero"</span>, <span class="number">120</span>, <span class="number">120</span>, <span class="number">32</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>);
+engine.<span class="function">add_rounded_rect</span>(<span class="string">"Button"</span>, <span class="number">120</span>, <span class="number">200</span>, <span class="number">160</span>, <span class="number">44</span>, <span class="number">0</span>, <span class="number">0.44</span>, <span class="number">0.89</span>, <span class="number">1</span>, <span class="number">8</span>);
+
+<span class="comment">// 5. Render</span>
+engine.<span class="function">render_canvas2d</span>(ctx, <span class="number">1920</span>, <span class="number">1080</span>);
+
+<span class="comment">// That's it. Pan, zoom, select, undo/redo — all built in.</span></code></pre>
+    </section>
+
+    <section class="features">
+        <div class="feature">
+            <h4>Spatial Grid Culling</h4>
+            <p>O(1) viewport culling via spatial hash grid. Only visible nodes are processed, enabling millions of nodes.</p>
+        </div>
+        <div class="feature">
+            <h4>Hierarchical LOD</h4>
+            <p>Subtrees smaller than 50px on screen skip descendants entirely. Sub-pixel nodes are culled. Zero wasted draw calls.</p>
+        </div>
+        <div class="feature">
+            <h4>Dual Render Paths</h4>
+            <p>GPU-accelerated Canvas 2D for screen rendering. CPU tile-based rasterizer (64x64 L1-friendly tiles) for pixel-perfect export.</p>
+        </div>
+        <div class="feature">
+            <h4>Document Model</h4>
+            <p>Arena-based tree with frames, rectangles, ellipses, vectors, text, images, boolean ops, auto-layout, and grouping.</p>
+        </div>
+        <div class="feature">
+            <h4>CRDT Collaboration</h4>
+            <p>Operation-based CRDT with Lamport timestamps and fractional indexing. Ready for real-time multi-user editing.</p>
+        </div>
+        <div class="feature">
+            <h4>494KB WASM</h4>
+            <p>The entire engine compiles to ~494KB gzipped WASM. No runtime dependencies. Works in any modern browser.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>Rendero is open source under the MIT License. <a href="https://github.com/nickhash/rendero">View on GitHub</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,17 @@
+[package]
+name = "rendero-fig-import"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Figma .fig file importer for Rendero"
+
+[dependencies]
+rendero-core = { path = "../core" }
+glam = { workspace = true }
+serde_json = { workspace = true }
+thiserror = "1.0"
+zip = { version = "0.6", default-features = false, features = ["deflate"] }
+flate2 = "1.0"
+ruzstd = "0.7"
+kiwi-schema = "0.2.1"
+base64 = "0.21"
