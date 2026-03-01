@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rendero — Gaussian Splat Viewer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050507;
+            --surface: rgba(8,8,14,0.92);
+            --border: rgba(255,255,255,0.06);
+            --text: #a8adb8;
+            --text-dim: #484d5a;
+            --text-bright: #e8ecf4;
+            --accent: #ff6b4a;
+            --accent2: #4ae0ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg); overflow: hidden;
+            font-family: 'Syne', system-ui; color: var(--text);
+        }
+
+        canvas {
+            display: block; width: 100vw; height: 100vh;
+            cursor: grab;
+        }
+        canvas:active { cursor: grabbing; }
+
+        /* ─── HUD ─── */
+        #hud {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+            display: flex; align-items: center; gap: 14px;
+            padding: 10px 20px; background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(16px);
+        }
+        #hud .logo {
+            font-family: 'Syne', system-ui;
+            font-weight: 800; font-size: 15px; color: var(--text-bright);
+            letter-spacing: -0.03em;
+        }
+        #hud .logo span { color: var(--accent); }
+        .divider { width: 1px; height: 20px; background: var(--border); }
+        .stat {
+            font-family: 'Space Mono', monospace; font-size: 10px;
+            color: var(--text-dim); white-space: nowrap;
+        }
+        .stat b { color: var(--accent2); font-weight: 400; }
+
+        /* ─── Scene selector ─── */
+        #scene-select {
+            padding: 5px 28px 5px 10px; border: 1px solid var(--border);
+            background: rgba(255,255,255,0.03); color: var(--text-bright);
+            border-radius: 5px; font-size: 11px; font-family: 'Space Mono', monospace;
+            cursor: pointer; outline: none;
+            -webkit-appearance: none; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23484d5a'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 8px center;
+        }
+        #scene-select option { background: #0a0a10; }
+
+        /* ─── Loading ─── */
+        #loading {
+            position: fixed; inset: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; background: var(--bg);
+            z-index: 100;
+        }
+        #loading .title {
+            font-weight: 800; font-size: 22px; color: var(--text-bright);
+            letter-spacing: -0.03em; margin-bottom: 4px;
+        }
+        #loading .title span { color: var(--accent); }
+        #loading .subtitle {
+            font-size: 12px; color: var(--text-dim); margin-bottom: 18px;
+            font-family: 'Space Mono', monospace;
+        }
+        #bar-wrap {
+            width: 360px; height: 3px; background: rgba(255,255,255,0.04);
+            border-radius: 2px; overflow: hidden;
+        }
+        #bar-fill {
+            width: 0%; height: 100%; background: var(--accent);
+            transition: width 0.1s;
+        }
+        #bar-text {
+            margin-top: 10px; font-size: 10px; color: var(--text-dim);
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* ─── Controls panel ─── */
+        #controls {
+            position: fixed; right: 16px; bottom: 16px; z-index: 10;
+            background: var(--surface); border-radius: 8px;
+            border: 1px solid var(--border); backdrop-filter: blur(16px);
+            padding: 14px 16px; font-size: 10px;
+            font-family: 'Space Mono', monospace; color: var(--text-dim);
+            line-height: 1.8;
+        }
+        #controls kbd {
+            display: inline-block; padding: 1px 5px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            border-radius: 3px; color: var(--text); font-size: 9px; margin: 0 1px;
+        }
+        #controls .ctrl-title {
+            font-family: 'Syne', system-ui; font-weight: 600;
+            font-size: 11px; color: var(--text-bright); margin-bottom: 6px;
+        }
+
+        /* ─── Info panel ─── */
+        #info-panel {
+            position: fixed; left: 16px; bottom: 16px; z-index: 10;
+            background: var(--surface); border-radius: 8px;
+            border: 1px solid var(--border); backdrop-filter: blur(16px);
+            padding: 14px 16px; min-width: 220px;
+        }
+        #info-panel .info-title {
+            font-family: 'Syne', system-ui; font-weight: 600;
+            font-size: 11px; color: var(--text-bright); margin-bottom: 6px;
+        }
+        .info-row {
+            font-family: 'Space Mono', monospace; font-size: 10px;
+            color: var(--text-dim); margin: 2px 0;
+        }
+        .info-row b { color: var(--text); font-weight: 400; }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="title">Splat<span>Viewer</span></div>
+        <div class="subtitle">Loading gaussian splats...</div>
+        <div id="bar-wrap"><div id="bar-fill"></div></div>
+        <div id="bar-text">Initializing...</div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="hud">
+        <span class="logo">Splat<span>Viewer</span></span>
+        <div class="divider"></div>
+        <select id="scene-select">
+            <option value="plush">Bonsai</option>
+            <option value="nike">Nike Shoe</option>
+            <option value="stump">Tree Stump</option>
+            <option value="truck" selected>Truck</option>
+            <option value="garden">Garden</option>
+        </select>
+        <div class="divider"></div>
+        <span class="stat">Splats: <b id="s-count">0</b></span>
+        <span class="stat">Sorted: <b id="s-sort">0</b>ms</span>
+        <span class="stat">FPS: <b id="s-fps">0</b></span>
+    </div>
+
+    <div id="info-panel">
+        <div class="info-title">Scene Info</div>
+        <div class="info-row">File: <b id="i-file">—</b></div>
+        <div class="info-row">Size: <b id="i-size">—</b></div>
+        <div class="info-row">Gaussians: <b id="i-gaussians">—</b></div>
+        <div class="info-row">Camera: <b id="i-camera">—</b></div>
+    </div>
+
+    <div id="controls">
+        <div class="ctrl-title">Controls</div>
+        <kbd>Drag</kbd> Orbit &nbsp;
+        <kbd>Scroll</kbd> Zoom<br>
+        <kbd>Shift+Drag</kbd> Pan &nbsp;
+        <kbd>R</kbd> Reset<br>
+        <kbd>1-5</kbd> Switch scene
+    </div>
+
+    <script type="module" src="main.js?v=4"></script>
+</body>
+</html>

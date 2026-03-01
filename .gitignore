@@ -38,3 +38,5 @@ demos/*/data/*.json
 *.bak
 *.tmp
 .env
+
+.playwright-mcp
