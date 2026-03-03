@@ -57,7 +57,8 @@ window.addEventListener('resize', () => { resize(); clampCamera(); });
 
 // ─── Load metadata ───
 barText.textContent = 'Loading metadata...';
-const meta = await fetch('data/meta.json').then(r => r.json());
+const DATA_BASE = 'https://huggingface.co/datasets/rajatady/rendero-data/resolve/main/genome-browser';
+const meta = await fetch(`${DATA_BASE}/meta.json`).then(r => r.json());
 
 let currentChrIdx = 0;
 
@@ -68,7 +69,7 @@ async function loadGeneData(chrIdx) {
     if (geneData[chrIdx]) return geneData[chrIdx];
     const chr = meta.chromosomes[chrIdx];
     if (!chr.genes_file) return [];
-    const data = await fetch(`data/${chr.genes_file}`).then(r => r.json());
+    const data = await fetch(`${DATA_BASE}/${chr.genes_file}`).then(r => r.json());
     geneData[chrIdx] = data;
     return data;
 }
@@ -193,7 +194,7 @@ const totalChrs = meta.chromosomes.length;
 let loadedChrs = 0;
 
 for (const chr of meta.chromosomes) {
-    const resp = await fetch(`data/${chr.file}`);
+    const resp = await fetch(`${DATA_BASE}/${chr.file}`);
     const buf = await resp.arrayBuffer();
     const f32 = new Float32Array(buf);
     engine.add_point_cloud(gl, f32);

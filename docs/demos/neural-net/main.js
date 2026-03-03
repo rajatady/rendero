@@ -46,7 +46,8 @@ const sZoom = document.getElementById('s-zoom');
 
 // ─── Load metadata ───
 barText.textContent = 'Loading metadata...';
-const meta = await fetch('data/meta.json').then(r => r.json());
+const DATA_BASE = 'https://huggingface.co/datasets/rajatady/rendero-data/resolve/main/neural-net';
+const meta = await fetch(`${DATA_BASE}/meta.json`).then(r => r.json());
 
 // ─── World bounds for camera clamping ───
 const WORLD_PAD = 500;
@@ -168,7 +169,7 @@ function flushToGPU() {
 
 for (const tensor of meta.tensors) {
     for (const chunk of tensor.chunks) {
-        const resp = await fetch(`data/${chunk.file}`);
+        const resp = await fetch(`${DATA_BASE}/${chunk.file}`);
         const buf = await resp.arrayBuffer();
         const f32 = new Float32Array(buf);
         engine.add_point_cloud(gl, f32);
