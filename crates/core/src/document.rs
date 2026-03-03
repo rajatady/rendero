@@ -4,7 +4,24 @@ use serde::{Deserialize, Serialize};
 
 use crate::id::{ClockGen, NodeId};
 use crate::node::Node;
-use crate::tree::{DocumentTree, TreeError};
+use crate::tree::{DocumentTree, FlatTree, TreeError};
+
+/// Serializable snapshot of the entire document.
+#[derive(Serialize, Deserialize)]
+pub struct DocumentSnapshot {
+    pub name: String,
+    pub pages: Vec<PageSnapshot>,
+    pub clock_counter: u64,
+    pub client_id: u32,
+}
+
+/// Serializable snapshot of a single page.
+#[derive(Serialize, Deserialize)]
+pub struct PageSnapshot {
+    pub id: NodeId,
+    pub name: String,
+    pub tree: FlatTree,
+}
 
 /// A page in the document.
 pub struct Page {
@@ -73,5 +90,33 @@ impl Document {
     /// Generate a new unique node ID.
     pub fn next_id(&mut self) -> NodeId {
         self.clock.next_node_id()
+    }
+
+    /// Serialize the entire document to a snapshot.
+    pub fn to_snapshot(&self) -> DocumentSnapshot {
+        DocumentSnapshot {
+            name: self.name.clone(),
+            pages: self.pages.iter().map(|p| PageSnapshot {
+                id: p.id,
+                name: p.name.clone(),
+                tree: p.tree.to_flat(),
+            }).collect(),
+            clock_counter: self.clock.counter(),
+            client_id: self.clock.client_id(),
+        }
+    }
+
+    /// Restore a document from a snapshot.
+    pub fn from_snapshot(snap: DocumentSnapshot) -> Self {
+        let pages = snap.pages.into_iter().map(|ps| Page {
+            id: ps.id,
+            name: ps.name,
+            tree: DocumentTree::from_flat(ps.tree),
+        }).collect();
+        Self {
+            name: snap.name,
+            pages,
+            clock: ClockGen::from_parts(snap.client_id, snap.clock_counter),
+        }
     }
 }

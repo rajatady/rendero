@@ -319,7 +319,7 @@ fn builtin_tests() -> Vec<RenderTest> {
                         GradientStop::new(1.0, Color::new(0.0, 0.0, 1.0, 1.0)), // Blue at right
                     ],
                     start: Vec2::new(0.0, 0.0),
-                    end: Vec2::new(100.0, 0.0),
+                    end: Vec2::new(1.0, 0.0),
                 });
                 tree.insert(node, root, 0).unwrap();
             },
@@ -349,8 +349,8 @@ fn builtin_tests() -> Vec<RenderTest> {
                         GradientStop::new(0.0, Color::new(1.0, 1.0, 1.0, 1.0)), // White at center
                         GradientStop::new(1.0, Color::new(0.0, 0.0, 0.0, 1.0)), // Black at edge
                     ],
-                    center: Vec2::new(50.0, 50.0),
-                    radius: 50.0,
+                    center: Vec2::new(0.5, 0.5),
+                    radius: 0.5,
                 });
                 tree.insert(node, root, 0).unwrap();
             },

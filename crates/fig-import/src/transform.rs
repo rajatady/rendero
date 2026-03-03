@@ -1,4 +1,4 @@
-//! Essential transformations to make raw kiwi JSON compatible with rendero_fig_import.rs expectations.
+//! Essential transformations to make raw kiwi JSON compatible with fig_import.rs expectations.
 //! Only the transformations needed by our Node converter — not all 62 from fig2json.
 
 use serde_json::Value as JsonValue;

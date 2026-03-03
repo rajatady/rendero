@@ -2,8 +2,6 @@
 name = "rendero-crdt"
 version.workspace = true
 edition.workspace = true
-license.workspace = true
-description = "Operation-based CRDT for collaborative editing in Rendero"
 
 [dependencies]
 rendero-core = { path = "../core" }

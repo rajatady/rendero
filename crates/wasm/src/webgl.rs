@@ -314,8 +314,9 @@ pub fn render_webgl(
     cam_x: f64,
     cam_y: f64,
     zoom: f64,
+    dpr: f64,
 ) -> usize {
-    gl.viewport(0, 0, width as i32, height as i32);
+    gl.viewport(0, 0, (width * dpr) as i32, (height * dpr) as i32);
     gl.clear_color(0.0, 0.0, 0.0, 0.0);
     gl.clear(GL::COLOR_BUFFER_BIT);
 
@@ -889,6 +890,7 @@ pub fn render_point_clouds(
     cam_x: f64,
     cam_y: f64,
     zoom: f64,
+    dpr: f64,
 ) -> usize {
     if clouds.is_empty() { return 0; }
 

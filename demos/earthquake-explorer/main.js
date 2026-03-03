@@ -19,11 +19,13 @@ if (!gl) {
 }
 
 // ─── Canvas sizing ───
+const dpr = window.devicePixelRatio || 1;
+let cssW, cssH;
 function resize() {
-    const w = window.innerWidth, h = window.innerHeight;
-    mapCanvas.width = w; mapCanvas.height = h;
-    dataCanvas.width = w; dataCanvas.height = h;
-    engine.set_viewport(w, h);
+    cssW = window.innerWidth; cssH = window.innerHeight;
+    mapCanvas.width = cssW * dpr; mapCanvas.height = cssH * dpr;
+    dataCanvas.width = cssW * dpr; dataCanvas.height = cssH * dpr;
+    engine.set_viewport(cssW, cssH);
 }
 resize();
 window.addEventListener('resize', () => { resize(); clampCamera(); });
@@ -196,8 +198,9 @@ function drawTilesAtOffset(camX, camY, zoom, w, h, z, offsetX) {
 function renderMapCanvas() {
     const cam = engine.get_camera();
     const camX = cam[0], camY = cam[1], zoom = cam[2];
-    const w = mapCanvas.width, h = mapCanvas.height;
+    const w = cssW, h = cssH;
 
+    mapCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     mapCtx.fillStyle = '#0a0e17';
     mapCtx.fillRect(0, 0, w, h);
 
@@ -302,7 +305,7 @@ function buildPointClouds(features, saveCam) {
     }
 
     engine = new CanvasEngine("EarthquakeExplorer", 1);
-    engine.set_viewport(dataCanvas.width, dataCanvas.height);
+    engine.set_viewport(cssW, cssH);
 
     // Filter by enabled magnitude groups
     const filtered = features.filter(f => enabledGroups.has(magToGroup(f.properties.mag || 0)));
@@ -364,9 +367,9 @@ function buildPointClouds(features, saveCam) {
     if (prevCam) {
         engine.set_camera(prevCam[0], prevCam[1], prevCam[2]);
     } else {
-        const zoom = Math.max(dataCanvas.width / WORLD_W, dataCanvas.height / WORLD_H);
-        const cx = (WORLD_W / 2) - (dataCanvas.width / zoom) / 2;
-        const cy = (WORLD_H / 2) - (dataCanvas.height / zoom) / 2;
+        const zoom = Math.max(cssW / WORLD_W, cssH / WORLD_H);
+        const cx = (WORLD_W / 2) - (cssW / zoom) / 2;
+        const cy = (WORLD_H / 2) - (cssH / zoom) / 2;
         engine.set_camera(cx, cy, zoom);
     }
     clampCamera();
@@ -437,7 +440,7 @@ document.querySelectorAll('.mag-row[data-mag]').forEach(row => {
 function clampCamera() {
     const cam = engine.get_camera();
     let [cx, cy, zoom] = [cam[0], cam[1], cam[2]];
-    const w = dataCanvas.width, h = dataCanvas.height;
+    const w = cssW, h = cssH;
 
     // Min zoom: map must fill viewport vertically (horizontal has 3x wrap)
     const minZoom = h / WORLD_H;
@@ -470,7 +473,7 @@ function clampCamera() {
 function render() {
     try {
         renderMapCanvas();
-        engine.render_webgl(gl, dataCanvas.width, dataCanvas.height);
+        engine.render_webgl(gl, cssW, cssH, dpr);
     } catch (e) {
         console.warn('Render error:', e.message);
     }
@@ -519,7 +522,7 @@ dataCanvas.addEventListener('wheel', (e) => {
         clampCamera();
     } else {
         engine.pan_start(e.offsetX, e.offsetY);
-        engine.pan_move(e.offsetX - e.deltaX, e.offsetY - e.deltaY);
+        engine.pan_move((e.offsetX - e.deltaX), (e.offsetY - e.deltaY));
         engine.pan_end();
         clampCamera();
     }

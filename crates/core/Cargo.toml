@@ -2,8 +2,6 @@
 name = "rendero-core"
 version.workspace = true
 edition.workspace = true
-license.workspace = true
-description = "Core document model for Rendero — nodes, tree, properties, hit testing, layout"
 
 [dependencies]
 glam = { workspace = true }

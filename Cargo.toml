@@ -1,0 +1,22 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/core",
+    "crates/renderer",
+    "crates/crdt",
+    "crates/wasm",
+    "crates/fig-import",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[workspace.dependencies]
+# Shared across crates — single source of truth for versions
+bytemuck = { version = "1", features = ["derive"] }
+glam = { version = "0.29", features = ["bytemuck", "serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+fontdue = "0.9"

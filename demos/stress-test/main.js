@@ -24,10 +24,13 @@ const TIER_LABELS = ['1K', '5K', '10K', '80K', '200K', '800K', '2M'];
 let app = new CanvasEngine("Stress Test", 1);
 
 // --- Canvas sizing ---
+const dpr = window.devicePixelRatio || 1;
+let cssW, cssH;
 function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    app.set_viewport(canvas.width, canvas.height);
+    cssW = window.innerWidth; cssH = window.innerHeight;
+    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+    app.set_viewport(cssW, cssH);
 }
 resize();
 window.addEventListener('resize', () => { resize(); render(); });
@@ -147,7 +150,7 @@ function getMeanFrameTime() {
 
 // --- Rendering ---
 function render() {
-    app.render_canvas2d(ctx, canvas.width, canvas.height);
+    app.render_canvas2d(ctx, cssW, cssH, dpr);
 }
 
 let rafId = 0;

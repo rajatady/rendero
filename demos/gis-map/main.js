@@ -9,10 +9,13 @@ const progress = document.getElementById('progress');
 const tooltip = document.getElementById('tooltip');
 
 // ─── Canvas sizing ───
+const dpr = window.devicePixelRatio || 1;
+let cssW, cssH;
 function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    engine.set_viewport(canvas.width, canvas.height);
+    cssW = window.innerWidth; cssH = window.innerHeight;
+    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+    engine.set_viewport(cssW, cssH);
 }
 resize();
 window.addEventListener('resize', () => { resize(); render(); });
@@ -106,7 +109,7 @@ let frameTimes = [];
 let lastTime = 0;
 
 function render() {
-    engine.render_canvas2d(ctx, canvas.width, canvas.height);
+    engine.render_canvas2d(ctx, cssW, cssH, dpr);
 }
 
 function loop(now) {

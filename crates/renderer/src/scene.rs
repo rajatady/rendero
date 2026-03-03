@@ -283,7 +283,7 @@ fn build_scene_recursive(
                 height: node.height,
                 corner_radii: rendero_core::node::CornerRadii::default(),
             },
-            true,
+            true, // clip children like a frame
         ),
         NodeKind::Instance { .. } => (
             RenderShape::Rect {
@@ -291,7 +291,7 @@ fn build_scene_recursive(
                 height: node.height,
                 corner_radii: rendero_core::node::CornerRadii::default(),
             },
-            true,
+            true, // clip children like a frame
         ),
         NodeKind::Image { data, image_width, image_height } => (
             RenderShape::Image {

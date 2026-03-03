@@ -162,6 +162,16 @@ pub enum Paint {
         center: Vec2,
         radius: f32,
     },
+    AngularGradient {
+        stops: Vec<GradientStop>,
+        center: Vec2,
+        start_angle: f32, // radians
+    },
+    DiamondGradient {
+        stops: Vec<GradientStop>,
+        center: Vec2,
+        radius: f32,
+    },
     /// Image fill — referenced by path/URL. Renderer loads and caches.
     Image {
         /// Path or URL to the image (relative to import root).

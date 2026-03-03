@@ -16,14 +16,16 @@ let nameCounter = 0;
 let isPanning = false;
 
 // ─── Canvas sizing ───
+const dpr = window.devicePixelRatio || 1;
+let cssW, cssH;
 function resize() {
     const toolbarW = 56;
     const colorbarH = 48;
-    canvas.width = window.innerWidth - toolbarW;
-    canvas.height = window.innerHeight - colorbarH;
-    canvas.style.width = canvas.width + 'px';
-    canvas.style.height = canvas.height + 'px';
-    engine.set_viewport(canvas.width, canvas.height);
+    cssW = window.innerWidth - toolbarW;
+    cssH = window.innerHeight - colorbarH;
+    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+    engine.set_viewport(cssW, cssH);
 }
 resize();
 window.addEventListener('resize', () => { resize(); render(); });
@@ -257,7 +259,7 @@ let frameTimes = [];
 let lastTime = 0;
 
 function render() {
-    engine.render_canvas2d(ctx, canvas.width, canvas.height);
+    engine.render_canvas2d(ctx, cssW, cssH, dpr);
 }
 
 function loop(now) {

@@ -25,11 +25,15 @@ const PANEL_TOP = 42;          // HUD height
 const PANEL_BOTTOM = 0;
 
 // ─── Sizing ───
+const dpr = window.devicePixelRatio || 1;
+let cssW, cssH;
 function resize() {
-    const w = window.innerWidth, h = window.innerHeight;
-    canvas.width = w; canvas.height = h;
-    labelCanvas.width = w; labelCanvas.height = h;
-    engine.set_viewport(w, h);
+    cssW = window.innerWidth; cssH = window.innerHeight;
+    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+    labelCanvas.width = cssW * dpr; labelCanvas.height = cssH * dpr;
+    labelCanvas.style.width = cssW + 'px'; labelCanvas.style.height = cssH + 'px';
+    engine.set_viewport(cssW, cssH);
 }
 resize();
 window.addEventListener('resize', () => { resize(); clampCamera(); });
@@ -55,8 +59,8 @@ function clampCamera() {
     const cam = engine.get_camera(); // [x, y, zoom]
     let [cx, cy, zoom] = cam;
     // The visible canvas area (excluding panels) in world units
-    const visW = (canvas.width - PANEL_LEFT - PANEL_RIGHT) / zoom;
-    const visH = (canvas.height - PANEL_TOP - PANEL_BOTTOM) / zoom;
+    const visW = (cssW - PANEL_LEFT - PANEL_RIGHT) / zoom;
+    const visH = (cssH - PANEL_TOP - PANEL_BOTTOM) / zoom;
     // Camera x,y is the top-left of the full viewport (including panel areas).
     // We want the visible area (after panels) to stay within world bounds.
     // Visible area starts at: worldX = cx + PANEL_LEFT/zoom, worldY = cy + PANEL_TOP/zoom
@@ -76,8 +80,8 @@ let currentTensorIdx = 1;
 function jumpToTensor(idx) {
     const t = meta.tensors[idx];
     // Usable viewport area (between panels)
-    const usableW = canvas.width - PANEL_LEFT - PANEL_RIGHT;
-    const usableH = canvas.height - PANEL_TOP - PANEL_BOTTOM;
+    const usableW = cssW - PANEL_LEFT - PANEL_RIGHT;
+    const usableH = cssH - PANEL_TOP - PANEL_BOTTOM;
     // Zoom to fit tensor in the usable area
     let zoom = Math.min(usableH / (t.h + 200), usableW / (t.w + 200));
     zoom = Math.max(0.02, Math.min(256, zoom));
@@ -159,7 +163,7 @@ let loadedPoints = 0;
 barText.textContent = `Loading ${meta.total_points.toLocaleString()} weights (${totalChunks} chunks)...`;
 
 function flushToGPU() {
-    engine.render_webgl(gl, canvas.width, canvas.height);
+    engine.render_webgl(gl, cssW, cssH, dpr);
 }
 
 for (const tensor of meta.tensors) {
@@ -183,8 +187,8 @@ loading.style.display = 'none';
 // Start at Layer 0 Q projection with zoom 1.3
 {
     const t = meta.tensors[1];
-    const usableW = canvas.width - PANEL_LEFT - PANEL_RIGHT;
-    const usableH = canvas.height - PANEL_TOP - PANEL_BOTTOM;
+    const usableW = cssW - PANEL_LEFT - PANEL_RIGHT;
+    const usableH = cssH - PANEL_TOP - PANEL_BOTTOM;
     const zoom = 1.3;
     const tcx = t.x + t.w / 2;
     const tcy = t.y + t.h / 2;
@@ -255,7 +259,7 @@ document.addEventListener('keydown', (e) => {
 // ─── Toolbar buttons ───
 document.getElementById('btn-fit').addEventListener('click', () => {
     const zoom = 0.02;
-    const vw = canvas.width;
+    const vw = cssW;
     const cx = meta.world_width / 2 - vw / zoom / 2;
     engine.set_camera(cx, WORLD_Y_MIN, zoom);
     clampCamera();
@@ -268,8 +272,8 @@ document.getElementById('btn-top').addEventListener('click', () => {
 function findVisibleTensor() {
     const cam = engine.get_camera();
     // Center of the usable viewport in world coords
-    const cx = cam[0] + (PANEL_LEFT + (canvas.width - PANEL_LEFT - PANEL_RIGHT) / 2) / cam[2];
-    const cy = cam[1] + (PANEL_TOP + (canvas.height - PANEL_TOP - PANEL_BOTTOM) / 2) / cam[2];
+    const cx = cam[0] + (PANEL_LEFT + (cssW - PANEL_LEFT - PANEL_RIGHT) / 2) / cam[2];
+    const cy = cam[1] + (PANEL_TOP + (cssH - PANEL_TOP - PANEL_BOTTOM) / 2) / cam[2];
     let bestIdx = 0;
     let bestDist = Infinity;
     for (let i = 0; i < meta.tensors.length; i++) {
@@ -335,7 +339,7 @@ let fps = 0;
 function render() {
     let drawn = 0;
     try {
-        drawn = engine.render_webgl(gl, canvas.width, canvas.height) || 0;
+        drawn = engine.render_webgl(gl, cssW, cssH, dpr) || 0;
     } catch (e) {
         // silent
     }

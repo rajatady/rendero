@@ -1,42 +1,31 @@
 # Build artifacts
 /target/
 /pkg/
-*.wasm
 
 # IDE
 .idea/
 .vscode/
-*.swp
-*.swo
-*~
 
 # OS
 .DS_Store
-Thumbs.db
 
-# Node
-node_modules/
-
-# Logs
-*.log
-
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
-
-# Demo data (generated/large binary files)
-demos/*/data/*.bin
-demos/*/data/*.json
-!demos/*/data/.gitkeep
-
-# Claude
-.claude/
-
-# Misc
+# Dev screenshots & temp files
+*.png
 *.bak
 *.tmp
 .env
 
-.playwright-mcp
+# Playwright
+.playwright-mcp/
+
+# Claude
+.claude/
+
+# Demo data (large binary/generated files)
+demos/*/data/
+
+# Backup HTML
+www/index-backup*.html
+
+# Allow docs/ deployment assets
+!docs/**

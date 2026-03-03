@@ -176,13 +176,8 @@ fn import_node(
     let name = val.get("name").and_then(|n| n.as_str()).unwrap_or("unnamed");
 
     // Mask nodes define clipping paths for subsequent siblings.
-    // For now, skip mask nodes and rely on parent clip_content to handle clipping.
-    // Mask nodes are typically frames containing vector shapes that define the clip region.
-    // Full vector mask support would require compositing child shapes into a clip path.
+    // The renderer handles is_mask by using the shape as a clip path (canvas2d.rs).
     let is_mask = val.get("mask").and_then(|v| v.as_bool()).unwrap_or(false);
-    if is_mask {
-        return 0;
-    }
 
     // Skip invisible nodes early (but still count them)
     let visible = val.get("visible").and_then(|v| v.as_bool()).unwrap_or(true);
@@ -630,6 +625,12 @@ fn get_text_data(val: &Value) -> (Vec<TextRun>, TextAlign) {
         _ => TextAlign::Left,
     };
 
+    let decoration = match val.get("textDecoration").and_then(|v| v.as_str()) {
+        Some("UNDERLINE") => TextDecoration::Underline,
+        Some("STRIKETHROUGH") => TextDecoration::Strikethrough,
+        _ => TextDecoration::None,
+    };
+
     let runs = vec![TextRun {
         text: characters.to_string(),
         font_family,
@@ -639,6 +640,8 @@ fn get_text_data(val: &Value) -> (Vec<TextRun>, TextAlign) {
         color,
         letter_spacing,
         line_height,
+        decoration,
+        fill_override: None,
     }];
 
     (runs, align)

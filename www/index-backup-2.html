@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rendero — WASM Canvas Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #06070a;
+            --surface: rgba(10,12,18,0.88);
+            --surface-solid: #0c0e14;
+            --border: rgba(255,255,255,0.06);
+            --border-bright: rgba(255,255,255,0.1);
+            --text: #c8cdd8;
+            --text-dim: #5c6378;
+            --text-bright: #eef1f6;
+            --accent: #4fc3f7;
+            --accent-dim: rgba(79,195,247,0.12);
+            --green: #4ade80;
+            --amber: #fbbf24;
+            --red: #f87171;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ── Engine canvas — full viewport, fixed behind everything ── */
+        #engine-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── Hero vignette — darkens center for text readability ── */
+        #hero-vignette {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+            background: radial-gradient(ellipse 55% 50% at 50% 45%,
+                rgba(6,7,10,0.65) 0%,
+                rgba(6,7,10,0.3) 50%,
+                transparent 75%
+            );
+        }
+
+        /* ── Mouse capture layer — sits on top of canvas, behind content ── */
+        #mouse-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 1;
+            pointer-events: all;
+            cursor: default;
+        }
+
+        /* ── All HTML content floats above the canvas ── */
+        #content {
+            position: relative;
+            z-index: 2;
+            pointer-events: none;
+            isolation: isolate;
+        }
+        #content a, #content button, #content select, #content input,
+        .demo-card, .nav-links a, .nav-brand, .btn, .cta-row a {
+            pointer-events: all;
+        }
+
+        /* ── Noise grain overlay ── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: 9999;
+            pointer-events: none;
+            opacity: 0.02;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 256px 256px;
+        }
+
+        /* ── Live engine badge (fixed bottom-left) ── */
+        #live-badge {
+            position: fixed;
+            bottom: 16px; left: 16px;
+            z-index: 100;
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            backdrop-filter: blur(12px);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+        #live-badge .pulse {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s ease infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74,222,128,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(74,222,128,0); }
+        }
+        #live-badge b { color: var(--accent); font-weight: 500; }
+        #live-badge .sep { color: rgba(255,255,255,0.12); }
+
+        /* ── Navigation ── */
+        nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 48px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(6,7,10,0.6);
+            backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 50;
+        }
+        .nav-brand {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700; font-size: 18px;
+            color: var(--text-bright);
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+        .nav-brand span { color: var(--accent); }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a {
+            font-size: 13px; color: var(--text-dim);
+            text-decoration: none; font-weight: 500;
+            transition: color 0.15s;
+        }
+        .nav-links a:hover { color: var(--text-bright); }
+
+        /* ── Hero ── */
+        .hero {
+            padding: 140px 48px 120px;
+            text-align: center;
+            position: relative;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        /* Removed — vignette now in #hero-vignette overlay */
+        .hero-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 28px;
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 6px 16px;
+            border: 1px solid var(--accent-dim);
+            border-radius: 100px;
+            background: var(--accent-dim);
+        }
+        .hero-label .live-dot {
+            width: 5px; height: 5px; border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s ease infinite;
+        }
+        .hero h1 {
+            font-family: 'Newsreader', serif;
+            font-size: clamp(52px, 7.5vw, 96px);
+            font-weight: 600;
+            color: var(--text-bright);
+            line-height: 1.02;
+            letter-spacing: -2.5px;
+            margin-bottom: 28px;
+            max-width: 900px;
+        }
+        .hero h1 em {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub {
+            font-size: 18px;
+            color: var(--text-dim);
+            max-width: 540px;
+            margin: 0 auto 52px;
+            line-height: 1.7;
+        }
+
+        /* ── Stats row ── */
+        .stats-row {
+            display: flex; justify-content: center; gap: 1px;
+            margin-bottom: 52px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            max-width: 780px;
+            width: 100%;
+        }
+        .stat-cell {
+            flex: 1;
+            background: var(--surface);
+            padding: 22px 16px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+        }
+        .stat-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 30px; font-weight: 700;
+            color: var(--text-bright);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .stat-val .unit { font-size: 14px; color: var(--accent); font-weight: 500; }
+        .stat-val .live-val { color: var(--green); }
+        .stat-label {
+            font-size: 10px; color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+        }
+
+        /* ── CTA ── */
+        .cta-row { display: flex; justify-content: center; gap: 12px; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 32px; border-radius: 8px;
+            text-decoration: none; font-weight: 600; font-size: 14px;
+            transition: all 0.15s; border: none; cursor: pointer;
+        }
+        .btn-accent { background: var(--accent); color: #000; }
+        .btn-accent:hover { background: #81d4fa; transform: translateY(-1px); }
+        .btn-ghost {
+            background: transparent; color: var(--text);
+            border: 1px solid var(--border-bright);
+        }
+        .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ── Section divider ── */
+        .section-divider {
+            height: 1px; max-width: 60%;
+            margin: 0 auto;
+            background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+        }
+
+        /* ── Demos ── */
+        .demos { padding: 100px 48px; }
+        .section-header { text-align: center; margin-bottom: 64px; }
+        .section-header h2 {
+            font-family: 'Newsreader', serif;
+            font-size: 42px; font-weight: 600;
+            color: var(--text-bright);
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+        .section-header p { font-size: 16px; color: var(--text-dim); }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+        }
+        .demo-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none; color: var(--text);
+            transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+            display: flex; flex-direction: column;
+        }
+        .demo-card:hover {
+            border-color: rgba(79,195,247,0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(79,195,247,0.1);
+        }
+        .demo-card .thumb {
+            width: 100%; aspect-ratio: 16/9;
+            object-fit: cover; display: block;
+            border-bottom: 1px solid var(--border);
+        }
+        .demo-card .card-body { padding: 20px 24px; flex: 1; display: flex; flex-direction: column; }
+        .demo-card .card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .demo-card h3 { font-size: 16px; font-weight: 600; color: var(--text-bright); }
+        .badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; font-weight: 600;
+            padding: 3px 8px; border-radius: 4px;
+            background: var(--accent-dim); color: var(--accent);
+            white-space: nowrap;
+        }
+        .badge.green { background: rgba(74,222,128,0.12); color: var(--green); }
+        .badge.amber { background: rgba(251,191,36,0.12); color: var(--amber); }
+        .badge.red { background: rgba(248,113,113,0.12); color: var(--red); }
+        .demo-card p { font-size: 13px; color: var(--text-dim); line-height: 1.6; flex: 1; }
+        .demo-card .card-meta {
+            margin-top: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; color: var(--text-dim);
+            display: flex; gap: 16px;
+        }
+        .demo-card .card-meta span b { color: var(--text); font-weight: 500; }
+
+        .small-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ── Code section ── */
+        .code-section { padding: 100px 48px; }
+        .code-wrap { max-width: 800px; margin: 0 auto; }
+        pre {
+            background: var(--surface-solid);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px 32px;
+            overflow-x: auto;
+            font-size: 13px; line-height: 1.8;
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+        }
+        pre .ln { color: #333; user-select: none; display: inline-block; width: 28px; text-align: right; margin-right: 20px; }
+        pre .cm { color: #4a5568; }
+        pre .kw { color: #c792ea; }
+        pre .st { color: #c3e88d; }
+        pre .fn { color: #82aaff; }
+        pre .nm { color: #f78c6c; }
+        pre .op { color: #89ddff; }
+        .pre-label {
+            position: absolute; top: 12px; right: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* ── Architecture ── */
+        .arch-section { padding: 0 48px 100px; }
+        .arch-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; max-width: 1000px; margin: 0 auto;
+            background: var(--border); border-radius: 12px; overflow: hidden;
+        }
+        .arch-cell { background: var(--surface-solid); padding: 28px 24px; }
+        .arch-cell h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px; font-weight: 600;
+            color: var(--accent); margin-bottom: 8px;
+        }
+        .arch-cell p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+
+        /* ── Benchmarks ── */
+        .bench-section { padding: 100px 48px; }
+        .bench-table {
+            max-width: 800px; margin: 0 auto;
+            border-radius: 12px; overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .bench-table table {
+            width: 100%; border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace; font-size: 13px;
+        }
+        .bench-table th {
+            background: rgba(13,15,22,0.95); padding: 14px 20px; text-align: left;
+            font-weight: 600; color: var(--text-dim); font-size: 11px;
+            text-transform: uppercase; letter-spacing: 1px;
+            border-bottom: 1px solid var(--border);
+        }
+        .bench-table td {
+            padding: 12px 20px; border-bottom: 1px solid var(--border);
+            background: var(--surface-solid);
+        }
+        .bench-table tr:last-child td { border-bottom: none; }
+        .bench-table .demo-name { color: var(--text-bright); font-weight: 500; }
+        .bench-table .fps { color: var(--green); font-weight: 600; }
+        .bench-table .nodes { color: var(--accent); }
+        .bench-table .renderer { color: var(--text-dim); }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center; padding: 48px;
+            border-top: 1px solid var(--border);
+            font-size: 13px; color: var(--text-dim);
+            background: var(--surface-solid);
+        }
+        footer a { color: var(--accent); text-decoration: none; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            nav { padding: 16px 24px; }
+            .hero { padding: 80px 24px 60px; min-height: auto; }
+            .demos, .code-section, .arch-section, .bench-section { padding-left: 24px; padding-right: 24px; }
+            .featured-grid, .arch-grid { grid-template-columns: 1fr; }
+            .small-grid { grid-template-columns: 1fr; }
+            .stats-row { flex-wrap: wrap; }
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-label { animation: fadeUp 0.6s ease 0.2s both; }
+        .hero h1 { animation: fadeUp 0.6s ease 0.35s both; }
+        .hero-sub { animation: fadeUp 0.6s ease 0.5s both; }
+        .stats-row { animation: fadeUp 0.6s ease 0.65s both; }
+        .cta-row { animation: fadeUp 0.6s ease 0.8s both; }
+    </style>
+</head>
+<body>
+
+<!-- Engine canvas — the entire page background is a live Rendero instance -->
+<canvas id="engine-canvas"></canvas>
+<div id="hero-vignette"></div>
+<div id="mouse-layer"></div>
+
+<!-- Live engine stats badge -->
+<div id="live-badge">
+    <div class="pulse"></div>
+    LIVE &mdash; <b id="lb-points">0</b> particles
+    <span class="sep">|</span>
+    <b id="lb-fps">0</b> fps
+</div>
+
+<!-- All page content overlays the engine -->
+<div id="content">
+
+<nav>
+    <a href="#" class="nav-brand">rendero<span>.</span></a>
+    <div class="nav-links">
+        <a href="#demos">Demos</a>
+        <a href="#code">Quick Start</a>
+        <a href="#benchmarks">Benchmarks</a>
+        <a href="https://github.com/nickhash/rendero">GitHub</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-label"><div class="live-dot"></div> This page is powered by Rendero</div>
+    <!-- Title "rendero." is rendered by the engine as particles -->
+    <div style="height: 180px;"></div>
+    <p class="hero-sub">A high-performance WASM canvas engine written in Rust. Spatial culling, instanced WebGL2, CRDT collaboration, and a full scene graph &mdash; in 494KB.</p>
+
+    <div class="stats-row">
+        <div class="stat-cell">
+            <div class="stat-val"><span class="live-val" id="sv-points">0</span></div>
+            <div class="stat-label">Live Particles</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-val"><span class="live-val" id="sv-fps">—</span><span class="unit">fps</span></div>
+            <div class="stat-label">This Page Right Now</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-val">12<span class="unit">K</span></div>
+            <div class="stat-label">Lines of Rust</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-val">494<span class="unit">KB</span></div>
+            <div class="stat-label">WASM (gzip)</div>
+        </div>
+    </div>
+
+    <div class="cta-row">
+        <a href="#demos" class="btn btn-accent">Try the Demos</a>
+        <a href="https://github.com/nickhash/rendero" class="btn btn-ghost">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+        </a>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="demos" id="demos">
+    <div class="section-header">
+        <h2>What you can build</h2>
+        <p>Every demo runs entirely in the browser. Zero external dependencies.</p>
+    </div>
+
+    <div class="featured-grid">
+        <a href="../demos/earthquake-explorer/" class="demo-card">
+            <img class="thumb" src="shots/earthquake.jpg" alt="Earthquake Explorer" loading="lazy">
+            <div class="card-body">
+                <div class="card-top">
+                    <h3>Earthquake Explorer</h3>
+                    <span class="badge">WebGL2 + Map Tiles</span>
+                </div>
+                <p>Live USGS seismic data on CartoDB Dark Matter tiles. Two-canvas architecture: raster map behind GPU point clouds. Filter by magnitude and time range.</p>
+                <div class="card-meta">
+                    <span>Points <b>14K</b></span>
+                    <span>FPS <b>120</b></span>
+                    <span>Source <b>earthquake.usgs.gov</b></span>
+                </div>
+            </div>
+        </a>
+        <a href="../demos/neural-net/" class="demo-card">
+            <img class="thumb" src="shots/neural-net.jpg" alt="Neural Net Visualizer" loading="lazy">
+            <div class="card-body">
+                <div class="card-top">
+                    <h3>Neural Net Visualizer</h3>
+                    <span class="badge red">134M Points</span>
+                </div>
+                <p>Every weight of SmolLM2-135M rendered as a colored pixel. Browse 30 transformer layers, inspect tensor statistics, navigate by architecture.</p>
+                <div class="card-meta">
+                    <span>Points <b>134,515,008</b></span>
+                    <span>FPS <b>120</b></span>
+                    <span>Renderer <b>WebGL2</b></span>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="small-grid">
+        <a href="../demos/splat-viewer/" class="demo-card">
+            <img class="thumb" src="shots/splat-viewer.jpg" alt="Gaussian Splat Viewer" loading="lazy">
+            <div class="card-body">
+                <div class="card-top">
+                    <h3>Gaussian Splat Viewer</h3>
+                    <span class="badge amber">2.5M Splats</span>
+                </div>
+                <p>3D Gaussian Splatting renderer. Load .splat files, orbit camera, real-time depth sorting on Web Workers.</p>
+                <div class="card-meta">
+                    <span>Splats <b>2.5M</b></span>
+                    <span>FPS <b>120</b></span>
+                </div>
+            </div>
+        </a>
+        <a href="../demos/genome-browser/" class="demo-card">
+            <img class="thumb" src="shots/genome-browser.jpg" alt="Genome Browser" loading="lazy">
+            <div class="card-body">
+                <div class="card-top">
+                    <h3>Genome Browser</h3>
+                    <span class="badge green">234K Exons</span>
+                </div>
+                <p>Navigate the human genome (GRCh38). 28K genes and 234K exons across 24 chromosomes with ideogram, ruler, and gene labels.</p>
+                <div class="card-meta">
+                    <span>Genes <b>28,832</b></span>
+                    <span>FPS <b>120</b></span>
+                </div>
+            </div>
+        </a>
+        <a href="../demos/design-tool/" class="demo-card">
+            <img class="thumb" src="shots/design-tool.jpg" alt="Design Tool" loading="lazy">
+            <div class="card-body">
+                <div class="card-top">
+                    <h3>Design Tool</h3>
+                    <span class="badge">Full Editor</span>
+                </div>
+                <p>Figma-like vector editor with layers, properties, pen tool, boolean ops, grouping, undo/redo, PNG/SVG export, and .fig import.</p>
+                <div class="card-meta">
+                    <span>Renderer <b>Canvas2D</b></span>
+                </div>
+            </div>
+        </a>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="code-section" id="code">
+    <div class="section-header">
+        <h2>Get started in 10 lines</h2>
+        <p>Import the WASM module, create an engine, add shapes, render.</p>
+    </div>
+    <div class="code-wrap">
+        <pre><span class="pre-label">main.js</span><span class="ln"> 1</span><span class="kw">import</span> init, { CanvasEngine } <span class="kw">from</span> <span class="st">'./pkg/rendero.js'</span><span class="op">;</span>
+<span class="ln"> 2</span><span class="kw">await</span> <span class="fn">init</span>()<span class="op">;</span>
+<span class="ln"> 3</span>
+<span class="ln"> 4</span><span class="kw">const</span> engine <span class="op">=</span> <span class="kw">new</span> <span class="fn">CanvasEngine</span>(<span class="st">"MyApp"</span>, <span class="nm">1</span>)<span class="op">;</span>
+<span class="ln"> 5</span><span class="kw">const</span> ctx <span class="op">=</span> canvas.<span class="fn">getContext</span>(<span class="st">'2d'</span>)<span class="op">;</span>
+<span class="ln"> 6</span>engine.<span class="fn">set_viewport</span>(<span class="nm">1920</span>, <span class="nm">1080</span>)<span class="op">;</span>
+<span class="ln"> 7</span>
+<span class="ln"> 8</span><span class="cm">// Add shapes &mdash; each becomes a scene graph node</span>
+<span class="ln"> 9</span>engine.<span class="fn">add_rectangle</span>(<span class="st">"bg"</span>, <span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">400</span>, <span class="nm">300</span>, <span class="nm">0.2</span>, <span class="nm">0.5</span>, <span class="nm">1</span>, <span class="nm">1</span>)<span class="op">;</span>
+<span class="ln">10</span>engine.<span class="fn">add_text</span>(<span class="st">"title"</span>, <span class="st">"Hello"</span>, <span class="nm">20</span>, <span class="nm">20</span>, <span class="nm">32</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>, <span class="nm">1</span>)<span class="op">;</span>
+<span class="ln">11</span>
+<span class="ln">12</span><span class="cm">// Render &mdash; pan, zoom, select, undo/redo all built in</span>
+<span class="ln">13</span>engine.<span class="fn">render_canvas2d</span>(ctx, <span class="nm">1920</span>, <span class="nm">1080</span>, <span class="nm">1</span>)<span class="op">;</span></pre>
+    </div>
+</section>
+
+<section class="arch-section" id="architecture">
+    <div class="section-header">
+        <h2>Under the hood</h2>
+        <p>Five Rust crates compiled to a single WASM module.</p>
+    </div>
+    <div class="arch-grid">
+        <div class="arch-cell">
+            <h4>Spatial Grid Culling</h4>
+            <p>O(1) viewport culling via spatial hash grid. Only visible nodes are processed, enabling millions of nodes with zero wasted work.</p>
+        </div>
+        <div class="arch-cell">
+            <h4>Hierarchical LOD</h4>
+            <p>Subtrees smaller than 50px skip descendants. Sub-pixel nodes are culled. Every frame renders the minimum necessary geometry.</p>
+        </div>
+        <div class="arch-cell">
+            <h4>Dual Render Paths</h4>
+            <p>Canvas2D for interactive scenes with full scene graph. WebGL2 instanced rendering for data-dense point clouds. Choose per use case.</p>
+        </div>
+        <div class="arch-cell">
+            <h4>Scene Graph</h4>
+            <p>Arena-based tree with frames, rectangles, ellipses, vectors, text, images, boolean ops, auto-layout, and hierarchical grouping.</p>
+        </div>
+        <div class="arch-cell">
+            <h4>CRDT Collaboration</h4>
+            <p>Operation-based CRDT with Lamport timestamps and fractional indexing. Built for real-time multi-user editing out of the box.</p>
+        </div>
+        <div class="arch-cell">
+            <h4>Tile Rasterizer</h4>
+            <p>CPU-based 64&times;64 tile rasterizer for pixel-perfect PNG export. L1-cache-friendly, anti-aliased, independent of any canvas context.</p>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="bench-section" id="benchmarks">
+    <div class="section-header">
+        <h2>Benchmarks</h2>
+        <p>All numbers from a MacBook Pro M3 Max, Chrome, at native resolution.</p>
+    </div>
+    <div class="bench-table">
+        <table>
+            <thead><tr><th>Demo</th><th>Nodes / Points</th><th>FPS</th><th>Renderer</th></tr></thead>
+            <tbody>
+                <tr><td class="demo-name">Neural Net Visualizer</td><td class="nodes">134,515,008</td><td class="fps">120</td><td class="renderer">WebGL2</td></tr>
+                <tr><td class="demo-name">Gaussian Splat Viewer</td><td class="nodes">2,541,226</td><td class="fps">120</td><td class="renderer">WebGL2</td></tr>
+                <tr><td class="demo-name">Genome Browser</td><td class="nodes">234,354 exons</td><td class="fps">120</td><td class="renderer">WebGL2 + Canvas2D</td></tr>
+                <tr><td class="demo-name">Earthquake Explorer</td><td class="nodes">14,146</td><td class="fps">120</td><td class="renderer">WebGL2 + Canvas2D</td></tr>
+                <tr><td class="demo-name">Design Tool</td><td class="nodes">28</td><td class="fps">120</td><td class="renderer">Canvas2D</td></tr>
+                <tr><td class="demo-name">Stress Test (2M)</td><td class="nodes">2,000,000</td><td class="fps">60+</td><td class="renderer">Canvas2D</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<footer>
+    <p>Rendero is open source under the MIT License. Built with Rust + WebAssembly.<br>
+    <a href="https://github.com/nickhash/rendero">GitHub</a></p>
+</footer>
+
+</div><!-- #content -->
+
+<script type="module" src="main.js?v=7"></script>
+</body>
+</html>

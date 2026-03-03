@@ -417,9 +417,11 @@ function mat4Multiply(a, b) {
 }
 
 // ─── Resize ───
+const dpr = window.devicePixelRatio || 1;
 function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const cssW = window.innerWidth, cssH = window.innerHeight;
+    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
     gl.viewport(0, 0, canvas.width, canvas.height);
 }
 resize();

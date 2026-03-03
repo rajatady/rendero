@@ -36,13 +36,18 @@ const CHR_BLOCK_H = 50;
 const CHR_GAP = 20;
 
 // ─── Sizing ───
+const dpr = window.devicePixelRatio || 1;
+let cssW, cssH;
 function resize() {
     const wrap = document.getElementById('canvas-wrap');
-    const w = wrap.clientWidth, h = wrap.clientHeight;
-    canvas.width = w; canvas.height = h;
-    labelCanvas.width = w; labelCanvas.height = h;
-    rulerCanvas.width = w; rulerCanvas.height = 22;
-    engine.set_viewport(w, h);
+    cssW = wrap.clientWidth; cssH = wrap.clientHeight;
+    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+    labelCanvas.width = cssW * dpr; labelCanvas.height = cssH * dpr;
+    labelCanvas.style.width = cssW + 'px'; labelCanvas.style.height = cssH + 'px';
+    rulerCanvas.width = cssW * dpr; rulerCanvas.height = 22 * dpr;
+    rulerCanvas.style.width = cssW + 'px'; rulerCanvas.style.height = '22px';
+    engine.set_viewport(cssW, cssH);
     const ideoBar = document.getElementById('ideogram-bar');
     ideogramCanvas.width = ideoBar.clientWidth;
     ideogramCanvas.height = ideoBar.clientHeight;
@@ -82,8 +87,8 @@ function clampCamera() {
     const cam = engine.get_camera();
     let [cx, cy, zoom] = cam;
     const chr = meta.chromosomes[currentChrIdx];
-    const vw = canvas.width / zoom;
-    const vh = canvas.height / zoom;
+    const vw = cssW / zoom;
+    const vh = cssH / zoom;
     cx = Math.max(-200, Math.min(cx, chr.w + 200 - vw));
     cy = Math.max(chr.y - 20, Math.min(cy, chr.y + chr.h + 20 - vh));
     engine.set_camera(cx, cy, zoom);
@@ -94,8 +99,8 @@ function jumpToChromosome(idx) {
     currentChrIdx = idx;
     chrSelect.value = idx;
     const chr = meta.chromosomes[idx];
-    const vw = canvas.width;
-    const vh = canvas.height;
+    const vw = cssW;
+    const vh = cssH;
     const yZoom = vh / (chr.h + 10);
     const xZoom = vw / Math.min(chr.w, 20000);
     let zoom = Math.max(0.02, Math.min(256, Math.min(yZoom, xZoom)));
@@ -112,7 +117,7 @@ function updateInfo() {
     const chr = meta.chromosomes[currentChrIdx];
     const cam = engine.get_camera();
     const leftBp = Math.max(0, cam[0] * SCALE);
-    const rightBp = Math.min(chr.size_bp, (cam[0] + canvas.width / cam[2]) * SCALE);
+    const rightBp = Math.min(chr.size_bp, (cam[0] + cssW / cam[2]) * SCALE);
     document.getElementById('pos-display').innerHTML =
         `${chr.name}:<b>${formatBp(leftBp)}</b> – <b>${formatBp(rightBp)}</b> (${formatBp(rightBp - leftBp)})`;
 }
@@ -136,7 +141,7 @@ function renderIdeogram() {
     // Viewport indicator
     const cam = engine.get_camera();
     const viewLeft = Math.max(0, cam[0]);
-    const viewRight = cam[0] + canvas.width / cam[2];
+    const viewRight = cam[0] + cssW / cam[2];
     const vl = pad + (viewLeft / chrLen) * drawW;
     const vr = pad + (Math.min(viewRight, chrLen) / chrLen) * drawW;
     ideogramViewport.style.left = Math.max(pad, vl) + 'px';
@@ -167,7 +172,7 @@ function ideoScrub(clientX) {
     const chr = meta.chromosomes[currentChrIdx];
     const worldX = frac * chr.w;
     const cam = engine.get_camera();
-    const vw = canvas.width / cam[2];
+    const vw = cssW / cam[2];
     engine.set_camera(worldX - vw / 2, cam[1], cam[2]);
     clampCamera();
 }
@@ -192,7 +197,7 @@ for (const chr of meta.chromosomes) {
     const buf = await resp.arrayBuffer();
     const f32 = new Float32Array(buf);
     engine.add_point_cloud(gl, f32);
-    engine.render_webgl(gl, canvas.width, canvas.height);
+    engine.render_webgl(gl, cssW, cssH, dpr);
     loadedChrs++;
     barFill.style.width = (loadedChrs / totalChrs * 100) + '%';
     barText.textContent = `${chr.name} loaded (${loadedChrs}/${totalChrs})`;
@@ -325,7 +330,7 @@ canvas.addEventListener('wheel', (e) => {
 document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'SELECT') return;
     const cam = engine.get_camera();
-    const panStep = canvas.width / cam[2] * 0.3;
+    const panStep = cssW / cam[2] * 0.3;
     if (e.key === 'ArrowLeft') { engine.set_camera(cam[0] - panStep, cam[1], cam[2]); clampCamera(); e.preventDefault(); }
     if (e.key === 'ArrowRight') { engine.set_camera(cam[0] + panStep, cam[1], cam[2]); clampCamera(); e.preventDefault(); }
     if (e.key === 'ArrowUp' || e.key === 'k') {
@@ -336,8 +341,8 @@ document.addEventListener('keydown', (e) => {
         e.preventDefault();
         jumpToChromosome(Math.min(meta.chromosomes.length - 1, currentChrIdx + 1));
     }
-    if (e.key === '+' || e.key === '=') { engine.zoom(1, canvas.width / 2, canvas.height / 2); clampCamera(); }
-    if (e.key === '-') { engine.zoom(-1, canvas.width / 2, canvas.height / 2); clampCamera(); }
+    if (e.key === '+' || e.key === '=') { engine.zoom(1, cssW / 2, cssH / 2); clampCamera(); }
+    if (e.key === '-') { engine.zoom(-1, cssW / 2, cssH / 2); clampCamera(); }
     if (e.key === '0') jumpToChromosome(currentChrIdx);
     if (e.key === 'Escape') hideTooltip();
 });
@@ -467,7 +472,7 @@ let frames = 0;
 let fps = 0;
 
 function render() {
-    try { engine.render_webgl(gl, canvas.width, canvas.height); } catch (e) {}
+    try { engine.render_webgl(gl, cssW, cssH, dpr); } catch (e) {}
 
     renderRuler();
     renderGeneLabels();

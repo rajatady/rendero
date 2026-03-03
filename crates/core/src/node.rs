@@ -55,6 +55,14 @@ pub enum TextVerticalAlign {
     Bottom,
 }
 
+/// Text decoration style.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum TextDecoration {
+    None,
+    Underline,
+    Strikethrough,
+}
+
 /// A run of text with uniform styling.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TextRun {
@@ -66,6 +74,10 @@ pub struct TextRun {
     pub color: Color,
     pub letter_spacing: f32,
     pub line_height: Option<f32>, // None = auto
+    pub decoration: TextDecoration,
+    /// Override fill for gradient text. When Some, renderer uses this instead of `color`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fill_override: Option<Paint>,
 }
 
 /// Text auto-resize behavior.
@@ -310,13 +322,15 @@ impl Node {
             kind: NodeKind::Text {
                 runs: vec![TextRun {
                     text: content.to_string(),
-                    font_family: "sans-serif".to_string(),
+                    font_family: "Inter".to_string(),
                     font_size,
                     font_weight: 400,
                     italic: false,
                     color,
                     letter_spacing: 0.0,
                     line_height: None,
+                    decoration: TextDecoration::None,
+                    fill_override: None,
                 }],
                 align: TextAlign::Left,
                 vertical_align: TextVerticalAlign::Top,

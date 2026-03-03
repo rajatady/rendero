@@ -13,8 +13,18 @@
 
 use std::collections::HashMap;
 
+use serde::{Deserialize, Serialize};
+
 use crate::id::NodeId;
 use crate::node::Node;
+
+/// Flat serializable representation of a document tree.
+/// Nodes are stored in DFS order with their parent IDs.
+/// Root node (parent=None) is always first.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FlatTree {
+    pub nodes: Vec<(Node, Option<NodeId>)>,
+}
 
 /// Ordered list of children for a parent node.
 /// Maintains insertion order. Used for sibling ordering (z-order).
@@ -46,7 +56,7 @@ impl ChildList {
         }
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = &NodeId> {
+    pub fn iter(&self) -> std::slice::Iter<'_, NodeId> {
         self.children.iter()
     }
 
@@ -265,6 +275,62 @@ impl DocumentTree {
                 self.dfs(child_id, result);
             }
         }
+    }
+
+    /// Serialize the tree to a flat representation (DFS order).
+    pub fn to_flat(&self) -> FlatTree {
+        let mut nodes = Vec::with_capacity(self.nodes.len());
+        self.to_flat_dfs(&self.root_id, None, &mut nodes);
+        FlatTree { nodes }
+    }
+
+    fn to_flat_dfs(&self, id: &NodeId, parent: Option<NodeId>, out: &mut Vec<(Node, Option<NodeId>)>) {
+        if let Some(node) = self.nodes.get(id) {
+            let mut n = node.clone();
+            // JSON can't represent f32::INFINITY — clamp to 0 for serialization.
+            if !n.width.is_finite() { n.width = 0.0; }
+            if !n.height.is_finite() { n.height = 0.0; }
+            out.push((n, parent));
+            if let Some(children) = self.children.get(id) {
+                for child_id in children.iter() {
+                    self.to_flat_dfs(child_id, Some(*id), out);
+                }
+            }
+        }
+    }
+
+    /// Reconstruct a tree from a flat representation.
+    /// Nodes must be in DFS order (parent before children).
+    pub fn from_flat(flat: FlatTree) -> Self {
+        let mut tree = Self {
+            nodes: HashMap::new(),
+            children: HashMap::new(),
+            parents: HashMap::new(),
+            root_id: NodeId::ROOT,
+        };
+
+        for (mut node, parent_id) in flat.nodes {
+            let node_id = node.id;
+            let is_container = node.is_container();
+
+            if parent_id.is_none() {
+                // Root node — restore infinite dimensions
+                tree.root_id = node_id;
+                node.width = f32::INFINITY;
+                node.height = f32::INFINITY;
+            } else {
+                tree.parents.insert(node_id, parent_id.unwrap());
+                tree.children.entry(parent_id.unwrap()).or_default().push(node_id);
+            }
+
+            tree.nodes.insert(node_id, node);
+
+            if is_container {
+                tree.children.entry(node_id).or_default();
+            }
+        }
+
+        tree
     }
 }
 

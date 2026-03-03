@@ -70,4 +70,19 @@ impl ClockGen {
     pub fn merge(&mut self, remote_counter: u64) {
         self.counter = self.counter.max(remote_counter);
     }
+
+    /// Current counter value (for serialization).
+    pub fn counter(&self) -> u64 {
+        self.counter
+    }
+
+    /// Client ID (for serialization).
+    pub fn client_id(&self) -> u32 {
+        self.client_id
+    }
+
+    /// Restore from saved state.
+    pub fn from_parts(client_id: u32, counter: u64) -> Self {
+        Self { client_id, counter }
+    }
 }

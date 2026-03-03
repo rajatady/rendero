@@ -1,4 +1,4 @@
-//! rendero_fig_import: .fig binary → JSON tree with essential transforms.
+//! fig_import: .fig binary → JSON tree with essential transforms.
 //!
 //! Pipeline:
 //! 1. ZIP extraction (if needed) + image extraction
@@ -8,7 +8,7 @@
 //! 5. Blob substitution (commandsBlob → commands, vectorNetworkBlob → vectorNetwork)
 //! 6. Essential transforms (color→hex, matrix→CSS, image hash→filename)
 //!
-//! The output JSON is compatible with the existing rendero_fig_import.rs converter in crates/wasm.
+//! The output JSON is compatible with the existing fig_import.rs converter in crates/wasm.
 
 mod blobs;
 mod container;
@@ -21,7 +21,7 @@ pub use error::{FigError, Result};
 
 /// Result of importing a .fig file.
 pub struct FigImportResult {
-    /// The document tree as JSON, ready for rendero_fig_import.rs conversion.
+    /// The document tree as JSON, ready for fig_import.rs conversion.
     pub document: serde_json::Value,
     /// Images extracted from the ZIP: (path, bytes).
     pub images: Vec<(String, Vec<u8>)>,
@@ -30,7 +30,7 @@ pub struct FigImportResult {
 }
 
 /// Convert .fig bytes to a JSON document tree with images.
-/// The returned JSON is compatible with the existing rendero_fig_import.rs converter.
+/// The returned JSON is compatible with the existing fig_import.rs converter.
 pub fn convert_fig(bytes: &[u8]) -> Result<FigImportResult> {
     // 1. Extract canvas.fig + images from ZIP (or use raw bytes)
     let (canvas_bytes, extracted_images) = container::extract_fig(bytes)?;

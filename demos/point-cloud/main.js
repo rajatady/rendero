@@ -16,11 +16,14 @@ const loadBar = document.getElementById('load-bar');
 const loadText = document.getElementById('load-text');
 
 // ─── Canvas sizing ───
+const dpr = window.devicePixelRatio || 1;
+let cssW, cssH;
 function resize() {
     const wrap = document.getElementById('canvas-wrap');
-    canvas.width = wrap.clientWidth;
-    canvas.height = wrap.clientHeight;
-    app.set_viewport(canvas.width, canvas.height);
+    cssW = wrap.clientWidth; cssH = wrap.clientHeight;
+    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+    app.set_viewport(cssW, cssH);
 }
 resize();
 window.addEventListener('resize', () => { resize(); render(); });
@@ -57,7 +60,7 @@ function updateStats(now) {
 
 // ─── Render ───
 function render() {
-    app.render_canvas2d(ctx, canvas.width, canvas.height);
+    app.render_canvas2d(ctx, cssW, cssH, dpr);
 }
 
 function loop(now) {
@@ -202,8 +205,8 @@ function fitViewToData(buf, count) {
     const contentH = maxY - minY;
     if (contentW <= 0 || contentH <= 0) return;
     const padding = 50;
-    const vw = canvas.width - padding * 2;
-    const vh = canvas.height - padding * 2;
+    const vw = cssW - padding * 2;
+    const vh = cssH - padding * 2;
     const zoom = Math.min(vw / contentW, vh / contentH);
     app.set_camera(minX - padding / zoom, minY - padding / zoom, zoom);
 }
@@ -323,7 +326,7 @@ async function generate(pattern, count) {
 
     // Fresh engine
     app = new CanvasEngine("PointCloud", 1);
-    app.set_viewport(canvas.width, canvas.height);
+    app.set_viewport(cssW, cssH);
 
     loadBar.style.width = '30%';
     loadText.textContent = `Computing ${count.toLocaleString()} points...`;

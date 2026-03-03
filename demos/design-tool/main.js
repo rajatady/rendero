@@ -15,11 +15,14 @@ const figInput = document.getElementById('fig-input');
 const loading = document.getElementById('loading');
 
 // ─── Canvas sizing ───
+const dpr = window.devicePixelRatio || 1;
+let cssW, cssH;
 function resize() {
     const wrap = document.getElementById('canvas-wrap');
-    canvas.width = wrap.clientWidth;
-    canvas.height = wrap.clientHeight;
-    app.set_viewport(canvas.width, canvas.height);
+    cssW = wrap.clientWidth; cssH = wrap.clientHeight;
+    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+    app.set_viewport(cssW, cssH);
 }
 resize();
 window.addEventListener('resize', () => { resize(); render(); });
@@ -63,7 +66,7 @@ function updateStats(now) {
 
 // ─── Render ───
 function render(force = false) {
-    app.render_canvas2d(ctx, canvas.width, canvas.height);
+    app.render_canvas2d(ctx, cssW, cssH, dpr);
     // Pen overlay
     if (app.pen_is_active()) drawPenOverlay();
 }

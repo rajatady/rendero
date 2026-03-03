@@ -29,7 +29,9 @@ enum ColorSampler<'a> {
 }
 
 impl<'a> ColorSampler<'a> {
-    fn from_paint(paint: &'a Paint, opacity: f32) -> Option<Self> {
+    /// Create a sampler from a paint. `node_w`/`node_h` scale normalized gradient
+    /// coordinates (0–1) to local pixel space.
+    fn from_paint(paint: &'a Paint, opacity: f32, node_w: f32, node_h: f32) -> Option<Self> {
         match paint {
             Paint::Solid(c) => {
                 let p = c.premultiplied();
@@ -40,16 +42,27 @@ impl<'a> ColorSampler<'a> {
             }
             Paint::LinearGradient { stops, start, end } => {
                 if stops.is_empty() { return None; }
-                let d = *end - *start;
+                // Gradient start/end are in normalized 0-1 space; scale to local pixels
+                let s = Vec2::new(start.x * node_w, start.y * node_h);
+                let e = Vec2::new(end.x * node_w, end.y * node_h);
+                let d = e - s;
                 let len_sq = d.dot(d);
                 let dir_norm = if len_sq > 1e-10 { d / len_sq } else { Vec2::ZERO };
-                Some(ColorSampler::Linear { stops, start: *start, dir_norm })
+                Some(ColorSampler::Linear { stops, start: s, dir_norm })
             }
             Paint::RadialGradient { stops, center, radius } => {
                 if stops.is_empty() || *radius <= 0.0 { return None; }
+                // Radial center is normalized; radius is a fraction of the larger dimension
+                let cx = center.x * node_w;
+                let cy = center.y * node_h;
+                let r = *radius * node_w.max(node_h);
                 Some(ColorSampler::Radial {
-                    stops, center: *center, inv_radius: 1.0 / *radius,
+                    stops, center: Vec2::new(cx, cy), inv_radius: 1.0 / r,
                 })
+            }
+            Paint::AngularGradient { .. } | Paint::DiamondGradient { .. } => {
+                // Angular/Diamond gradients handled by Canvas 2D renderer
+                None
             }
             Paint::Image { .. } => {
                 // Image fills handled by Canvas 2D renderer, not rasterizer
@@ -256,7 +269,15 @@ pub fn rasterize_item(
         Some(p) => p,
         None => return,
     };
-    let sampler = match ColorSampler::from_paint(paint, opacity) {
+    // Extract node dimensions for gradient coordinate scaling
+    let (node_w, node_h) = match shape {
+        RenderShape::Rect { width, height, .. } => (*width, *height),
+        RenderShape::Ellipse { width, height, .. } => (*width, *height),
+        RenderShape::Line { length } => (*length, 1.0),
+        RenderShape::Path { .. } => (1.0, 1.0), // paths use absolute coords
+        _ => (1.0, 1.0),
+    };
+    let sampler = match ColorSampler::from_paint(paint, opacity, node_w, node_h) {
         Some(s) => s,
         None => return,
     };
