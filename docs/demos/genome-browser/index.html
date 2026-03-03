@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rendero — Genome Browser</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0c0e13;
+            --track-bg: #11131a;
+            --surface: rgba(14,16,24,0.96);
+            --border: rgba(255,255,255,0.05);
+            --border-track: rgba(255,255,255,0.03);
+            --text: #b8bec9;
+            --text-dim: #4e5565;
+            --text-bright: #e2e6ed;
+            --accent: #4dd0e1;
+            --gene-plus: #5b9cf6;
+            --gene-minus: #3dbf8a;
+            --exon-plus: #7db4ff;
+            --exon-minus: #5dd9a8;
+            --utr: #a388d0;
+            --centromere: #d95040;
+            --ruler: rgba(255,255,255,0.04);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            background: var(--bg); overflow: hidden;
+            font-family: 'DM Sans', system-ui; color: var(--text);
+            display: flex; flex-direction: column;
+        }
+
+        /* ─── Top bar: logo + chromosome selector + position ─── */
+        #topbar {
+            flex-shrink: 0; display: flex; align-items: center; gap: 12px;
+            padding: 8px 16px; background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            z-index: 20;
+        }
+        #topbar .logo {
+            font-weight: 700; font-size: 13px; color: var(--text-bright);
+            letter-spacing: -0.02em; white-space: nowrap;
+        }
+        #topbar .logo span { color: var(--accent); font-weight: 600; }
+        .tb-divider { width: 1px; height: 18px; background: var(--border); }
+        #chr-select {
+            padding: 4px 24px 4px 8px; border: 1px solid var(--border);
+            background: rgba(255,255,255,0.03); color: var(--text-bright);
+            border-radius: 4px; font-size: 12px; font-family: 'JetBrains Mono', monospace;
+            cursor: pointer; outline: none;
+            -webkit-appearance: none; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%234e5565'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 8px center;
+        }
+        #chr-select option { background: #0c0e13; }
+        #pos-display {
+            font-family: 'JetBrains Mono', monospace; font-size: 11px;
+            color: var(--text-dim); white-space: nowrap;
+        }
+        #pos-display b { color: var(--accent); font-weight: 500; }
+        .tb-stats {
+            margin-left: auto; display: flex; gap: 12px;
+            font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);
+        }
+        .tb-stats b { color: var(--accent); font-weight: 500; }
+
+        /* ─── Ideogram bar (cytoband minimap) ─── */
+        #ideogram-bar {
+            flex-shrink: 0; height: 28px; background: var(--track-bg);
+            border-bottom: 1px solid var(--border);
+            position: relative; cursor: pointer; z-index: 15;
+        }
+        #ideogram-canvas {
+            width: 100%; height: 100%; display: block;
+        }
+        #ideogram-viewport {
+            position: absolute; top: 0; bottom: 0;
+            border: 1.5px solid var(--accent); border-radius: 2px;
+            background: rgba(77,208,225,0.06);
+            pointer-events: none; z-index: 2;
+        }
+
+        /* ─── Track area ─── */
+        #track-area {
+            flex: 1; display: flex; overflow: hidden; position: relative;
+        }
+
+        /* Track labels (fixed left column) */
+        #track-labels {
+            flex-shrink: 0; width: 100px; background: var(--surface);
+            border-right: 1px solid var(--border); z-index: 10;
+            display: flex; flex-direction: column;
+        }
+        .track-label {
+            display: flex; align-items: center; padding: 0 10px;
+            font-size: 10px; font-family: 'JetBrains Mono', monospace;
+            color: var(--text-dim); border-bottom: 1px solid var(--border-track);
+            white-space: nowrap; overflow: hidden;
+        }
+
+        /* Canvas viewport (scrollable data) */
+        #canvas-wrap {
+            flex: 1; position: relative; overflow: hidden;
+        }
+        #canvas, #label-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+        #canvas { z-index: 1; cursor: grab; }
+        #canvas:active { cursor: grabbing; }
+        #label-canvas { z-index: 2; pointer-events: none; }
+
+        /* ─── Ruler (position axis) ─── */
+        #ruler {
+            position: absolute; top: 0; left: 0; right: 0; height: 22px;
+            z-index: 5; pointer-events: none;
+        }
+
+        /* ─── Loading ─── */
+        #loading {
+            position: fixed; inset: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; background: var(--bg); z-index: 100;
+        }
+        #loading .title {
+            font-weight: 700; font-size: 16px; color: var(--text-bright); margin-bottom: 4px;
+        }
+        #loading .subtitle { font-size: 12px; color: var(--text-dim); margin-bottom: 14px; }
+        #bar-wrap { width: 320px; height: 2px; background: rgba(255,255,255,0.04); border-radius: 1px; overflow: hidden; }
+        #bar-fill { width: 0%; height: 100%; background: var(--accent); transition: width 0.15s; }
+        #bar-text { margin-top: 8px; font-size: 10px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+
+        /* ─── Bottom status ─── */
+        #statusbar {
+            flex-shrink: 0; display: flex; align-items: center; gap: 16px;
+            padding: 4px 16px; background: var(--surface);
+            border-top: 1px solid var(--border);
+            font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim);
+        }
+        #statusbar b { color: var(--text); font-weight: 500; }
+
+        /* ─── Gene tooltip ─── */
+        #gene-tooltip {
+            position: fixed; z-index: 30; pointer-events: none;
+            background: rgba(10,12,18,0.95); border: 1px solid rgba(77,208,225,0.3);
+            border-radius: 6px; padding: 10px 14px; max-width: 320px;
+            backdrop-filter: blur(8px); display: none;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        #gene-tooltip.visible { display: block; }
+        #gene-tooltip .gt-name {
+            font-size: 13px; font-weight: 600; color: var(--accent);
+            margin-bottom: 4px;
+        }
+        #gene-tooltip .gt-row {
+            font-size: 10px; color: var(--text-dim); margin: 2px 0;
+        }
+        #gene-tooltip .gt-row b { color: var(--text-bright); font-weight: 500; }
+        #gene-tooltip .gt-strand-plus { color: var(--gene-plus); }
+        #gene-tooltip .gt-strand-minus { color: var(--gene-minus); }
+        #statusbar kbd {
+            display: inline-block; padding: 0 4px; background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border); border-radius: 2px; font-size: 9px;
+            color: var(--text-dim); margin: 0 1px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="title">Genome Browser</div>
+        <div class="subtitle">Loading human genome annotations (GRCh38/hg38)</div>
+        <div id="bar-wrap"><div id="bar-fill"></div></div>
+        <div id="bar-text">Initializing...</div>
+    </div>
+
+    <!-- Top bar -->
+    <div id="topbar">
+        <span class="logo">Genome<span>Browser</span></span>
+        <div class="tb-divider"></div>
+        <select id="chr-select"></select>
+        <span id="pos-display">Position: <b>—</b></span>
+        <div class="tb-stats">
+            <span>Genes <b id="s-genes">0</b></span>
+            <span>Exons <b id="s-exons">0</b></span>
+            <span>FPS <b id="s-fps">0</b></span>
+        </div>
+    </div>
+
+    <!-- Cytoband ideogram minimap -->
+    <div id="ideogram-bar">
+        <canvas id="ideogram-canvas"></canvas>
+        <div id="ideogram-viewport"></div>
+    </div>
+
+    <!-- Track area -->
+    <div id="track-area">
+        <div id="track-labels"></div>
+        <div id="canvas-wrap">
+            <canvas id="ruler"></canvas>
+            <canvas id="canvas"></canvas>
+            <canvas id="label-canvas"></canvas>
+        </div>
+    </div>
+
+    <!-- Status bar -->
+    <div id="statusbar">
+        <span>GRCh38/hg38</span>
+        <span>Source: <b>UCSC RefSeq</b></span>
+        <span style="margin-left:auto">
+            <kbd>↑</kbd><kbd>↓</kbd> chr &nbsp;
+            <kbd>←</kbd><kbd>→</kbd> pan &nbsp;
+            <kbd>+</kbd><kbd>−</kbd> zoom &nbsp;
+            <kbd>0</kbd> fit
+        </span>
+    </div>
+
+    <div id="gene-tooltip">
+        <div class="gt-name" id="gt-name"></div>
+        <div class="gt-row">Position: <b id="gt-pos"></b></div>
+        <div class="gt-row">Strand: <b id="gt-strand"></b></div>
+        <div class="gt-row">CDS: <b id="gt-cds"></b></div>
+        <div class="gt-row">Exons: <b id="gt-exons"></b></div>
+        <div class="gt-row">Length: <b id="gt-len"></b></div>
+    </div>
+
+    <script type="module" src="main.js?v=100"></script>
+</body>
+</html>

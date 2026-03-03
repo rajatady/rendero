@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rendero — Neural Net Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #08090c;
+            --surface: rgba(10,12,18,0.94);
+            --border: rgba(255,255,255,0.06);
+            --text: #c4cad6;
+            --text-dim: #5a6275;
+            --accent: #f59e0b;
+            --blue: #3b82f6;
+            --neg: #60a5fa;
+            --pos: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); overflow: hidden; font-family: 'Instrument Sans', system-ui; color: var(--text); }
+
+        #canvas-stack { position: relative; width: 100vw; height: 100vh; }
+        #canvas, #label-canvas {
+            position: absolute; top: 0; left: 0;
+            display: block; width: 100%; height: 100%;
+        }
+        #canvas { z-index: 1; }
+        #label-canvas { z-index: 2; pointer-events: none; }
+        #canvas { cursor: grab; }
+        #canvas:active { cursor: grabbing; }
+
+        #hud {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+            display: flex; align-items: center; gap: 16px;
+            padding: 10px 20px; background: var(--surface);
+            border-bottom: 1px solid var(--border); backdrop-filter: blur(12px);
+            font-size: 12px; font-family: 'Azeret Mono', monospace;
+        }
+        #hud .logo {
+            font-family: 'Instrument Sans', system-ui;
+            font-weight: 600; font-size: 14px; color: #f1f5f9;
+            letter-spacing: -0.02em; white-space: nowrap;
+        }
+        #hud .logo span { color: var(--accent); }
+        .divider { width: 1px; height: 20px; background: var(--border); }
+        #hud .stat { color: var(--text-dim); font-size: 11px; white-space: nowrap; }
+        #hud .stat b { color: var(--accent); font-weight: 500; }
+
+        #loading {
+            position: fixed; inset: 0; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; background: var(--bg); z-index: 100;
+        }
+        #loading .title {
+            font-family: 'Instrument Sans', system-ui;
+            font-size: 18px; font-weight: 600; color: #f1f5f9; margin-bottom: 6px;
+        }
+        #loading .subtitle { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; }
+        #bar-wrap { width: 380px; height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+        #bar-fill { width: 0%; height: 100%; background: var(--accent); transition: width 0.15s; }
+        #bar-text { margin-top: 10px; font-size: 11px; color: var(--text-dim); font-family: 'Azeret Mono', monospace; }
+
+        #layer-nav {
+            position: fixed; left: 16px; top: 56px; bottom: 16px; z-index: 10;
+            width: 220px; background: var(--surface); border-radius: 8px;
+            border: 1px solid var(--border); backdrop-filter: blur(12px);
+            overflow-y: auto; font-size: 11px;
+        }
+        #layer-nav .nav-title {
+            font-family: 'Instrument Sans', system-ui;
+            font-weight: 600; font-size: 12px; color: #f1f5f9;
+            padding: 12px 14px 8px; position: sticky; top: 0;
+            background: var(--surface); border-bottom: 1px solid var(--border);
+        }
+        .nav-item {
+            padding: 5px 14px; cursor: pointer; color: var(--text-dim);
+            transition: all 0.12s; font-family: 'Azeret Mono', monospace;
+            font-size: 10px; border-left: 2px solid transparent;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text); }
+        .nav-item.active { border-left-color: var(--accent); color: var(--accent); background: rgba(245,158,11,0.05); }
+        .nav-item .nav-numel { color: var(--text-dim); font-size: 9px; }
+        .nav-group {
+            padding: 8px 14px 4px; font-size: 10px; color: var(--text-dim);
+            font-family: 'Instrument Sans', system-ui; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        #tensor-info {
+            position: fixed; right: 16px; bottom: 16px; z-index: 10;
+            width: 260px; background: var(--surface); border-radius: 8px;
+            border: 1px solid var(--border); backdrop-filter: blur(12px);
+            padding: 14px 16px; font-size: 11px;
+        }
+        #tensor-info .info-title {
+            font-family: 'Instrument Sans', system-ui;
+            font-weight: 600; font-size: 12px; color: #f1f5f9; margin-bottom: 8px;
+        }
+        .info-row { margin: 3px 0; color: var(--text-dim); font-family: 'Azeret Mono', monospace; font-size: 10px; }
+        .info-row b { color: var(--text); font-weight: 500; }
+
+        #colorbar {
+            position: fixed; right: 16px; top: 56px; z-index: 10;
+            width: 260px; background: var(--surface); border-radius: 8px;
+            border: 1px solid var(--border); backdrop-filter: blur(12px);
+            padding: 14px 16px;
+        }
+        #colorbar .cb-title {
+            font-family: 'Instrument Sans', system-ui;
+            font-weight: 600; font-size: 12px; color: #f1f5f9; margin-bottom: 8px;
+        }
+        .cb-bar {
+            height: 12px; border-radius: 3px; margin-bottom: 4px;
+            background: linear-gradient(90deg, #60a5fa 0%, #1a1a2e 50%, #f59e0b 100%);
+        }
+        .cb-labels {
+            display: flex; justify-content: space-between;
+            font-size: 10px; font-family: 'Azeret Mono', monospace; color: var(--text-dim);
+        }
+        .cb-desc { font-size: 10px; color: var(--text-dim); margin-top: 6px; }
+
+        #shortcuts {
+            position: fixed; bottom: 16px; left: 250px; z-index: 10;
+            background: var(--surface); border-radius: 8px; padding: 10px 14px;
+            border: 1px solid var(--border); backdrop-filter: blur(12px);
+            font-size: 10px; font-family: 'Azeret Mono', monospace; color: var(--text-dim);
+        }
+        #shortcuts kbd {
+            display: inline-block; padding: 1px 5px; background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border); border-radius: 3px; color: var(--text);
+            font-size: 9px; margin: 0 1px;
+        }
+
+        #layer-nav::-webkit-scrollbar { width: 4px; }
+        #layer-nav::-webkit-scrollbar-track { background: transparent; }
+        #layer-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+        #controls {
+            display: flex; gap: 4px; margin-left: auto; align-items: center;
+        }
+        .ctrl-btn {
+            padding: 5px 12px; border: 1px solid var(--border); background: transparent;
+            color: var(--text-dim); border-radius: 6px; cursor: pointer; font-size: 11px;
+            font-family: 'Azeret Mono', monospace; transition: all 0.15s;
+        }
+        .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="title">Neural Net Visualizer</div>
+        <div class="subtitle">Loading 134,515,008 weights from SmolLM2-135M...</div>
+        <div id="bar-wrap"><div id="bar-fill"></div></div>
+        <div id="bar-text">Initializing engine...</div>
+    </div>
+
+    <div id="hud">
+        <span class="logo">Neural<span>Net</span></span>
+        <div class="divider"></div>
+        <span class="stat">Model: <b>SmolLM2-135M</b></span>
+        <span class="stat">Points: <b id="s-points">0</b></span>
+        <span class="stat">Visible: <b id="s-drawn">0</b></span>
+        <span class="stat">FPS: <b id="s-fps">0</b></span>
+        <span class="stat">Zoom: <b id="s-zoom">1.0</b></span>
+        <div id="controls">
+            <button class="ctrl-btn" id="btn-fit" title="Zoom to fit (0)">Fit</button>
+            <button class="ctrl-btn" id="btn-top" title="Jump to embedding">Embed</button>
+        </div>
+    </div>
+
+    <div id="layer-nav">
+        <div class="nav-title">Architecture</div>
+        <div id="nav-list"></div>
+    </div>
+
+    <div id="colorbar">
+        <div class="cb-title">Weight Values</div>
+        <div class="cb-bar"></div>
+        <div class="cb-labels">
+            <span>-max (neg)</span>
+            <span>0</span>
+            <span>+max (pos)</span>
+        </div>
+        <div class="cb-desc">Blue = negative, Amber = positive, Dark = near zero</div>
+    </div>
+
+    <div id="tensor-info">
+        <div class="info-title" id="ti-name">Hover a tensor</div>
+        <div class="info-row">Shape: <b id="ti-shape">—</b></div>
+        <div class="info-row">Parameters: <b id="ti-numel">—</b></div>
+        <div class="info-row">Min: <b id="ti-min">—</b> Max: <b id="ti-max">—</b></div>
+        <div class="info-row">Mean: <b id="ti-mean">—</b> Std: <b id="ti-std">—</b></div>
+    </div>
+
+    <div id="shortcuts">
+        <kbd>↑</kbd><kbd>↓</kbd> prev/next tensor &nbsp;
+        <kbd>PgUp</kbd><kbd>PgDn</kbd> prev/next layer &nbsp;
+        <kbd>0</kbd> home
+    </div>
+    <div id="canvas-stack">
+        <canvas id="canvas"></canvas>
+        <canvas id="label-canvas"></canvas>
+    </div>
+    <script type="module" src="main.js?v=100"></script>
+</body>
+</html>

@@ -98,11 +98,11 @@ export async function buildIslands(engine) {
     // DEMO ISLANDS
     // ═══════════════════════════════════════
     const demos = [
-        { key: 'earthquake', title: "Earthquake Explorer", badge: "WebGL2 + Map Tiles", stats: "14K pts · 120 FPS", shot: "shots/earthquake.jpg", url: "../demos/earthquake-explorer/", desc: "Live USGS seismic data on CartoDB Dark Matter tiles." },
-        { key: 'neural', title: "Neural Net Visualizer", badge: "134M Points", stats: "134M pts · 120 FPS", shot: "shots/neural-net.jpg", url: "../demos/neural-net/", desc: "Every weight of SmolLM2-135M as a colored pixel." },
-        { key: 'design', title: "Design Tool", badge: "Full Editor", stats: "Canvas2D · 120 FPS", shot: "shots/design-tool.jpg", url: "../demos/design-tool/", desc: "Figma-like vector editor with layers, pen tool, .fig import." },
-        { key: 'splat', title: "Gaussian Splat Viewer", badge: "2.5M Splats", stats: "2.5M splats · 120 FPS", shot: "shots/splat-viewer.jpg", url: "../demos/splat-viewer/", desc: "3D Gaussian Splatting with real-time depth sorting." },
-        { key: 'genome', title: "Genome Browser", badge: "234K Exons", stats: "28K genes · 120 FPS", shot: "shots/genome-browser.jpg", url: "../demos/genome-browser/", desc: "Human genome GRCh38 across 24 chromosomes." },
+        { key: 'earthquake', title: "Earthquake Explorer", badge: "WebGL2 + Map Tiles", stats: "14K pts · 120 FPS", shot: "shots/earthquake.jpg", url: "./demos/earthquake-explorer/", desc: "Live USGS seismic data on CartoDB Dark Matter tiles." },
+        { key: 'neural', title: "Neural Net Visualizer", badge: "134M Points", stats: "134M pts · 120 FPS", shot: "shots/neural-net.jpg", url: "./demos/neural-net/", desc: "Every weight of SmolLM2-135M as a colored pixel." },
+        { key: 'design', title: "Design Tool", badge: "Full Editor", stats: "Canvas2D · 120 FPS", shot: "shots/design-tool.jpg", url: "./demos/design-tool/", desc: "Figma-like vector editor with layers, pen tool, .fig import." },
+        { key: 'splat', title: "Gaussian Splat Viewer", badge: "2.5M Splats", stats: "2.5M splats · 120 FPS", shot: "shots/splat-viewer.jpg", url: "./demos/splat-viewer/", desc: "3D Gaussian Splatting with real-time depth sorting." },
+        { key: 'genome', title: "Genome Browser", badge: "234K Exons", stats: "28K genes · 120 FPS", shot: "shots/genome-browser.jpg", url: "./demos/genome-browser/", desc: "Human genome GRCh38 across 24 chromosomes." },
     ];
 
     // Load all images in parallel
