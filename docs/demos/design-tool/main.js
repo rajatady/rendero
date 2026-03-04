@@ -255,6 +255,61 @@ canvas.addEventListener('wheel', (e) => {
     render();
 }, { passive: false });
 
+// ─── Touch: Pan + Pinch-to-Zoom ───
+let touchPanning = false;
+let touchStartDist = 0;
+let touchStartZoom = 1;
+
+function touchDist(t1, t2) {
+    const dx = t1.clientX - t2.clientX;
+    const dy = t1.clientY - t2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+        touchPanning = true;
+        app.pan_start(e.touches[0].clientX, e.touches[0].clientY);
+    } else if (e.touches.length === 2) {
+        if (touchPanning) { app.pan_end(); touchPanning = false; }
+        touchStartDist = touchDist(e.touches[0], e.touches[1]);
+        const [,,z] = app.get_camera();
+        touchStartZoom = z;
+        const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        app.pan_start(mx, my);
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (e.touches.length === 1 && touchPanning) {
+        app.pan_move(e.touches[0].clientX, e.touches[0].clientY);
+    } else if (e.touches.length === 2) {
+        const nd = touchDist(e.touches[0], e.touches[1]);
+        const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        app.pan_move(mx, my);
+        const scale = nd / touchStartDist;
+        const nz = Math.max(0.05, Math.min(20, touchStartZoom * scale));
+        const [cx, cy] = app.get_camera();
+        app.set_camera(cx, cy, nz);
+    }
+    render();
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    if (e.touches.length === 0 && touchPanning) {
+        app.pan_end(); touchPanning = false; render();
+    } else if (e.touches.length === 1) {
+        app.pan_end();
+        touchPanning = true;
+        app.pan_start(e.touches[0].clientX, e.touches[0].clientY);
+    }
+}, { passive: false });
+
 // ─── Context menu ───
 canvas.addEventListener('contextmenu', (e) => {
     e.preventDefault();

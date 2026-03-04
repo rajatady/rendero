@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Rendero — Earthquake Explorer</title>
     <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -18,7 +19,7 @@
             --green: #22c55e;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); overflow: hidden; font-family: 'Instrument Sans', system-ui; color: var(--text); }
+        body { background: var(--bg); overflow: hidden; font-family: 'Instrument Sans', system-ui; color: var(--text); touch-action: none; }
 
         #canvas-stack { position: relative; width: 100vw; height: 100vh; }
         #map-canvas, #data-canvas {
@@ -130,6 +131,15 @@
             font-family: 'Azeret Mono', monospace;
         }
         .map-attr a { color: rgba(255,255,255,0.35); text-decoration: none; }
+
+        @media (max-width: 640px) {
+            #legend, #info-panel, .map-attr { display: none; }
+            #hud { padding: 8px 12px; gap: 8px; flex-wrap: wrap; }
+            #hud .logo { font-size: 12px; }
+            #hud .stat { font-size: 10px; }
+            .range-btn { padding: 4px 8px; font-size: 10px; }
+            #controls { gap: 2px; }
+        }
     </style>
 </head>
 <body>

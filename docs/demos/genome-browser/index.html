@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Rendero — Genome Browser</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -28,7 +29,7 @@
         body {
             background: var(--bg); overflow: hidden;
             font-family: 'DM Sans', system-ui; color: var(--text);
-            display: flex; flex-direction: column;
+            display: flex; flex-direction: column; touch-action: none;
         }
 
         /* ─── Top bar: logo + chromosome selector + position ─── */
@@ -157,6 +158,18 @@
         #gene-tooltip .gt-row b { color: var(--text-bright); font-weight: 500; }
         #gene-tooltip .gt-strand-plus { color: var(--gene-plus); }
         #gene-tooltip .gt-strand-minus { color: var(--gene-minus); }
+
+        @media (max-width: 640px) {
+            #track-labels { display: none; }
+            #statusbar span:last-child { display: none; }
+            #topbar { padding: 6px 10px; gap: 6px; flex-wrap: wrap; }
+            #topbar .logo { font-size: 11px; }
+            #chr-select { font-size: 11px; }
+            #pos-display { font-size: 10px; }
+            .tb-stats { font-size: 9px; gap: 8px; }
+            #statusbar { padding: 3px 10px; font-size: 9px; }
+        }
+
         #statusbar kbd {
             display: inline-block; padding: 0 4px; background: rgba(255,255,255,0.04);
             border: 1px solid var(--border); border-radius: 2px; font-size: 9px;

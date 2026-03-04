@@ -327,6 +327,63 @@ canvas.addEventListener('wheel', (e) => {
     hideTooltip();
 }, { passive: false });
 
+// ─── Touch: Pan + Pinch-to-Zoom ───
+let touchPanning = false;
+let touchStartDist = 0;
+let touchStartZoom = 1;
+
+function touchDist(t1, t2) {
+    const dx = t1.clientX - t2.clientX;
+    const dy = t1.clientY - t2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    hideTooltip();
+    if (e.touches.length === 1) {
+        touchPanning = true;
+        engine.pan_start(e.touches[0].clientX, e.touches[0].clientY);
+    } else if (e.touches.length === 2) {
+        if (touchPanning) { engine.pan_end(); touchPanning = false; }
+        touchStartDist = touchDist(e.touches[0], e.touches[1]);
+        const [,,z] = engine.get_camera();
+        touchStartZoom = z;
+        const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        engine.pan_start(mx, my);
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (e.touches.length === 1 && touchPanning) {
+        engine.pan_move(e.touches[0].clientX, e.touches[0].clientY);
+        clampCamera();
+    } else if (e.touches.length === 2) {
+        const nd = touchDist(e.touches[0], e.touches[1]);
+        const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        engine.pan_move(mx, my);
+        const scale = nd / touchStartDist;
+        const nz = Math.max(0.001, Math.min(200, touchStartZoom * scale));
+        const [cx, cy] = engine.get_camera();
+        engine.set_camera(cx, cy, nz);
+        clampCamera();
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    if (e.touches.length === 0 && touchPanning) {
+        engine.pan_end(); touchPanning = false; clampCamera();
+    } else if (e.touches.length === 1) {
+        engine.pan_end();
+        touchPanning = true;
+        engine.pan_start(e.touches[0].clientX, e.touches[0].clientY);
+    }
+}, { passive: false });
+
 // ─── Keyboard shortcuts ───
 document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'SELECT') return;

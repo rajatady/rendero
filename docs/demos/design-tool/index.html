@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Rendero — Design Tool</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -28,6 +29,7 @@
             font-family: 'DM Sans', system-ui, sans-serif;
             overflow: hidden;
             height: 100vh;
+            touch-action: none;
         }
 
         /* ─── App Layout ─── */
@@ -283,6 +285,14 @@
             font-size: 14px;
             color: var(--text-dim);
             font-family: 'JetBrains Mono', monospace;
+        }
+
+        @media (max-width: 640px) {
+            .panel { display: none; }
+            #toolbar { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+            #toolbar::-webkit-scrollbar { display: none; }
+            .tool-btn { font-size: 11px; padding: 5px 8px; }
+            #info { font-size: 10px; }
         }
     </style>
 </head>

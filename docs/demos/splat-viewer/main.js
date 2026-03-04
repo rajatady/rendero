@@ -459,6 +459,55 @@ canvas.addEventListener('wheel', (e) => {
     camRadius = Math.max(0.1, Math.min(100, camRadius));
 }, { passive: false });
 
+// ─── Touch: Orbit + Pinch-to-Zoom ───
+let touchDragging = false;
+let touchLastX = 0, touchLastY = 0;
+let touchStartDist = 0, touchStartRadius = 0;
+
+canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+        touchDragging = true;
+        touchLastX = e.touches[0].clientX;
+        touchLastY = e.touches[0].clientY;
+    } else if (e.touches.length === 2) {
+        touchDragging = false;
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        touchStartDist = Math.sqrt(dx * dx + dy * dy);
+        touchStartRadius = camRadius;
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (e.touches.length === 1 && touchDragging) {
+        const dx = e.touches[0].clientX - touchLastX;
+        const dy = e.touches[0].clientY - touchLastY;
+        touchLastX = e.touches[0].clientX;
+        touchLastY = e.touches[0].clientY;
+        camTheta -= dx * 0.005;
+        camPhi += dy * 0.005;
+        camPhi = Math.max(-1.5, Math.min(1.5, camPhi));
+    } else if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const scale = touchStartDist / dist;
+        camRadius = Math.max(0.1, Math.min(100, touchStartRadius * scale));
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+    e.preventDefault();
+    if (e.touches.length === 0) touchDragging = false;
+    else if (e.touches.length === 1) {
+        touchDragging = true;
+        touchLastX = e.touches[0].clientX;
+        touchLastY = e.touches[0].clientY;
+    }
+}, { passive: false });
+
 // ─── Keyboard ───
 document.addEventListener('keydown', (e) => {
     if (e.key === 'r' || e.key === 'R') {

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Rendero — Neural Net Visualizer</title>
     <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -17,7 +18,7 @@
             --pos: #f59e0b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); overflow: hidden; font-family: 'Instrument Sans', system-ui; color: var(--text); }
+        body { background: var(--bg); overflow: hidden; font-family: 'Instrument Sans', system-ui; color: var(--text); touch-action: none; }
 
         #canvas-stack { position: relative; width: 100vw; height: 100vh; }
         #canvas, #label-canvas {
@@ -143,6 +144,15 @@
             font-family: 'Azeret Mono', monospace; transition: all 0.15s;
         }
         .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        @media (max-width: 640px) {
+            #layer-nav, #colorbar, #tensor-info, #shortcuts { display: none; }
+            #hud { padding: 8px 12px; gap: 8px; flex-wrap: wrap; }
+            #hud .logo { font-size: 12px; }
+            #hud .stat { font-size: 10px; }
+            .ctrl-btn { padding: 4px 8px; font-size: 10px; }
+            #bar-wrap { width: 280px; }
+        }
     </style>
 </head>
 <body>
