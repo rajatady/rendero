@@ -1,111 +1,101 @@
 // ─── Gaussian Splat Viewer ───
 // WebGL2 renderer for .splat files
-// Based on the projection math from antimatter15/splat
+// Rendering pipeline from antimatter15/splat (instanced, front-to-back)
+
+// Register service worker to cache .splat files
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 
 const canvas = document.getElementById('canvas');
 const loading = document.getElementById('loading');
 const barFill = document.getElementById('bar-fill');
 const barText = document.getElementById('bar-text');
 
-const gl = canvas.getContext('webgl2', { antialias: false, premultipliedAlpha: false });
+const gl = canvas.getContext('webgl2', { antialias: false });
 if (!gl) { barText.textContent = 'WebGL2 required.'; throw new Error('No WebGL2'); }
 
 // ─── Scene URLs ───
 const SCENES = {
-    plush:  'https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/bonsai/point_cloud.splat',
-    nike:   'https://media.reshot.ai/models/nike_next/model.splat',
+    plush:  'https://huggingface.co/cakewalk/splat-data/resolve/main/plush.splat',
+    nike:   'https://huggingface.co/cakewalk/splat-data/resolve/main/nike.splat',
     stump:  'https://huggingface.co/cakewalk/splat-data/resolve/main/stump.splat',
     truck:  'https://huggingface.co/cakewalk/splat-data/resolve/main/truck.splat',
     garden: 'https://huggingface.co/cakewalk/splat-data/resolve/main/garden.splat',
 };
 
-// ─── Shaders (following antimatter15 proven math) ───
+// ─── Shaders (identical to antimatter15/splat) ───
 const VERT_SRC = `#version 300 es
 precision highp float;
 precision highp int;
 
 uniform highp usampler2D u_texture;
-uniform mat4 u_proj;
-uniform mat4 u_view;
-uniform vec2 u_focal;
-uniform vec2 u_viewport;
+uniform mat4 projection, view;
+uniform vec2 focal;
+uniform vec2 viewport;
 
-in vec2 a_quad;
-in int a_index;
+in vec2 position;
+in int index;
 
-out vec4 v_color;
-out vec2 v_position;
+out vec4 vColor;
+out vec2 vPosition;
 
-void main() {
-    // Fetch center position from texture
-    uvec4 cen = texelFetch(u_texture, ivec2((uint(a_index) & 0x3ffu) << 1, uint(a_index) >> 10), 0);
-    vec4 cam = u_view * vec4(uintBitsToFloat(cen.xyz), 1);
-    vec4 pos2d = u_proj * cam;
+void main () {
+    uvec4 cen = texelFetch(u_texture, ivec2((uint(index) & 0x3ffu) << 1, uint(index) >> 10), 0);
+    vec4 cam = view * vec4(uintBitsToFloat(cen.xyz), 1);
+    vec4 pos2d = projection * cam;
 
-    // Frustum cull
     float clip = 1.2 * pos2d.w;
     if (pos2d.z < -clip || pos2d.x < -clip || pos2d.x > clip || pos2d.y < -clip || pos2d.y > clip) {
         gl_Position = vec4(0.0, 0.0, 2.0, 1.0);
         return;
     }
 
-    // Fetch covariance + color from texture
-    uvec4 cov = texelFetch(u_texture, ivec2(((uint(a_index) & 0x3ffu) << 1) | 1u, uint(a_index) >> 10), 0);
+    uvec4 cov = texelFetch(u_texture, ivec2(((uint(index) & 0x3ffu) << 1) | 1u, uint(index) >> 10), 0);
     vec2 u1 = unpackHalf2x16(cov.x), u2 = unpackHalf2x16(cov.y), u3 = unpackHalf2x16(cov.z);
     mat3 Vrk = mat3(u1.x, u1.y, u2.x, u1.y, u2.y, u3.x, u2.x, u3.x, u3.y);
 
-    // Jacobian of projection
     mat3 J = mat3(
-        u_focal.x / cam.z, 0., -(u_focal.x * cam.x) / (cam.z * cam.z),
-        0., -u_focal.y / cam.z, (u_focal.y * cam.y) / (cam.z * cam.z),
+        focal.x / cam.z, 0., -(focal.x * cam.x) / (cam.z * cam.z),
+        0., -focal.y / cam.z, (focal.y * cam.y) / (cam.z * cam.z),
         0., 0., 0.
     );
 
-    mat3 T = transpose(mat3(u_view)) * J;
+    mat3 T = transpose(mat3(view)) * J;
     mat3 cov2d = transpose(T) * Vrk * T;
-
-    // Low-pass filter: prevent degenerate / sub-pixel splats (matches 3DGS paper + antimatter15)
-    cov2d[0][0] += 0.3;
-    cov2d[1][1] += 0.3;
 
     float mid = (cov2d[0][0] + cov2d[1][1]) / 2.0;
     float radius = length(vec2((cov2d[0][0] - cov2d[1][1]) / 2.0, cov2d[0][1]));
     float lambda1 = mid + radius, lambda2 = mid - radius;
 
-    if (lambda2 < 0.0) return;
+    if(lambda2 < 0.0) return;
+    vec2 diagonalVector = normalize(vec2(cov2d[0][1], lambda1 - cov2d[0][0]));
+    vec2 majorAxis = min(sqrt(2.0 * lambda1), 1024.0) * diagonalVector;
+    vec2 minorAxis = min(sqrt(2.0 * lambda2), 1024.0) * vec2(diagonalVector.y, -diagonalVector.x);
 
-    // Eigenvector for major axis — handle near-isotropic case where both components → 0
-    vec2 v1 = vec2(cov2d[0][1], lambda1 - cov2d[0][0]);
-    float v1len = length(v1);
-    vec2 diag = v1len > 1.0e-6 ? v1 / v1len : vec2(1.0, 0.0);
-    vec2 majorAxis = min(sqrt(2.0 * lambda1), 1024.0) * diag;
-    vec2 minorAxis = min(sqrt(2.0 * lambda2), 1024.0) * vec2(diag.y, -diag.x);
-
-    // Color from packed uint
-    v_color = clamp(pos2d.z / pos2d.w + 1.0, 0.0, 1.0) *
-        vec4((cov.w) & 0xffu, (cov.w >> 8) & 0xffu, (cov.w >> 16) & 0xffu, (cov.w >> 24) & 0xffu) / 255.0;
-    v_position = a_quad;
+    vColor = clamp(pos2d.z/pos2d.w+1.0, 0.0, 1.0) * vec4((cov.w) & 0xffu, (cov.w >> 8) & 0xffu, (cov.w >> 16) & 0xffu, (cov.w >> 24) & 0xffu) / 255.0;
+    vPosition = position;
 
     vec2 vCenter = vec2(pos2d) / pos2d.w;
     gl_Position = vec4(
-        vCenter + a_quad.x * majorAxis / u_viewport + a_quad.y * minorAxis / u_viewport,
-        0.0, 1.0
-    );
+        vCenter
+        + position.x * majorAxis / viewport
+        + position.y * minorAxis / viewport, 0.0, 1.0);
 }
 `;
 
 const FRAG_SRC = `#version 300 es
 precision highp float;
 
-in vec4 v_color;
-in vec2 v_position;
+in vec4 vColor;
+in vec2 vPosition;
 out vec4 fragColor;
 
-void main() {
-    float A = -dot(v_position, v_position);
+void main () {
+    float A = -dot(vPosition, vPosition);
     if (A < -4.0) discard;
-    float B = exp(A) * v_color.a;
-    fragColor = vec4(B * v_color.rgb, B);
+    float B = exp(A) * vColor.a;
+    fragColor = vec4(B * vColor.rgb, B);
 }
 `;
 
@@ -129,238 +119,316 @@ if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     console.error(gl.getProgramInfoLog(program));
     throw new Error('Link fail');
 }
+gl.useProgram(program);
 
-const u_proj = gl.getUniformLocation(program, 'u_proj');
-const u_view = gl.getUniformLocation(program, 'u_view');
-const u_focal = gl.getUniformLocation(program, 'u_focal');
-const u_viewport = gl.getUniformLocation(program, 'u_viewport');
+const u_proj = gl.getUniformLocation(program, 'projection');
+const u_view = gl.getUniformLocation(program, 'view');
+const u_focal = gl.getUniformLocation(program, 'focal');
+const u_viewport = gl.getUniformLocation(program, 'viewport');
 const u_texture = gl.getUniformLocation(program, 'u_texture');
-const a_quad = gl.getAttribLocation(program, 'a_quad');
-const a_index = gl.getAttribLocation(program, 'a_index');
 
-// ─── Sort worker ───
-const sortWorker = new Worker('sort-worker.js');
-let sortPending = false;
-let lastSortTime = 0;
+// ─── GL state (set once, like antimatter15) ───
+gl.disable(gl.DEPTH_TEST);
+gl.enable(gl.BLEND);
+gl.blendFuncSeparate(gl.ONE_MINUS_DST_ALPHA, gl.ONE, gl.ONE_MINUS_DST_ALPHA, gl.ONE);
+gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
+
+// ─── Shared quad (4 vertices, instanced) ───
+const quadVerts = new Float32Array([-2, -2, 2, -2, 2, 2, -2, 2]);
+const quadBuf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+gl.bufferData(gl.ARRAY_BUFFER, quadVerts, gl.STATIC_DRAW);
+const a_position = gl.getAttribLocation(program, 'position');
+gl.enableVertexAttribArray(a_position);
+gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+
+// ─── Per-instance index buffer ───
+const indexBuffer = gl.createBuffer();
+const a_index = gl.getAttribLocation(program, 'index');
+gl.enableVertexAttribArray(a_index);
+gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
+gl.vertexAttribIPointer(a_index, 1, gl.INT, false, 0, 0);
+gl.vertexAttribDivisor(a_index, 1);
+
+// ─── Texture ───
+const splatTexture = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, splatTexture);
+gl.uniform1i(u_texture, 0);
+
+// ─── Inline sort worker (matches antimatter15 approach) ───
+function createSortWorker(self) {
+    let buffer;
+    let vertexCount = 0;
+    let viewProj;
+    const rowLength = 3 * 4 + 3 * 4 + 4 + 4;
+    let lastProj = [];
+    let lastVertexCount = 0;
+    let sortRunning = false;
+
+    var _floatView = new Float32Array(1);
+    var _int32View = new Int32Array(_floatView.buffer);
+
+    function floatToHalf(float) {
+        _floatView[0] = float;
+        var f = _int32View[0];
+        var sign = (f >> 31) & 0x0001;
+        var exp = (f >> 23) & 0x00ff;
+        var frac = f & 0x007fffff;
+        var newExp;
+        if (exp == 0) { newExp = 0; }
+        else if (exp < 113) {
+            newExp = 0;
+            frac |= 0x00800000;
+            frac = frac >> (113 - exp);
+            if (frac & 0x01000000) { newExp = 1; frac = 0; }
+        } else if (exp < 142) { newExp = exp - 112; }
+        else { newExp = 31; frac = 0; }
+        return (sign << 15) | (newExp << 10) | (frac >> 13);
+    }
+
+    function packHalf2x16(x, y) {
+        return (floatToHalf(x) | (floatToHalf(y) << 16)) >>> 0;
+    }
+
+    function generateTexture() {
+        if (!buffer) return;
+        const f_buffer = new Float32Array(buffer);
+        const u_buffer = new Uint8Array(buffer);
+
+        var texwidth = 1024 * 2;
+        var texheight = Math.ceil((2 * vertexCount) / texwidth);
+        var texdata = new Uint32Array(texwidth * texheight * 4);
+        var texdata_c = new Uint8Array(texdata.buffer);
+        var texdata_f = new Float32Array(texdata.buffer);
+
+        for (let i = 0; i < vertexCount; i++) {
+            // Position (reinterpret float bits directly)
+            texdata_f[8 * i + 0] = f_buffer[8 * i + 0];
+            texdata_f[8 * i + 1] = f_buffer[8 * i + 1];
+            texdata_f[8 * i + 2] = f_buffer[8 * i + 2];
+
+            // Color
+            texdata_c[4 * (8 * i + 7) + 0] = u_buffer[32 * i + 24 + 0];
+            texdata_c[4 * (8 * i + 7) + 1] = u_buffer[32 * i + 24 + 1];
+            texdata_c[4 * (8 * i + 7) + 2] = u_buffer[32 * i + 24 + 2];
+            texdata_c[4 * (8 * i + 7) + 3] = u_buffer[32 * i + 24 + 3];
+
+            // Quaternion + Scale
+            let scale = [
+                f_buffer[8 * i + 3 + 0],
+                f_buffer[8 * i + 3 + 1],
+                f_buffer[8 * i + 3 + 2],
+            ];
+            let rot = [
+                (u_buffer[32 * i + 28 + 0] - 128) / 128,
+                (u_buffer[32 * i + 28 + 1] - 128) / 128,
+                (u_buffer[32 * i + 28 + 2] - 128) / 128,
+                (u_buffer[32 * i + 28 + 3] - 128) / 128,
+            ];
+
+            const M = [
+                1.0 - 2.0 * (rot[2] * rot[2] + rot[3] * rot[3]),
+                2.0 * (rot[1] * rot[2] + rot[0] * rot[3]),
+                2.0 * (rot[1] * rot[3] - rot[0] * rot[2]),
+                2.0 * (rot[1] * rot[2] - rot[0] * rot[3]),
+                1.0 - 2.0 * (rot[1] * rot[1] + rot[3] * rot[3]),
+                2.0 * (rot[2] * rot[3] + rot[0] * rot[1]),
+                2.0 * (rot[1] * rot[3] + rot[0] * rot[2]),
+                2.0 * (rot[2] * rot[3] - rot[0] * rot[1]),
+                1.0 - 2.0 * (rot[1] * rot[1] + rot[2] * rot[2]),
+            ].map((k, i) => k * scale[Math.floor(i / 3)]);
+
+            const sigma = [
+                M[0] * M[0] + M[3] * M[3] + M[6] * M[6],
+                M[0] * M[1] + M[3] * M[4] + M[6] * M[7],
+                M[0] * M[2] + M[3] * M[5] + M[6] * M[8],
+                M[1] * M[1] + M[4] * M[4] + M[7] * M[7],
+                M[1] * M[2] + M[4] * M[5] + M[7] * M[8],
+                M[2] * M[2] + M[5] * M[5] + M[8] * M[8],
+            ];
+
+            texdata[8 * i + 4] = packHalf2x16(4 * sigma[0], 4 * sigma[1]);
+            texdata[8 * i + 5] = packHalf2x16(4 * sigma[2], 4 * sigma[3]);
+            texdata[8 * i + 6] = packHalf2x16(4 * sigma[4], 4 * sigma[5]);
+        }
+
+        self.postMessage({ texdata, texwidth, texheight }, [texdata.buffer]);
+    }
+
+    function runSort(viewProj) {
+        if (!buffer) return;
+        const f_buffer = new Float32Array(buffer);
+        if (lastVertexCount == vertexCount) {
+            let dot = lastProj[2] * viewProj[2] + lastProj[6] * viewProj[6] + lastProj[10] * viewProj[10];
+            if (Math.abs(dot - 1) < 0.01) return;
+        } else {
+            generateTexture();
+            lastVertexCount = vertexCount;
+        }
+
+        let maxDepth = -Infinity;
+        let minDepth = Infinity;
+        let sizeList = new Int32Array(vertexCount);
+        for (let i = 0; i < vertexCount; i++) {
+            let depth = ((viewProj[2] * f_buffer[8 * i + 0] +
+                viewProj[6] * f_buffer[8 * i + 1] +
+                viewProj[10] * f_buffer[8 * i + 2]) * 4096) | 0;
+            sizeList[i] = depth;
+            if (depth > maxDepth) maxDepth = depth;
+            if (depth < minDepth) minDepth = depth;
+        }
+
+        let depthInv = (256 * 256 - 1) / (maxDepth - minDepth);
+        let counts0 = new Uint32Array(256 * 256);
+        for (let i = 0; i < vertexCount; i++) {
+            sizeList[i] = ((sizeList[i] - minDepth) * depthInv) | 0;
+            counts0[sizeList[i]]++;
+        }
+        let starts0 = new Uint32Array(256 * 256);
+        for (let i = 1; i < 256 * 256; i++)
+            starts0[i] = starts0[i - 1] + counts0[i - 1];
+        let depthIndex = new Uint32Array(vertexCount);
+        for (let i = 0; i < vertexCount; i++)
+            depthIndex[starts0[sizeList[i]]++] = i;
+
+        lastProj = viewProj;
+        self.postMessage({ depthIndex, viewProj, vertexCount }, [depthIndex.buffer]);
+    }
+
+    const throttledSort = () => {
+        if (!sortRunning) {
+            sortRunning = true;
+            let lastView = viewProj;
+            runSort(lastView);
+            setTimeout(() => {
+                sortRunning = false;
+                if (lastView !== viewProj) throttledSort();
+            }, 0);
+        }
+    };
+
+    self.onmessage = (e) => {
+        if (e.data.buffer) {
+            buffer = e.data.buffer;
+            vertexCount = e.data.vertexCount;
+        } else if (e.data.vertexCount) {
+            vertexCount = e.data.vertexCount;
+        } else if (e.data.view) {
+            viewProj = e.data.view;
+            throttledSort();
+        }
+    };
+}
+
+const worker = new Worker(
+    URL.createObjectURL(
+        new Blob(['(', createSortWorker.toString(), ')(self)'], {
+            type: 'application/javascript',
+        }),
+    ),
+);
 
 // ─── State ───
 let splatCount = 0;
-let splatTexture = null;
-let vao = null;
-let indexBuf = null;
-let rawPositions = null; // Float32Array of [x,y,z] for sorting
+let vertexCount = 0;
 
-// Texture dimensions (2 texels per splat, width up to 2048)
-const TEX_W = 2048;
-
-sortWorker.onmessage = (e) => {
-    const { sortedIndices, timeMs } = e.data;
-    lastSortTime = timeMs;
-    sortPending = false;
-    // Re-upload index buffer with sorted order
-    if (indexBuf) {
-        // Build sorted index attribute
-        const idx = new Int32Array(sortedIndices.length * 4);
-        for (let i = 0; i < sortedIndices.length; i++) {
-            idx[i * 4] = sortedIndices[i];
-            idx[i * 4 + 1] = sortedIndices[i];
-            idx[i * 4 + 2] = sortedIndices[i];
-            idx[i * 4 + 3] = sortedIndices[i];
-        }
-        gl.bindBuffer(gl.ARRAY_BUFFER, indexBuf);
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, idx);
+// ─── Worker message handler ───
+worker.onmessage = (e) => {
+    if (e.data.texdata) {
+        const { texdata, texwidth, texheight } = e.data;
+        gl.bindTexture(gl.TEXTURE_2D, splatTexture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32UI, texwidth, texheight, 0,
+            gl.RGBA_INTEGER, gl.UNSIGNED_INT, texdata);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, splatTexture);
+    } else if (e.data.depthIndex) {
+        const { depthIndex, viewProj } = e.data;
+        gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, depthIndex, gl.DYNAMIC_DRAW);
+        vertexCount = e.data.vertexCount;
+        lastSortTime = performance.now() - lastSortReqTime;
     }
 };
 
-// ─── Parse .splat and build GPU texture ───
-function processSplat(buffer) {
-    const count = buffer.byteLength / 32;
-    splatCount = count;
-    barText.textContent = `Processing ${count.toLocaleString()} gaussians...`;
-
-    const f32 = new Float32Array(buffer);
-    const u8 = new Uint8Array(buffer);
-
-    // Store positions for sorting
-    rawPositions = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-        rawPositions[i * 3] = f32[i * 8];
-        rawPositions[i * 3 + 1] = f32[i * 8 + 1];
-        rawPositions[i * 3 + 2] = f32[i * 8 + 2];
-    }
-
-    // Build texture data: 2 texels per splat
-    // Texel 0: position (xyz as float bits in uint) + w unused
-    // Texel 1: covariance (6 floats packed as 3 half-float pairs) + packed RGBA color
-    const texH = Math.ceil(count / (TEX_W / 2));  // /2 because 2 texels per splat
-    const texData = new Uint32Array(TEX_W * texH * 4); // RGBA32UI
-
-    for (let i = 0; i < count; i++) {
-        const bOff = i * 32;
-        const fOff = i * 8;
-
-        // Position
-        const px = f32[fOff], py = f32[fOff + 1], pz = f32[fOff + 2];
-
-        // Scale (stored as floats in the .splat)
-        const sx = f32[fOff + 3], sy = f32[fOff + 4], sz = f32[fOff + 5];
-
-        // Rotation quaternion from uint8: byte order is (w, x, y, z)
-        let rw = (u8[bOff + 28] - 128) / 128;
-        let rx = (u8[bOff + 29] - 128) / 128;
-        let ry = (u8[bOff + 30] - 128) / 128;
-        let rz = (u8[bOff + 31] - 128) / 128;
-        // Normalize quaternion (quantization denormalizes it)
-        const qlen = Math.sqrt(rw * rw + rx * rx + ry * ry + rz * rz) || 1;
-        const rot = [rw / qlen, rx / qlen, ry / qlen, rz / qlen];
-
-        // Rotation-scale matrix M (antimatter15 convention: scale per row)
-        const M = [
-            1.0 - 2.0 * (rot[2] * rot[2] + rot[3] * rot[3]),
-            2.0 * (rot[1] * rot[2] + rot[0] * rot[3]),
-            2.0 * (rot[1] * rot[3] - rot[0] * rot[2]),
-
-            2.0 * (rot[1] * rot[2] - rot[0] * rot[3]),
-            1.0 - 2.0 * (rot[1] * rot[1] + rot[3] * rot[3]),
-            2.0 * (rot[2] * rot[3] + rot[0] * rot[1]),
-
-            2.0 * (rot[1] * rot[3] + rot[0] * rot[2]),
-            2.0 * (rot[2] * rot[3] - rot[0] * rot[1]),
-            1.0 - 2.0 * (rot[1] * rot[1] + rot[2] * rot[2]),
-        ].map((k, i) => k * [sx, sy, sz][Math.floor(i / 3)]);
-
-        // Covariance Sigma = M * M^T (symmetric 3x3, 6 unique values)
-        const sigma = [
-            M[0] * M[0] + M[3] * M[3] + M[6] * M[6],
-            M[0] * M[1] + M[3] * M[4] + M[6] * M[7],
-            M[0] * M[2] + M[3] * M[5] + M[6] * M[8],
-            M[1] * M[1] + M[4] * M[4] + M[7] * M[7],
-            M[1] * M[2] + M[4] * M[5] + M[7] * M[8],
-            M[2] * M[2] + M[5] * M[5] + M[8] * M[8],
-        ];
-
-        // Color (RGBA packed into one uint32)
-        const r = u8[bOff + 24], g = u8[bOff + 25], b = u8[bOff + 26], a = u8[bOff + 27];
-        const packedColor = r | (g << 8) | (b << 16) | (a << 24);
-
-        // Pack sigma as half-floats
-        const sigHalf = sigma.map(floatToHalf);
-
-        // Texel row = i >> 10, col = (i & 0x3ff) << 1
-        const row = i >> 10;
-        const col = (i & 0x3FF) << 1;
-
-        // Texel 0: position (as uint bits)
-        const t0 = (row * TEX_W + col) * 4;
-        const pxU = new Float32Array([px]);
-        const pyU = new Float32Array([py]);
-        const pzU = new Float32Array([pz]);
-        texData[t0] = new Uint32Array(pxU.buffer)[0];
-        texData[t0 + 1] = new Uint32Array(pyU.buffer)[0];
-        texData[t0 + 2] = new Uint32Array(pzU.buffer)[0];
-        texData[t0 + 3] = 0;
-
-        // Texel 1: covariance (half-float pairs) + packed color
-        const t1 = (row * TEX_W + col + 1) * 4;
-        texData[t1] = sigHalf[0] | (sigHalf[1] << 16);
-        texData[t1 + 1] = sigHalf[2] | (sigHalf[3] << 16);
-        texData[t1 + 2] = sigHalf[4] | (sigHalf[5] << 16);
-        texData[t1 + 3] = packedColor;
-    }
-
-    // Upload texture
-    if (splatTexture) gl.deleteTexture(splatTexture);
-    splatTexture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, splatTexture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32UI, TEX_W, texH, 0, gl.RGBA_INTEGER, gl.UNSIGNED_INT, texData);
-
-    // Build VAO with quad + per-vertex index
-    if (vao) gl.deleteVertexArray(vao);
-    vao = gl.createVertexArray();
-    gl.bindVertexArray(vao);
-
-    // Quad positions (4 verts per splat, triangle strip)
-    // But we need indexed rendering for sorted order
-    // Actually: 6 verts per splat (2 triangles), each carrying the splat index
-    const quadData = new Float32Array(count * 4 * 2); // 4 verts * 2 floats per splat
-    const indexData = new Int32Array(count * 4);
-    for (let i = 0; i < count; i++) {
-        const off = i * 8;
-        quadData[off] = -2; quadData[off + 1] = -2;
-        quadData[off + 2] = 2; quadData[off + 3] = -2;
-        quadData[off + 4] = -2; quadData[off + 5] = 2;
-        quadData[off + 6] = 2; quadData[off + 7] = 2;
-        indexData[i * 4] = i;
-        indexData[i * 4 + 1] = i;
-        indexData[i * 4 + 2] = i;
-        indexData[i * 4 + 3] = i;
-    }
-
-    const quadBuf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
-    gl.bufferData(gl.ARRAY_BUFFER, quadData, gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(a_quad);
-    gl.vertexAttribPointer(a_quad, 2, gl.FLOAT, false, 0, 0);
-
-    indexBuf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, indexBuf);
-    gl.bufferData(gl.ARRAY_BUFFER, indexData, gl.DYNAMIC_DRAW);
-    gl.enableVertexAttribArray(a_index);
-    gl.vertexAttribIPointer(a_index, 1, gl.INT, 0, 0);
-
-    // Element buffer for triangle strip → triangles
-    const eleBuf = gl.createBuffer();
-    const elements = new Uint32Array(count * 6);
-    for (let i = 0; i < count; i++) {
-        const v = i * 4;
-        const e = i * 6;
-        elements[e] = v; elements[e + 1] = v + 1; elements[e + 2] = v + 2;
-        elements[e + 3] = v + 1; elements[e + 4] = v + 3; elements[e + 5] = v + 2;
-    }
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, eleBuf);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, elements, gl.STATIC_DRAW);
-
-    gl.bindVertexArray(null);
-
-    return count;
-}
-
-// ─── Float to half-float ───
-const floatView = new Float32Array(1);
-const int32View = new Int32Array(floatView.buffer);
-function floatToHalf(val) {
-    floatView[0] = val;
-    const x = int32View[0];
-    let bits = (x >> 16) & 0x8000;
-    let m = (x >> 12) & 0x07ff;
-    let e = (x >> 23) & 0xff;
-    if (e < 103) return bits;
-    if (e > 142) {
-        bits |= 0x7c00;
-        bits |= ((e === 255) ? 0 : 1) && (x & 0x007fffff);
-        return bits;
-    }
-    if (e < 113) {
-        m |= 0x0800;
-        bits |= (m >> (114 - e)) + ((m >> (113 - e)) & 1);
-        return bits;
-    }
-    bits |= ((e - 112) << 10) | (m >> 1);
-    bits += m & 1;
-    return bits;
-}
-
-// ─── 3D Camera ───
-let camTheta = 0.5;
-let camPhi = 0.4;
-let camRadius = 4.0;
+// ─── Camera (orbit) ───
+let camTheta = 4.236;
+let camPhi = -0.023;
+let camRadius = 6.5;
 let camTarget = [0, 0, 0];
-let camFovY = 50 * Math.PI / 180;
+
+// Use antimatter15's focal length (from their default camera)
+const focalX = 1159.5880733038064;
+const focalY = 1164.6601287484507;
+
+// antimatter15 projection matrix (positive Z forward convention)
+function getProjectionMatrix(fx, fy, width, height) {
+    const znear = 0.2;
+    const zfar = 200;
+    return new Float32Array([
+        (2 * fx) / width, 0, 0, 0,
+        0, -(2 * fy) / height, 0, 0,
+        0, 0, zfar / (zfar - znear), 1,
+        0, 0, -(zfar * znear) / (zfar - znear), 0,
+    ]);
+}
+
+// View matrix matching antimatter15's convention (cam.z > 0 for visible objects)
+// Uses the same matrix layout as antimatter15's getViewMatrix
+function getViewMatrix(eye, target, up) {
+    // Forward = normalize(target - eye) → maps to +Z in camera space
+    let fx = target[0] - eye[0], fy = target[1] - eye[1], fz = target[2] - eye[2];
+    let len = Math.sqrt(fx * fx + fy * fy + fz * fz) || 1;
+    fx /= len; fy /= len; fz /= len;
+
+    // Right = normalize(worldUp × forward) → matches antimatter15 convention
+    let rx = up[1] * fz - up[2] * fy;
+    let ry = up[2] * fx - up[0] * fz;
+    let rz = up[0] * fy - up[1] * fx;
+    len = Math.sqrt(rx * rx + ry * ry + rz * rz) || 1;
+    rx /= len; ry /= len; rz /= len;
+
+    // True up = normalize(forward × right) → maps to +Y in camera space
+    const ux = fy * rz - fz * ry;
+    const uy = fz * rx - fx * rz;
+    const uz = fx * ry - fy * rx;
+
+    // Column-major 4x4 (same layout as antimatter15's view matrices)
+    return new Float32Array([
+        rx, ux, fx, 0,
+        ry, uy, fy, 0,
+        rz, uz, fz, 0,
+        -(rx * eye[0] + ry * eye[1] + rz * eye[2]),
+        -(ux * eye[0] + uy * eye[1] + uz * eye[2]),
+        -(fx * eye[0] + fy * eye[1] + fz * eye[2]),
+        1,
+    ]);
+}
+
+function multiply4(a, b) {
+    return new Float32Array([
+        b[0]*a[0]+b[1]*a[4]+b[2]*a[8]+b[3]*a[12],
+        b[0]*a[1]+b[1]*a[5]+b[2]*a[9]+b[3]*a[13],
+        b[0]*a[2]+b[1]*a[6]+b[2]*a[10]+b[3]*a[14],
+        b[0]*a[3]+b[1]*a[7]+b[2]*a[11]+b[3]*a[15],
+        b[4]*a[0]+b[5]*a[4]+b[6]*a[8]+b[7]*a[12],
+        b[4]*a[1]+b[5]*a[5]+b[6]*a[9]+b[7]*a[13],
+        b[4]*a[2]+b[5]*a[6]+b[6]*a[10]+b[7]*a[14],
+        b[4]*a[3]+b[5]*a[7]+b[6]*a[11]+b[7]*a[15],
+        b[8]*a[0]+b[9]*a[4]+b[10]*a[8]+b[11]*a[12],
+        b[8]*a[1]+b[9]*a[5]+b[10]*a[9]+b[11]*a[13],
+        b[8]*a[2]+b[9]*a[6]+b[10]*a[10]+b[11]*a[14],
+        b[8]*a[3]+b[9]*a[7]+b[10]*a[11]+b[11]*a[15],
+        b[12]*a[0]+b[13]*a[4]+b[14]*a[8]+b[15]*a[12],
+        b[12]*a[1]+b[13]*a[5]+b[14]*a[9]+b[15]*a[13],
+        b[12]*a[2]+b[13]*a[6]+b[14]*a[10]+b[15]*a[14],
+        b[12]*a[3]+b[13]*a[7]+b[14]*a[11]+b[15]*a[15],
+    ]);
+}
 
 function getCameraPos() {
     return [
@@ -370,59 +438,15 @@ function getCameraPos() {
     ];
 }
 
-// ─── Matrix math ───
-function mat4Perspective(fovY, aspect, near, far) {
-    const f = 1 / Math.tan(fovY / 2);
-    const nf = 1 / (near - far);
-    return new Float32Array([
-        f / aspect, 0, 0, 0,
-        0, f, 0, 0,
-        0, 0, (far + near) * nf, -1,
-        0, 0, 2 * far * near * nf, 0,
-    ]);
-}
-
-function mat4LookAt(eye, center, up) {
-    const zx = eye[0] - center[0], zy = eye[1] - center[1], zz = eye[2] - center[2];
-    let len = 1 / (Math.sqrt(zx * zx + zy * zy + zz * zz) || 1);
-    const fz = [zx * len, zy * len, zz * len];
-    const sx = up[1] * fz[2] - up[2] * fz[1];
-    const sy = up[2] * fz[0] - up[0] * fz[2];
-    const sz = up[0] * fz[1] - up[1] * fz[0];
-    len = 1 / (Math.sqrt(sx * sx + sy * sy + sz * sz) || 1);
-    const fs = [sx * len, sy * len, sz * len];
-    const ux = fz[1] * fs[2] - fz[2] * fs[1];
-    const uy = fz[2] * fs[0] - fz[0] * fs[2];
-    const uz = fz[0] * fs[1] - fz[1] * fs[0];
-    return new Float32Array([
-        fs[0], ux, fz[0], 0,
-        fs[1], uy, fz[1], 0,
-        fs[2], uz, fz[2], 0,
-        -(fs[0] * eye[0] + fs[1] * eye[1] + fs[2] * eye[2]),
-        -(ux * eye[0] + uy * eye[1] + uz * eye[2]),
-        -(fz[0] * eye[0] + fz[1] * eye[1] + fz[2] * eye[2]),
-        1,
-    ]);
-}
-
-function mat4Multiply(a, b) {
-    const out = new Float32Array(16);
-    for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-            out[j * 4 + i] = a[i] * b[j * 4] + a[4 + i] * b[j * 4 + 1] +
-                              a[8 + i] * b[j * 4 + 2] + a[12 + i] * b[j * 4 + 3];
-        }
-    }
-    return out;
-}
-
 // ─── Resize ───
-const dpr = window.devicePixelRatio || 1;
 function resize() {
-    const cssW = window.innerWidth, cssH = window.innerHeight;
-    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
-    canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
     gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2fv(u_focal, new Float32Array([focalX, focalY]));
+    gl.uniform2fv(u_viewport, new Float32Array([innerWidth, innerHeight]));
+    gl.uniformMatrix4fv(u_proj, false,
+        getProjectionMatrix(focalX, focalY, innerWidth, innerHeight));
 }
 resize();
 window.addEventListener('resize', resize);
@@ -511,7 +535,7 @@ canvas.addEventListener('touchend', e => {
 // ─── Keyboard ───
 document.addEventListener('keydown', (e) => {
     if (e.key === 'r' || e.key === 'R') {
-        camTheta = 0.5; camPhi = 0.4; camRadius = 4.0; camTarget = [0, 0, 0];
+        camTheta = 4.236; camPhi = -0.023; camRadius = 6.5; camTarget = [0, 0, 0];
     }
     if (e.key >= '1' && e.key <= '5') {
         const scenes = Object.keys(SCENES);
@@ -527,22 +551,6 @@ document.getElementById('scene-select').addEventListener('change', (e) => {
     loadScene(e.target.value);
 });
 
-// ─── Request sort ───
-function requestSort() {
-    if (sortPending || !rawPositions) return;
-    sortPending = true;
-    const eye = getCameraPos();
-    const view = mat4LookAt(eye, camTarget, [0, 1, 0]);
-    const aspect = canvas.width / canvas.height;
-    const proj = mat4Perspective(camFovY, aspect, 0.1, 200);
-    const viewProj = mat4Multiply(proj, view);
-    sortWorker.postMessage({
-        positions: rawPositions,
-        viewProj,
-        count: splatCount,
-    });
-}
-
 // ─── Load scene ───
 async function loadScene(name) {
     const url = SCENES[name];
@@ -552,6 +560,7 @@ async function loadScene(name) {
     barFill.style.width = '0%';
     barText.textContent = `Fetching ${name}...`;
     splatCount = 0;
+    vertexCount = 0;
 
     try {
         const resp = await fetch(url);
@@ -584,25 +593,23 @@ async function loadScene(name) {
         barText.textContent = 'Processing splats...';
         await new Promise(r => setTimeout(r, 0));
 
-        const count = processSplat(buffer);
+        const rowLength = 32;
+        splatCount = Math.floor(received / rowLength);
 
-        document.getElementById('s-count').textContent = count.toLocaleString();
+        // Send buffer to worker (it generates texture + sorts)
+        worker.postMessage({
+            buffer: buffer,
+            vertexCount: splatCount,
+        });
+
+        camTarget = [0, 0, 0];
+        camRadius = 6.5; camTheta = 4.236; camPhi = -0.023;
+
+        document.getElementById('s-count').textContent = splatCount.toLocaleString();
         document.getElementById('i-file').textContent = name + '.splat';
         document.getElementById('i-size').textContent = (received / 1e6).toFixed(1) + ' MB';
-        document.getElementById('i-gaussians').textContent = count.toLocaleString();
+        document.getElementById('i-gaussians').textContent = splatCount.toLocaleString();
 
-        // Auto-center
-        let cx = 0, cy = 0, cz = 0;
-        const n = Math.min(count, 50000);
-        for (let i = 0; i < n; i++) {
-            cx += rawPositions[i * 3];
-            cy += rawPositions[i * 3 + 1];
-            cz += rawPositions[i * 3 + 2];
-        }
-        camTarget = [cx / n, cy / n, cz / n];
-        camRadius = 4.0; camTheta = 0.5; camPhi = 0.4;
-
-        requestSort();
         loading.style.display = 'none';
     } catch (err) {
         barText.textContent = `Error: ${err.message}`;
@@ -612,49 +619,27 @@ async function loadScene(name) {
 
 // ─── Render ───
 let lastTime = performance.now();
-let frames = 0, fps = 0, lastSortReq = 0;
+let frames = 0, fps = 0;
+let lastSortTime = 0, lastSortReqTime = 0;
 
-function render() {
-    const now = performance.now();
-    if (now - lastSortReq > 50) { requestSort(); lastSortReq = now; }
+function render(now) {
+    const eye = getCameraPos();
+    const viewMatrix = getViewMatrix(eye, camTarget, [0, 1, 0]);
+    const projMatrix = getProjectionMatrix(focalX, focalY, canvas.width, canvas.height);
+    const viewProj = multiply4(projMatrix, viewMatrix);
+    lastSortReqTime = performance.now();
+    worker.postMessage({ view: viewProj });
 
-    const w = canvas.width, h = canvas.height;
-    gl.viewport(0, 0, w, h);
-    gl.clearColor(0.02, 0.02, 0.028, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    if (splatCount > 0 && vao && splatTexture) {
-        const eye = getCameraPos();
-        const view = mat4LookAt(eye, camTarget, [0, 1, 0]);
-        const aspect = w / h;
-        const proj = mat4Perspective(camFovY, aspect, 0.1, 200);
-        const focalY = (h / 2) / Math.tan(camFovY / 2);
-        const focalX = focalY;
-
-        gl.useProgram(program);
-        gl.uniformMatrix4fv(u_proj, false, proj);
-        gl.uniformMatrix4fv(u_view, false, view);
-        gl.uniform2f(u_focal, focalX, focalY);
-        gl.uniform2f(u_viewport, w, h);
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, splatTexture);
-        gl.uniform1i(u_texture, 0);
-
-        gl.enable(gl.BLEND);
-        gl.blendFuncSeparate(gl.ONE, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        gl.disable(gl.DEPTH_TEST);
-        gl.depthMask(false);
-
-        gl.bindVertexArray(vao);
-        gl.drawElements(gl.TRIANGLES, splatCount * 6, gl.UNSIGNED_INT, 0);
-        gl.bindVertexArray(null);
-
-        gl.disable(gl.BLEND);
-
-        document.getElementById('i-camera').textContent =
-            `θ=${(camTheta * 180 / Math.PI).toFixed(0)}° φ=${(camPhi * 180 / Math.PI).toFixed(0)}° r=${camRadius.toFixed(1)}`;
+    if (vertexCount > 0) {
+        gl.uniformMatrix4fv(u_view, false, viewMatrix);
+        gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, 4, vertexCount);
     }
+
+    // HUD
+    document.getElementById('i-camera').textContent =
+        `θ=${(camTheta * 180 / Math.PI).toFixed(0)}° φ=${(camPhi * 180 / Math.PI).toFixed(0)}° r=${camRadius.toFixed(1)}`;
 
     frames++;
     if (now - lastTime > 500) {
