@@ -1,0 +1,52 @@
+{
+  "name": "linear",
+  "url": "https://linear.app",
+  "capturedAt": "2026-03-30T22:50:23Z",
+  "viewports": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "label": "desktop"
+      },
+      "elementCount": 3796,
+      "scrollHeight": 10777,
+      "scrollContainers": 0,
+      "fixedSticky": 4,
+      "images": 31,
+      "interactive": 589,
+      "textBlocks": 31,
+      "stackingContexts": 8
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024,
+        "label": "tablet"
+      },
+      "elementCount": 3782,
+      "scrollHeight": 9779,
+      "scrollContainers": 3,
+      "fixedSticky": 4,
+      "images": 31,
+      "interactive": 589,
+      "textBlocks": 31,
+      "stackingContexts": 8
+    },
+    {
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "label": "mobile"
+      },
+      "elementCount": 3782,
+      "scrollHeight": 6410,
+      "scrollContainers": 3,
+      "fixedSticky": 4,
+      "images": 31,
+      "interactive": 589,
+      "textBlocks": 26,
+      "stackingContexts": 8
+    }
+  ]
+}

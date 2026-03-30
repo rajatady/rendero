@@ -337,8 +337,8 @@ impl Node {
             visible: true,
             locked: false,
             transform: Transform::IDENTITY,
-            width: content.len() as f32 * font_size * 0.65,
-            height: font_size * 1.5,
+            width: 0.0,  // measured by layout engine or JS browser measurement
+            height: 0.0,
             style: Style::default(),
             kind: NodeKind::Text {
                 runs: vec![TextRun {

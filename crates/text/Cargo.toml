@@ -1,0 +1,8 @@
+[package]
+name = "rendero-text"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+rendero-core = { path = "../core" }
+parley = "0.3"

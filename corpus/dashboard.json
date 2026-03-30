@@ -1,0 +1,6004 @@
+{
+  "generatedAt": "2026-03-30T22:59:14Z",
+  "corpusSummary": {
+    "siteCount": 7,
+    "viewportsPerSite": 3,
+    "totalGroundTruthFiles": 22,
+    "totalElements": 14966,
+    "totalScrollContainers": 7,
+    "totalFixedSticky": 56,
+    "totalImages": 362,
+    "totalInteractive": 3958,
+    "totalTextBlocks": 297,
+    "totalStackingContexts": 842
+  },
+  "featureCoverageAcrossSites": {
+    "overflowHidden": 7,
+    "flex": 6,
+    "grid": 6,
+    "transform": 6,
+    "animation": 6,
+    "transition": 6,
+    "borderRadius": 6,
+    "gradient": 5,
+    "shadow": 4
+  },
+  "displayTypeCoverage": {
+    "block": 5420,
+    "inline": 5229,
+    "flex": 2054,
+    "list-item": 834,
+    "inline-block": 407,
+    "grid": 337,
+    "none": 325,
+    "table-cell": 183,
+    "table-row": 104,
+    "inline-flex": 42,
+    "contents": 10,
+    "flow-root": 8,
+    "table": 5,
+    "table-row-group": 4,
+    "inline-grid": 2
+  },
+  "sites": {
+    "apple-macbook-pro": {
+      "desktop": {
+        "elements": 5584,
+        "scrollHeight": 41479,
+        "features": {
+          "flex": 627,
+          "grid": 182,
+          "gradient": 196,
+          "shadow": 8,
+          "transform": 490,
+          "animation": 11,
+          "transition": 819,
+          "borderRadius": 482,
+          "overflowHidden": 592
+        },
+        "scrollContainers": 3,
+        "fixedSticky": 36
+      },
+      "mobile": {
+        "elements": 5556,
+        "scrollHeight": 39230,
+        "features": {
+          "flex": 831,
+          "grid": 139,
+          "gradient": 203,
+          "shadow": 8,
+          "transform": 228,
+          "animation": 50,
+          "transition": 650,
+          "borderRadius": 464,
+          "overflowHidden": 602
+        },
+        "scrollContainers": 6,
+        "fixedSticky": 35
+      },
+      "tablet": {
+        "elements": 5564,
+        "scrollHeight": 35929,
+        "features": {
+          "flex": 808,
+          "grid": 140,
+          "gradient": 196,
+          "shadow": 8,
+          "transform": 196,
+          "animation": 50,
+          "transition": 643,
+          "borderRadius": 480,
+          "overflowHidden": 602
+        },
+        "scrollContainers": 6,
+        "fixedSticky": 33
+      }
+    },
+    "fin": {
+      "desktop": {
+        "elements": 1945,
+        "scrollHeight": 10443,
+        "features": {
+          "flex": 329,
+          "grid": 21,
+          "gradient": 102,
+          "shadow": 0,
+          "transform": 11,
+          "animation": 3,
+          "transition": 298,
+          "borderRadius": 53,
+          "overflowHidden": 204
+        },
+        "scrollContainers": 0,
+        "fixedSticky": 6
+      },
+      "mobile": {
+        "elements": 2023,
+        "scrollHeight": 10486,
+        "features": {
+          "flex": 324,
+          "grid": 14,
+          "gradient": 101,
+          "shadow": 3,
+          "transform": 8,
+          "animation": 4,
+          "transition": 296,
+          "borderRadius": 61,
+          "overflowHidden": 212
+        },
+        "scrollContainers": 1,
+        "fixedSticky": 10
+      },
+      "tablet": {
+        "elements": 2037,
+        "scrollHeight": 10852,
+        "features": {
+          "flex": 324,
+          "grid": 18,
+          "gradient": 102,
+          "shadow": 3,
+          "transform": 12,
+          "animation": 4,
+          "transition": 297,
+          "borderRadius": 63,
+          "overflowHidden": 213
+        },
+        "scrollContainers": 0,
+        "fixedSticky": 9
+      },
+      "unknown": {
+        "elements": 886,
+        "scrollHeight": 0,
+        "features": {
+          "flex": 243,
+          "grid": 21,
+          "gradient": 73,
+          "shadow": 0,
+          "transform": 11,
+          "animation": 0,
+          "transition": 0,
+          "borderRadius": 43,
+          "overflowHidden": 45
+        },
+        "scrollContainers": 0,
+        "fixedSticky": 0
+      }
+    },
+    "github": {
+      "desktop": {
+        "elements": 879,
+        "scrollHeight": 1187,
+        "features": {
+          "flex": 149,
+          "grid": 34,
+          "gradient": 2,
+          "shadow": 28,
+          "transform": 26,
+          "animation": 2,
+          "transition": 75,
+          "borderRadius": 67,
+          "overflowHidden": 38
+        },
+        "scrollContainers": 1,
+        "fixedSticky": 5
+      },
+      "mobile": {
+        "elements": 879,
+        "scrollHeight": 1960,
+        "features": {
+          "flex": 154,
+          "grid": 29,
+          "gradient": 2,
+          "shadow": 24,
+          "transform": 27,
+          "animation": 2,
+          "transition": 76,
+          "borderRadius": 63,
+          "overflowHidden": 40
+        },
+        "scrollContainers": 2,
+        "fixedSticky": 11
+      },
+      "tablet": {
+        "elements": 879,
+        "scrollHeight": 1425,
+        "features": {
+          "flex": 155,
+          "grid": 29,
+          "gradient": 2,
+          "shadow": 24,
+          "transform": 27,
+          "animation": 2,
+          "transition": 76,
+          "borderRadius": 63,
+          "overflowHidden": 40
+        },
+        "scrollContainers": 2,
+        "fixedSticky": 11
+      }
+    },
+    "gumroad": {
+      "desktop": {
+        "elements": 633,
+        "scrollHeight": 900,
+        "features": {
+          "flex": 193,
+          "grid": 2,
+          "gradient": 0,
+          "shadow": 0,
+          "transform": 11,
+          "animation": 4,
+          "transition": 15,
+          "borderRadius": 163,
+          "overflowHidden": 28
+        },
+        "scrollContainers": 1,
+        "fixedSticky": 2
+      },
+      "mobile": {
+        "elements": 633,
+        "scrollHeight": 812,
+        "features": {
+          "flex": 195,
+          "grid": 2,
+          "gradient": 0,
+          "shadow": 0,
+          "transform": 11,
+          "animation": 4,
+          "transition": 15,
+          "borderRadius": 150,
+          "overflowHidden": 28
+        },
+        "scrollContainers": 1,
+        "fixedSticky": 2
+      },
+      "tablet": {
+        "elements": 633,
+        "scrollHeight": 1024,
+        "features": {
+          "flex": 197,
+          "grid": 2,
+          "gradient": 0,
+          "shadow": 0,
+          "transform": 11,
+          "animation": 4,
+          "transition": 15,
+          "borderRadius": 150,
+          "overflowHidden": 28
+        },
+        "scrollContainers": 1,
+        "fixedSticky": 2
+      }
+    },
+    "hacker-news": {
+      "desktop": {
+        "elements": 808,
+        "scrollHeight": 1217,
+        "features": {
+          "flex": 0,
+          "grid": 0,
+          "gradient": 30,
+          "shadow": 0,
+          "transform": 0,
+          "animation": 0,
+          "transition": 0,
+          "borderRadius": 0,
+          "overflowHidden": 61
+        },
+        "scrollContainers": 0,
+        "fixedSticky": 0
+      },
+      "mobile": {
+        "elements": 808,
+        "scrollHeight": 2204,
+        "features": {
+          "flex": 0,
+          "grid": 0,
+          "gradient": 30,
+          "shadow": 0,
+          "transform": 30,
+          "animation": 0,
+          "transition": 0,
+          "borderRadius": 0,
+          "overflowHidden": 61
+        },
+        "scrollContainers": 0,
+        "fixedSticky": 0
+      },
+      "tablet": {
+        "elements": 808,
+        "scrollHeight": 1217,
+        "features": {
+          "flex": 0,
+          "grid": 0,
+          "gradient": 30,
+          "shadow": 0,
+          "transform": 0,
+          "animation": 0,
+          "transition": 0,
+          "borderRadius": 0,
+          "overflowHidden": 61
+        },
+        "scrollContainers": 0,
+        "fixedSticky": 0
+      }
+    },
+    "linear": {
+      "desktop": {
+        "elements": 3796,
+        "scrollHeight": 10777,
+        "features": {
+          "flex": 490,
+          "grid": 98,
+          "gradient": 46,
+          "shadow": 74,
+          "transform": 90,
+          "animation": 206,
+          "transition": 145,
+          "borderRadius": 237,
+          "overflowHidden": 495
+        },
+        "scrollContainers": 0,
+        "fixedSticky": 4
+      },
+      "mobile": {
+        "elements": 3782,
+        "scrollHeight": 6410,
+        "features": {
+          "flex": 496,
+          "grid": 83,
+          "gradient": 42,
+          "shadow": 74,
+          "transform": 27,
+          "animation": 180,
+          "transition": 145,
+          "borderRadius": 233,
+          "overflowHidden": 494
+        },
+        "scrollContainers": 3,
+        "fixedSticky": 4
+      },
+      "tablet": {
+        "elements": 3782,
+        "scrollHeight": 9779,
+        "features": {
+          "flex": 490,
+          "grid": 88,
+          "gradient": 46,
+          "shadow": 74,
+          "transform": 92,
+          "animation": 180,
+          "transition": 145,
+          "borderRadius": 236,
+          "overflowHidden": 495
+        },
+        "scrollContainers": 3,
+        "fixedSticky": 4
+      }
+    },
+    "tailadmin": {
+      "desktop": {
+        "elements": 1321,
+        "scrollHeight": 900,
+        "features": {
+          "flex": 266,
+          "grid": 2,
+          "gradient": 0,
+          "shadow": 21,
+          "transform": 21,
+          "animation": 2,
+          "transition": 4,
+          "borderRadius": 242,
+          "overflowHidden": 103
+        },
+        "scrollContainers": 2,
+        "fixedSticky": 3
+      },
+      "mobile": {
+        "elements": 1321,
+        "scrollHeight": 812,
+        "features": {
+          "flex": 266,
+          "grid": 2,
+          "gradient": 0,
+          "shadow": 21,
+          "transform": 20,
+          "animation": 2,
+          "transition": 4,
+          "borderRadius": 242,
+          "overflowHidden": 103
+        },
+        "scrollContainers": 5,
+        "fixedSticky": 4
+      },
+      "tablet": {
+        "elements": 1321,
+        "scrollHeight": 1024,
+        "features": {
+          "flex": 266,
+          "grid": 2,
+          "gradient": 0,
+          "shadow": 21,
+          "transform": 20,
+          "animation": 2,
+          "transition": 4,
+          "borderRadius": 242,
+          "overflowHidden": 103
+        },
+        "scrollContainers": 3,
+        "fixedSticky": 4
+      }
+    }
+  },
+  "perSiteDetail": {
+    "apple-macbook-pro": {
+      "file": "apple-macbook-pro-desktop.json",
+      "siteName": "apple-macbook-pro-desktop",
+      "url": "https://www.apple.com/macbook-pro/",
+      "viewport": "desktop",
+      "elementCount": 5584,
+      "pageScroll": {
+        "scrollWidth": 1440,
+        "scrollHeight": 41479,
+        "clientWidth": 1440,
+        "clientHeight": 900
+      },
+      "scrollContainers": 3,
+      "fixedSticky": 36,
+      "images": 139,
+      "interactive": 1535,
+      "textBlocks": 174,
+      "stackingContexts": 611,
+      "scrollBehaviorPositions": 5,
+      "cssPropertyCount": 118,
+      "totalStyleValues": 658912,
+      "avgStylesPerElement": 118.0,
+      "displayBreakdown": {
+        "block": 2427,
+        "inline": 1424,
+        "flex": 627,
+        "list-item": 413,
+        "inline-block": 320,
+        "grid": 182,
+        "none": 153,
+        "inline-flex": 24,
+        "contents": 10,
+        "flow-root": 4
+      },
+      "positionBreakdown": {
+        "static": 4098,
+        "relative": 1029,
+        "absolute": 421,
+        "sticky": 20,
+        "fixed": 16
+      },
+      "featureCounts": {
+        "flex": 627,
+        "grid": 182,
+        "gradient": 196,
+        "shadow": 8,
+        "transform": 490,
+        "animation": 11,
+        "transition": 819,
+        "borderRadius": 482,
+        "overflowHidden": 592
+      },
+      "topProperties": {
+        "display": 5584,
+        "position": 5584,
+        "top": 5584,
+        "right": 5584,
+        "bottom": 5584,
+        "left": 5584,
+        "width": 5584,
+        "height": 5584,
+        "minWidth": 5584,
+        "minHeight": 5584,
+        "maxWidth": 5584,
+        "maxHeight": 5584,
+        "overflow": 5584,
+        "overflowX": 5584,
+        "overflowY": 5584,
+        "boxSizing": 5584,
+        "float": 5584,
+        "clear": 5584,
+        "flexDirection": 5584,
+        "flexWrap": 5584,
+        "justifyContent": 5584,
+        "alignItems": 5584,
+        "alignContent": 5584,
+        "flexGrow": 5584,
+        "flexShrink": 5584,
+        "flexBasis": 5584,
+        "alignSelf": 5584,
+        "order": 5584,
+        "flex": 5584,
+        "gap": 5584
+      },
+      "uniqueValuesPerProp": {
+        "alignContent": [
+          "center",
+          "normal",
+          "start"
+        ],
+        "alignItems": [
+          "center",
+          "flex-end",
+          "flex-start",
+          "normal",
+          "start",
+          "stretch"
+        ],
+        "alignSelf": [
+          "auto",
+          "center",
+          "end",
+          "flex-end",
+          "flex-start"
+        ],
+        "animation": [
+          "0.32s 0.28s both",
+          "0.32s 0.32s both",
+          "0.32s 0.34s both",
+          "0.32s 0.36s both",
+          "0.32s 0.38s both",
+          "0.32s 0.3s both",
+          "0.32s 0.42s both",
+          "0.32s 0.4s both",
+          "0.32s cubic-bezier(0.4, 0, 0.6, 1) 0.22s both globalnav-search-fade-and-slide",
+          "0.32s cubic-bezier(0.4, 0, 0.6, 1) 0.24s both globalnav-search-fade-and-slide"
+        ],
+        "animationDuration": [
+          "0.32s",
+          "0.8s",
+          "0s",
+          "1s",
+          "4s, 0.4s"
+        ],
+        "animationName": [
+          "animate-background-1d1d1f-1d1d1f",
+          "animate-color-2997ff-2997ff",
+          "animate-color-fff-1d1d1f",
+          "globalnav-search-fade-and-slide",
+          "media-card-battery-animation, reset-media-card-battery-animation",
+          "none",
+          "ribbon-drop"
+        ],
+        "backdropFilter": [
+          "blur(0px)",
+          "blur(14px)",
+          "blur(20px)",
+          "blur(20px) saturate(1)",
+          "none"
+        ],
+        "backgroundColor": [
+          "rgb(0, 0, 0)",
+          "rgb(0, 113, 227)",
+          "rgb(200, 216, 224)",
+          "rgb(22, 22, 23)",
+          "rgb(227, 228, 229)",
+          "rgb(232, 232, 237)",
+          "rgb(240, 228, 211)",
+          "rgb(245, 245, 247)",
+          "rgb(255, 255, 255)",
+          "rgb(29, 29, 31)"
+        ],
+        "backgroundImage": [
+          "linear-gradient(108deg, rgb(0, 144, 247), rgb(186, 98, 252) 33%, rgb(242, 65, 107) 66%, rgb(245, 86,",
+          "linear-gradient(45deg, rgb(191, 235, 224), rgb(42, 186, 158), rgb(23, 140, 155), rgb(18, 56, 90))",
+          "linear-gradient(45deg, rgb(51, 51, 54), rgb(51, 51, 54), rgb(51, 51, 54), rgb(51, 51, 54))",
+          "linear-gradient(90deg, rgb(225, 229, 255) 7%, rgb(131, 160, 239) 80%)",
+          "linear-gradient(90deg, rgb(228, 246, 240), rgb(157, 207, 202) 31%, rgb(107, 149, 172) 68%, rgb(69, 1",
+          "linear-gradient(90deg, rgb(255, 225, 252) 7%, rgb(198, 131, 239) 79%)",
+          "linear-gradient(90deg, rgb(53, 169, 138) 0%, rgb(109, 212, 0))",
+          "linear-gradient(rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.56))",
+          "linear-gradient(to right, rgba(255, 255, 255, 0), rgb(255, 255, 255) 50%)",
+          "none"
+        ],
+        "backgroundPosition": [
+          "0% 0%",
+          "50% 50%"
+        ],
+        "backgroundRepeat": [
+          "no-repeat",
+          "repeat"
+        ],
+        "backgroundSize": [
+          "13px",
+          "18px",
+          "19px",
+          "20px",
+          "21px",
+          "25px",
+          "480px 380px",
+          "auto"
+        ],
+        "borderBottomColor": [
+          "rgb(0, 0, 0)",
+          "rgb(0, 102, 204)",
+          "rgb(110, 110, 115)",
+          "rgb(131, 160, 239)",
+          "rgb(134, 134, 139)",
+          "rgb(198, 131, 239)",
+          "rgb(210, 210, 215)",
+          "rgb(22, 22, 23)",
+          "rgb(232, 232, 237)",
+          "rgb(245, 245, 247)"
+        ],
+        "borderBottomLeftRadius": [
+          "0px",
+          "10px",
+          "11px",
+          "12px",
+          "18px",
+          "20%",
+          "210px",
+          "22px",
+          "28px",
+          "32px"
+        ],
+        "borderBottomRightRadius": [
+          "0px",
+          "10px",
+          "11px",
+          "12px",
+          "18px",
+          "20%",
+          "210px",
+          "22px",
+          "28px",
+          "32px"
+        ],
+        "borderBottomStyle": [
+          "none",
+          "solid"
+        ],
+        "borderBottomWidth": [
+          "0px",
+          "1px",
+          "2px",
+          "3px"
+        ],
+        "borderLeftColor": [
+          "rgb(0, 0, 0)",
+          "rgb(0, 102, 204)",
+          "rgb(110, 110, 115)",
+          "rgb(131, 160, 239)",
+          "rgb(134, 134, 139)",
+          "rgb(198, 131, 239)",
+          "rgb(210, 210, 215)",
+          "rgb(22, 22, 23)",
+          "rgb(232, 232, 237)",
+          "rgb(245, 245, 247)"
+        ],
+        "borderLeftStyle": [
+          "none",
+          "solid"
+        ],
+        "borderLeftWidth": [
+          "0px",
+          "1px",
+          "2px",
+          "3px"
+        ],
+        "borderRightColor": [
+          "rgb(0, 0, 0)",
+          "rgb(0, 102, 204)",
+          "rgb(110, 110, 115)",
+          "rgb(131, 160, 239)",
+          "rgb(134, 134, 139)",
+          "rgb(198, 131, 239)",
+          "rgb(210, 210, 215)",
+          "rgb(22, 22, 23)",
+          "rgb(232, 232, 237)",
+          "rgb(245, 245, 247)"
+        ],
+        "borderRightStyle": [
+          "none",
+          "solid"
+        ],
+        "borderRightWidth": [
+          "0px",
+          "1px",
+          "2px",
+          "3px"
+        ],
+        "borderTopColor": [
+          "rgb(0, 0, 0)",
+          "rgb(0, 102, 204)",
+          "rgb(110, 110, 115)",
+          "rgb(131, 160, 239)",
+          "rgb(134, 134, 139)",
+          "rgb(198, 131, 239)",
+          "rgb(210, 210, 215)",
+          "rgb(22, 22, 23)",
+          "rgb(232, 232, 237)",
+          "rgb(245, 245, 247)"
+        ],
+        "borderTopLeftRadius": [
+          "0px",
+          "10px",
+          "11px",
+          "12px",
+          "20%",
+          "210px",
+          "22px",
+          "28px",
+          "32px",
+          "36px"
+        ],
+        "borderTopRightRadius": [
+          "0px",
+          "10px",
+          "11px",
+          "12px",
+          "20%",
+          "210px",
+          "22px",
+          "28px",
+          "32px",
+          "36px"
+        ],
+        "borderTopStyle": [
+          "none",
+          "solid"
+        ],
+        "borderTopWidth": [
+          "0px",
+          "1px",
+          "2px",
+          "3px"
+        ],
+        "bottom": [
+          "-1.70312px",
+          "-24px",
+          "-28px",
+          "-73px",
+          "-912px",
+          "0px",
+          "11px",
+          "19px",
+          "3.5px",
+          "32px"
+        ],
+        "boxShadow": [
+          "none",
+          "rgba(0, 0, 0, 0.11) 0px 0px 0.5px 0px inset"
+        ],
+        "boxSizing": [
+          "border-box",
+          "content-box"
+        ],
+        "clipPath": [
+          "inset(0px 0px 99.9% 99.9%)",
+          "inset(0px round 28px)",
+          "inset(6.25% round 40px)",
+          "none"
+        ],
+        "color": [
+          "rgb(0, 0, 0)",
+          "rgb(0, 102, 204)",
+          "rgb(110, 110, 115)",
+          "rgb(131, 160, 239)",
+          "rgb(134, 134, 139)",
+          "rgb(182, 68, 0)",
+          "rgb(198, 131, 239)",
+          "rgb(210, 210, 215)",
+          "rgb(232, 232, 237)",
+          "rgb(245, 245, 247)"
+        ],
+        "columnGap": [
+          "0px",
+          "10.5px",
+          "10px",
+          "12px",
+          "16px",
+          "18px",
+          "20px",
+          "28px",
+          "30px",
+          "34px"
+        ],
+        "cursor": [
+          "auto",
+          "default",
+          "none",
+          "pointer",
+          "text"
+        ],
+        "display": [
+          "block",
+          "contents",
+          "flex",
+          "flow-root",
+          "grid",
+          "inline",
+          "inline-block",
+          "inline-flex",
+          "list-item",
+          "none"
+        ],
+        "flex": [
+          "0 0 auto",
+          "0 1 100%",
+          "0 1 25%",
+          "0 1 50%",
+          "0 1 66.6667%",
+          "0 1 75%",
+          "0 1 8.33333%",
+          "0 1 83.3333%",
+          "0 1 auto",
+          "1 1 0%"
+        ],
+        "flexBasis": [
+          "0%",
+          "100%",
+          "25%",
+          "50%",
+          "66.6667%",
+          "75%",
+          "8.33333%",
+          "83.3333%",
+          "auto"
+        ],
+        "flexDirection": [
+          "column",
+          "column-reverse",
+          "row"
+        ],
+        "flexGrow": [
+          "0",
+          "1"
+        ],
+        "flexShrink": [
+          "0",
+          "1"
+        ],
+        "flexWrap": [
+          "nowrap",
+          "wrap"
+        ],
+        "float": [
+          "inline-start",
+          "left",
+          "none",
+          "right"
+        ],
+        "fontFamily": [
+          "\"SF Pro Display\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "\"SF Pro Text\", \"Myriad Set Pro\", \"SF Pro Icons\", \"Apple Legacy Chevron\", \"Helvetica Neue\", Helvetica",
+          "\"SF Pro Text\", \"Myriad Set Pro\", system-ui, -apple-system, \"system-ui\", \"Segoe UI\", \"SF Pro Icons\", ",
+          "\"SF Pro Text\", \"SF Pro Icons\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "Arial",
+          "Times"
+        ],
+        "fontSize": [
+          "10px",
+          "12px",
+          "13.3333px",
+          "14px",
+          "16.8px",
+          "17px",
+          "18px",
+          "19px",
+          "20px",
+          "21px"
+        ],
+        "fontStyle": [
+          "italic",
+          "normal"
+        ],
+        "fontVariant": [
+          "normal",
+          "tabular-nums"
+        ],
+        "fontWeight": [
+          "300",
+          "400",
+          "600"
+        ],
+        "gap": [
+          "0px",
+          "10.5px",
+          "12px",
+          "16px",
+          "18px",
+          "18px normal",
+          "20px",
+          "20px 80px",
+          "24px 20px",
+          "32px 80px"
+        ],
+        "gridAutoColumns": [
+          "1fr",
+          "auto"
+        ],
+        "gridAutoFlow": [
+          "column",
+          "row"
+        ],
+        "gridAutoRows": [
+          "1fr",
+          "auto"
+        ],
+        "gridColumn": [
+          "1",
+          "1 / 2",
+          "auto",
+          "auto / span 4",
+          "auto / span 6",
+          "bento-1",
+          "bento-2",
+          "bento-3",
+          "bento-4",
+          "cng"
+        ],
+        "gridColumnEnd": [
+          "2",
+          "auto",
+          "bento-1",
+          "bento-2",
+          "bento-3",
+          "bento-4",
+          "cng",
+          "item",
+          "span 4",
+          "span 6"
+        ],
+        "gridColumnStart": [
+          "1",
+          "auto",
+          "bento-1",
+          "bento-2",
+          "bento-3",
+          "bento-4",
+          "cng",
+          "item",
+          "span 12",
+          "stack"
+        ],
+        "gridRow": [
+          "1",
+          "1 / -1",
+          "1 / 2",
+          "2",
+          "2 / 3",
+          "3",
+          "3 / 4",
+          "4",
+          "auto",
+          "badge"
+        ],
+        "gridRowEnd": [
+          "-1",
+          "2",
+          "3",
+          "4",
+          "auto",
+          "badge",
+          "bento-1",
+          "bento-2",
+          "bento-3",
+          "bento-4"
+        ],
+        "gridRowStart": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "auto",
+          "badge",
+          "bento-1",
+          "bento-2",
+          "bento-3",
+          "bento-4"
+        ],
+        "gridTemplateColumns": [
+          "1036px",
+          "1050px",
+          "1100px",
+          "1260px",
+          "1260px 1260px 1260px 1260px 1260px",
+          "1440px",
+          "1728px",
+          "1fr",
+          "2048px",
+          "2880px"
+        ],
+        "gridTemplateRows": [
+          "110px",
+          "120px",
+          "124px",
+          "36px",
+          "408px 84px 408px",
+          "548px",
+          "632px",
+          "632px 24px",
+          "670px",
+          "670px 24px"
+        ],
+        "height": [
+          "0px",
+          "100%",
+          "10px",
+          "120px",
+          "16px",
+          "18px",
+          "28px",
+          "304px",
+          "326px",
+          "32px"
+        ],
+        "isolation": [
+          "auto",
+          "isolate"
+        ],
+        "justifyContent": [
+          "center",
+          "end",
+          "flex-end",
+          "flex-start",
+          "normal",
+          "space-between",
+          "space-evenly",
+          "start"
+        ],
+        "left": [
+          "-3.5px",
+          "0px",
+          "12.5px",
+          "14px",
+          "230px",
+          "24px",
+          "25px",
+          "31px",
+          "35px",
+          "36px"
+        ],
+        "letterSpacing": [
+          "-0.08px",
+          "-0.09px",
+          "-0.11px",
+          "-0.12px",
+          "-0.144px",
+          "-0.224px",
+          "-0.28px",
+          "-0.374px",
+          "-0.576px",
+          "-1.2px"
+        ],
+        "lineHeight": [
+          "0px",
+          "12.0002px",
+          "12px",
+          "14.7059px",
+          "16.0005px",
+          "18.0008px",
+          "18px",
+          "20.0003px",
+          "21.0012px",
+          "22px"
+        ],
+        "marginBottom": [
+          "-14px",
+          "-1px",
+          "-232px",
+          "-4px",
+          "-6px",
+          "0px",
+          "100px",
+          "11.2px",
+          "12px",
+          "140px"
+        ],
+        "marginLeft": [
+          "-11px",
+          "-30px",
+          "-50px",
+          "-6px",
+          "-8px",
+          "-90px",
+          "0px",
+          "105px",
+          "10px",
+          "13px"
+        ],
+        "marginRight": [
+          "-11px",
+          "-12px",
+          "-2px",
+          "-31px",
+          "-5120px",
+          "-8px",
+          "0px",
+          "10px",
+          "112px",
+          "11px"
+        ],
+        "marginTop": [
+          "-1px",
+          "-2px",
+          "-3px",
+          "-44px",
+          "-52px",
+          "-96px",
+          "0px",
+          "10px",
+          "12px",
+          "13.6px"
+        ],
+        "maxHeight": [
+          "36px",
+          "42px",
+          "44px",
+          "719.991px",
+          "812px",
+          "88px",
+          "9999px",
+          "calc(100% - 44px)",
+          "none"
+        ],
+        "maxWidth": [
+          "100%",
+          "1024px",
+          "1034px",
+          "1036px",
+          "1260px",
+          "1440px",
+          "1680px",
+          "25%",
+          "349px",
+          "423px"
+        ],
+        "minHeight": [
+          "0px",
+          "100%",
+          "180px",
+          "184px",
+          "230px",
+          "248px",
+          "24px",
+          "380px",
+          "387px",
+          "42px"
+        ],
+        "minWidth": [
+          "0px",
+          "100px",
+          "1024px",
+          "133px",
+          "23px",
+          "24px",
+          "252px",
+          "264px",
+          "26px",
+          "280px"
+        ],
+        "mixBlendMode": [
+          "darken",
+          "multiply",
+          "normal"
+        ],
+        "objectFit": [
+          "contain",
+          "cover",
+          "fill"
+        ],
+        "objectPosition": [
+          "50% 100%",
+          "50% 50%"
+        ],
+        "opacity": [
+          "0",
+          "0.001",
+          "0.16",
+          "0.36",
+          "0.42",
+          "0.56",
+          "0.75",
+          "0.8",
+          "0.88",
+          "1"
+        ],
+        "order": [
+          "-1",
+          "0",
+          "1",
+          "2"
+        ],
+        "outline": [
+          "rgb(0, 0, 0) none 0px",
+          "rgb(0, 102, 204) none 0px",
+          "rgb(110, 110, 115) none 0px",
+          "rgb(131, 160, 239) none 0px",
+          "rgb(134, 134, 139) none 0px",
+          "rgb(182, 68, 0) none 0px",
+          "rgb(198, 131, 239) none 0px",
+          "rgb(210, 210, 215) none 0px",
+          "rgb(232, 232, 237) none 0px",
+          "rgb(245, 245, 247) none 0px"
+        ],
+        "outlineOffset": [
+          "-7px",
+          "0px"
+        ],
+        "overflow": [
+          "auto",
+          "auto hidden",
+          "clip",
+          "hidden",
+          "hidden auto",
+          "scroll auto",
+          "visible"
+        ],
+        "overflowX": [
+          "auto",
+          "clip",
+          "hidden",
+          "scroll",
+          "visible"
+        ],
+        "overflowY": [
+          "auto",
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "paddingBottom": [
+          "0px",
+          "100px",
+          "10px",
+          "12px",
+          "13.1765px",
+          "13px",
+          "144px",
+          "16px",
+          "216px",
+          "28px"
+        ],
+        "paddingLeft": [
+          "0px",
+          "10px",
+          "11px",
+          "14px",
+          "15px",
+          "16px",
+          "17px",
+          "21px",
+          "22px",
+          "24px"
+        ],
+        "paddingRight": [
+          "0px",
+          "10px",
+          "11px",
+          "14px",
+          "15px",
+          "16px",
+          "19.5938px",
+          "22px",
+          "28px",
+          "2px"
+        ],
+        "paddingTop": [
+          "0px",
+          "10px",
+          "13.1765px",
+          "144px",
+          "14px",
+          "15px",
+          "18px",
+          "1px",
+          "28px",
+          "2px"
+        ],
+        "pointerEvents": [
+          "all",
+          "auto",
+          "none"
+        ],
+        "position": [
+          "absolute",
+          "fixed",
+          "relative",
+          "static",
+          "sticky"
+        ],
+        "right": [
+          "-7px",
+          "0px",
+          "1.5px",
+          "11px",
+          "12.5px",
+          "1209px",
+          "30px",
+          "311.188px",
+          "31px",
+          "37px"
+        ],
+        "rowGap": [
+          "0px",
+          "10.5px",
+          "12px",
+          "16px",
+          "18px",
+          "20px",
+          "24px",
+          "32px",
+          "40px",
+          "60px"
+        ],
+        "textAlign": [
+          "center",
+          "end",
+          "left",
+          "right",
+          "start"
+        ],
+        "textDecoration": [
+          "none",
+          "underline"
+        ],
+        "textDecorationColor": [
+          "rgb(0, 0, 0)",
+          "rgb(0, 102, 204)",
+          "rgb(110, 110, 115)",
+          "rgb(131, 160, 239)",
+          "rgb(134, 134, 139)",
+          "rgb(182, 68, 0)",
+          "rgb(198, 131, 239)",
+          "rgb(210, 210, 215)",
+          "rgb(232, 232, 237)",
+          "rgb(245, 245, 247)"
+        ],
+        "textIndent": [
+          "0px",
+          "145px"
+        ],
+        "textOverflow": [
+          "clip",
+          "ellipsis"
+        ],
+        "textTransform": [
+          "none",
+          "uppercase"
+        ],
+        "top": [
+          "-148px",
+          "-4.2px",
+          "-40px",
+          "-42px",
+          "-8.4px",
+          "0px",
+          "116px",
+          "18px",
+          "20px",
+          "28px"
+        ],
+        "transform": [
+          "matrix(0, 0, 0, 0, -28, -28)",
+          "matrix(0, 0, 0, 0, 0, 0)",
+          "matrix(0, 0, 0, 1, 0, 0)",
+          "matrix(0.5, 0, 0, 0.5, 0, 0)",
+          "matrix(1, 0, 0, 1, -144, 0)",
+          "matrix(1, 0, 0, 1, -1440, 0)",
+          "matrix(1, 0, 0, 1, 0, -4)",
+          "matrix(1, 0, 0, 1, 0, -52)",
+          "matrix(1, 0, 0, 1, 0, 0)",
+          "matrix(1, 0, 0, 1, 0, 180)"
+        ],
+        "transformOrigin": [
+          "0.5px 22px",
+          "0px 0px",
+          "148px 18px",
+          "157.5px 0px",
+          "15px 22px",
+          "174.5px 21px",
+          "224.797px 16px",
+          "23px 22px",
+          "265.203px 21px",
+          "44.7812px 18px"
+        ],
+        "transition": [
+          "all",
+          "background 0.24s cubic-bezier(0.4, 0, 0.6, 1)",
+          "background-color 0.24s cubic-bezier(0.4, 0, 0.6, 1)",
+          "background-color 0.24s cubic-bezier(0.4, 0, 0.6, 1), border-color 0.24s cubic-bezier(0.4, 0, 0.6, 1)",
+          "color 0.32s cubic-bezier(0.4, 0, 0.6, 1)",
+          "opacity 0.06s, transform 0.06s",
+          "opacity 0.08s, transform 0.08s",
+          "opacity 0.12s, transform 0.12s",
+          "opacity 0.14s, transform 0.14s",
+          "opacity 0.16s, transform 0.16s"
+        ],
+        "transitionDelay": [
+          "0.038s, 0s, 0s, 0s, 0s, 0s",
+          "0.03s, 0.03s",
+          "0.05s, 0s, 0s",
+          "0.06s",
+          "0.06s, 0.06s",
+          "0.08s",
+          "0.08s, 0.08s",
+          "0.16s",
+          "0.201s, 0.335s, 0.201s",
+          "0.28s, 0.28s"
+        ],
+        "transitionDuration": [
+          "0.02s, 0.02s, 0.02s",
+          "0.04s",
+          "0.06s",
+          "0.08s",
+          "0.12s",
+          "0.14s",
+          "0.16s",
+          "0.18s",
+          "0.1s",
+          "0.22s"
+        ],
+        "transitionProperty": [
+          "--tabnav-mask-color-left, --tabnav-mask-color-right",
+          "all",
+          "background",
+          "background, color, opacity",
+          "background-color",
+          "background-color, border-color",
+          "color",
+          "color, background-color, fill",
+          "color, opacity, visibility",
+          "fill"
+        ],
+        "transitionTimingFunction": [
+          "cubic-bezier(0.25, 0.1, 0.3, 1)",
+          "cubic-bezier(0.28, 0.11, 0.32, 1)",
+          "cubic-bezier(0.33, 1, 0.68, 1)",
+          "cubic-bezier(0.4, 0, 0.6, 1)",
+          "cubic-bezier(0.4, 0, 0.6, 1), cubic-bezier(0.4, 0, 0.6, 1)",
+          "cubic-bezier(0.4, 0, 0.6, 1), cubic-bezier(0.4, 0, 0.6, 1), cubic-bezier(0.4, 0, 0.6, 1)",
+          "cubic-bezier(0.4, 0, 0.6, 1), cubic-bezier(0.4, 0, 0.6, 1), steps(1)",
+          "cubic-bezier(0.4, 0, 0.6, 1), steps(1)",
+          "cubic-bezier(0.4, 0, 0.6, 1), steps(1, start)",
+          "ease"
+        ],
+        "visibility": [
+          "hidden",
+          "visible"
+        ],
+        "whiteSpace": [
+          "normal",
+          "nowrap",
+          "pre",
+          "pre-wrap"
+        ],
+        "width": [
+          "100%",
+          "1024px",
+          "1440px",
+          "14px",
+          "17.8125px",
+          "17px",
+          "18px",
+          "1px",
+          "267px",
+          "30px"
+        ],
+        "willChange": [
+          "auto",
+          "bottom",
+          "opacity",
+          "opacity, transform",
+          "transform",
+          "transform, opacity"
+        ],
+        "zIndex": [
+          "-1",
+          "0",
+          "1",
+          "10",
+          "10000",
+          "11",
+          "15",
+          "2",
+          "3",
+          "4"
+        ]
+      }
+    },
+    "fin": {
+      "file": "fin-desktop.json",
+      "siteName": "fin-desktop",
+      "url": "https://fin.ai/",
+      "viewport": "desktop",
+      "elementCount": 1945,
+      "pageScroll": {
+        "scrollWidth": 1440,
+        "scrollHeight": 10443,
+        "clientWidth": 1440,
+        "clientHeight": 900
+      },
+      "scrollContainers": 0,
+      "fixedSticky": 6,
+      "images": 32,
+      "interactive": 480,
+      "textBlocks": 53,
+      "stackingContexts": 140,
+      "scrollBehaviorPositions": 5,
+      "cssPropertyCount": 118,
+      "totalStyleValues": 229510,
+      "avgStylesPerElement": 118.0,
+      "displayBreakdown": {
+        "block": 887,
+        "inline": 491,
+        "flex": 329,
+        "list-item": 152,
+        "none": 28,
+        "inline-block": 28,
+        "grid": 21,
+        "inline-flex": 9
+      },
+      "positionBreakdown": {
+        "static": 1318,
+        "relative": 337,
+        "absolute": 284,
+        "fixed": 5,
+        "sticky": 1
+      },
+      "featureCounts": {
+        "flex": 329,
+        "grid": 21,
+        "gradient": 102,
+        "shadow": 0,
+        "transform": 11,
+        "animation": 3,
+        "transition": 298,
+        "borderRadius": 53,
+        "overflowHidden": 204
+      },
+      "topProperties": {
+        "display": 1945,
+        "position": 1945,
+        "top": 1945,
+        "right": 1945,
+        "bottom": 1945,
+        "left": 1945,
+        "width": 1945,
+        "height": 1945,
+        "minWidth": 1945,
+        "minHeight": 1945,
+        "maxWidth": 1945,
+        "maxHeight": 1945,
+        "overflow": 1945,
+        "overflowX": 1945,
+        "overflowY": 1945,
+        "boxSizing": 1945,
+        "float": 1945,
+        "clear": 1945,
+        "flexDirection": 1945,
+        "flexWrap": 1945,
+        "justifyContent": 1945,
+        "alignItems": 1945,
+        "alignContent": 1945,
+        "flexGrow": 1945,
+        "flexShrink": 1945,
+        "flexBasis": 1945,
+        "alignSelf": 1945,
+        "order": 1945,
+        "flex": 1945,
+        "gap": 1945
+      },
+      "uniqueValuesPerProp": {
+        "alignItems": [
+          "baseline",
+          "center",
+          "flex-end",
+          "flex-start",
+          "normal"
+        ],
+        "alignSelf": [
+          "auto",
+          "flex-start"
+        ],
+        "animation": [
+          "1s ease-in-out both fadeIn",
+          "20s linear infinite marquee",
+          "60s linear infinite animateMarquee",
+          "none"
+        ],
+        "animationDuration": [
+          "0s",
+          "1s",
+          "20s",
+          "60s"
+        ],
+        "animationName": [
+          "animateMarquee",
+          "fadeIn",
+          "marquee",
+          "none"
+        ],
+        "backdropFilter": [
+          "blur(16px)",
+          "blur(8px)",
+          "none"
+        ],
+        "backgroundColor": [
+          "oklab(0 0 0 / 0.2)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.025)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.2)",
+          "rgb(197, 197, 193)",
+          "rgb(2, 9, 23)",
+          "rgb(21, 27, 41)",
+          "rgb(244, 243, 236)",
+          "rgb(246, 246, 241)",
+          "rgb(255, 255, 255)",
+          "rgb(255, 86, 0)"
+        ],
+        "backgroundImage": [
+          "linear-gradient(in oklab, rgb(2, 9, 23) 0px, rgb(2, 9, 23) 45%, rgba(0, 0, 0, 0) 100%)",
+          "linear-gradient(in oklab, rgb(8, 15, 30) 0px, rgb(8, 15, 30) 50%, rgba(0, 0, 0, 0) 100%)",
+          "linear-gradient(rgb(2, 9, 23) 0px, oklab(0.139718 -0.00824565 -0.033645 / 0.6) 50%, rgba(0, 0, 0, 0)",
+          "linear-gradient(to left in oklab, rgb(2, 9, 23) 0px, rgb(2, 9, 23) 45%, rgba(0, 0, 0, 0) 100%)",
+          "linear-gradient(to left in oklab, rgb(2, 9, 23) 0px, rgba(0, 0, 0, 0) 100%)",
+          "linear-gradient(to left in oklab, rgb(21, 27, 41) 0px, rgba(0, 0, 0, 0) 100%)",
+          "linear-gradient(to left in oklab, rgb(8, 15, 30) 0px, rgb(8, 15, 30) 50%, rgba(0, 0, 0, 0) 100%)",
+          "linear-gradient(to right in oklab, rgb(0, 0, 0) 0px, rgb(0, 0, 0) 100%)",
+          "linear-gradient(to right in oklab, rgb(123, 123, 120) 0px, rgb(123, 123, 120) 100%)",
+          "linear-gradient(to right in oklab, rgb(2, 9, 23) 0px, rgb(2, 9, 23) 45%, rgba(0, 0, 0, 0) 100%)"
+        ],
+        "backgroundPosition": [
+          "-2.5px 0px",
+          "0% 0%",
+          "0px 100%",
+          "100% 100%"
+        ],
+        "backgroundRepeat": [
+          "no-repeat",
+          "repeat",
+          "repeat-x"
+        ],
+        "backgroundSize": [
+          "0px 0.96px",
+          "100% 0.66px",
+          "100% 0.84px",
+          "100% 0.96px",
+          "100% 1.08px",
+          "100% 1px",
+          "10px 1px",
+          "20px 20px",
+          "auto",
+          "cover"
+        ],
+        "borderBottomColor": [
+          "oklab(0 0 0 / 0.2)",
+          "oklab(0.623481 -0.0000858009 -0.0124682 / 0.3)",
+          "oklab(0.676982 0.16832 0.13652 / 0.6)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.6)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.7)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.8)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.2)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3)",
+          "rgb(0, 0, 0)",
+          "rgb(123, 123, 120)"
+        ],
+        "borderBottomLeftRadius": [
+          "0px",
+          "16px",
+          "4px",
+          "6px",
+          "8px",
+          "9999px"
+        ],
+        "borderBottomRightRadius": [
+          "0px",
+          "16px",
+          "4px",
+          "6px",
+          "8px",
+          "9999px"
+        ],
+        "borderBottomStyle": [
+          "dashed",
+          "none",
+          "solid"
+        ],
+        "borderBottomWidth": [
+          "0px",
+          "1px",
+          "8px"
+        ],
+        "borderLeftColor": [
+          "oklab(0 0 0 / 0.2)",
+          "oklab(0.623481 -0.0000858009 -0.0124682 / 0.3)",
+          "oklab(0.676982 0.16832 0.13652 / 0.6)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.6)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.7)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.8)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.2)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3)",
+          "rgb(0, 0, 0)",
+          "rgb(123, 123, 120)"
+        ],
+        "borderLeftStyle": [
+          "dashed",
+          "none",
+          "solid"
+        ],
+        "borderLeftWidth": [
+          "0px",
+          "1px",
+          "8px"
+        ],
+        "borderRightColor": [
+          "oklab(0 0 0 / 0.2)",
+          "oklab(0.623481 -0.0000858009 -0.0124682 / 0.3)",
+          "oklab(0.676982 0.16832 0.13652 / 0.6)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.6)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.7)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.8)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.2)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3)",
+          "rgb(0, 0, 0)",
+          "rgb(123, 123, 120)"
+        ],
+        "borderRightStyle": [
+          "dashed",
+          "none",
+          "solid"
+        ],
+        "borderRightWidth": [
+          "0px",
+          "1px",
+          "8px"
+        ],
+        "borderTopColor": [
+          "oklab(0 0 0 / 0.2)",
+          "oklab(0.623481 -0.0000858009 -0.0124682 / 0.3)",
+          "oklab(0.676982 0.16832 0.13652 / 0.6)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.6)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.7)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.8)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.2)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3)",
+          "rgb(0, 0, 0)",
+          "rgb(123, 123, 120)"
+        ],
+        "borderTopLeftRadius": [
+          "0px",
+          "16px",
+          "4px",
+          "6px",
+          "8px",
+          "9999px"
+        ],
+        "borderTopRightRadius": [
+          "0px",
+          "16px",
+          "4px",
+          "6px",
+          "8px",
+          "9999px"
+        ],
+        "borderTopStyle": [
+          "dashed",
+          "none",
+          "solid"
+        ],
+        "borderTopWidth": [
+          "0px",
+          "1px"
+        ],
+        "bottom": [
+          "-0.5px",
+          "-1px",
+          "-50px",
+          "0px",
+          "10443px",
+          "1235.03px",
+          "1347.34px",
+          "1507.53px",
+          "26.2656px",
+          "414.344px"
+        ],
+        "clipPath": [
+          "inset(50%)",
+          "none",
+          "url(\"#apex-icon_svg__a\")",
+          "url(\"#cxm_svg__a\")",
+          "url(\"#doordash_svg__a\")",
+          "url(\"#freshdesk_svg__a\")",
+          "url(\"#front_svg__a\")",
+          "url(\"#gamma_svg__a\")",
+          "url(\"#glean_svg__a\")",
+          "url(\"#gorgias_svg__a\")"
+        ],
+        "color": [
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.6)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.8)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3)",
+          "rgb(0, 0, 0)",
+          "rgb(123, 123, 120)",
+          "rgb(156, 159, 165)",
+          "rgb(2, 9, 23)",
+          "rgb(206, 207, 210)",
+          "rgb(255, 255, 255)",
+          "rgb(255, 86, 0)"
+        ],
+        "columnGap": [
+          "0px",
+          "10px",
+          "12px",
+          "16px",
+          "20px",
+          "24px",
+          "28px",
+          "2px",
+          "32px",
+          "40px"
+        ],
+        "cursor": [
+          "auto",
+          "default",
+          "pointer"
+        ],
+        "display": [
+          "block",
+          "flex",
+          "grid",
+          "inline",
+          "inline-block",
+          "inline-flex",
+          "list-item",
+          "none"
+        ],
+        "filter": [
+          "blur(0px)",
+          "drop-shadow(rgb(255, 255, 255) 0px 0px 8px)",
+          "none",
+          "url(\"#ai-engine-grid_svg__b\")"
+        ],
+        "flex": [
+          "0 0 auto",
+          "0 1 auto",
+          "1 1 0%"
+        ],
+        "flexBasis": [
+          "0%",
+          "auto"
+        ],
+        "flexDirection": [
+          "column",
+          "row"
+        ],
+        "flexGrow": [
+          "0",
+          "1"
+        ],
+        "flexShrink": [
+          "0",
+          "1"
+        ],
+        "flexWrap": [
+          "nowrap",
+          "wrap"
+        ],
+        "fontFamily": [
+          "AeonikFono, \"AeonikFono Fallback\", ui-monospace, monospace",
+          "IvoryLL, \"IvoryLL Fallback\", ui-serif, Georgia, Cambria",
+          "MediumLL, \"MediumLL Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "MediumLL, system-ui, -apple-system, sans-serif"
+        ],
+        "fontSize": [
+          "10px",
+          "11px",
+          "12px",
+          "14px",
+          "16px",
+          "18px",
+          "24px",
+          "32px",
+          "36px",
+          "54px"
+        ],
+        "fontVariant": [
+          "normal",
+          "tabular-nums"
+        ],
+        "fontWeight": [
+          "300",
+          "400",
+          "500",
+          "600"
+        ],
+        "gap": [
+          "10px",
+          "12px",
+          "12px normal",
+          "16px",
+          "20px",
+          "24px",
+          "24px 0px",
+          "24px 16px",
+          "24px normal",
+          "28px"
+        ],
+        "gridColumn": [
+          "2 / span 1",
+          "3 / span 8",
+          "6 / span 5",
+          "9 / span 4",
+          "auto",
+          "span 10 / span 10",
+          "span 12 / span 12",
+          "span 2 / span 2",
+          "span 3 / span 3",
+          "span 4 / span 4"
+        ],
+        "gridColumnEnd": [
+          "auto",
+          "span 1",
+          "span 10",
+          "span 12",
+          "span 2",
+          "span 3",
+          "span 4",
+          "span 5",
+          "span 8",
+          "span 9"
+        ],
+        "gridColumnStart": [
+          "2",
+          "3",
+          "6",
+          "9",
+          "auto",
+          "span 10",
+          "span 12",
+          "span 2",
+          "span 3",
+          "span 4"
+        ],
+        "gridRow": [
+          "auto",
+          "span 2 / span 2",
+          "span 3 / span 3"
+        ],
+        "gridRowEnd": [
+          "auto",
+          "span 2",
+          "span 3"
+        ],
+        "gridRowStart": [
+          "auto",
+          "span 2",
+          "span 3"
+        ],
+        "gridTemplateColumns": [
+          "105.859px 105.859px 105.859px 105.859px 105.859px 105.859px 105.859px 105.859px 105.859px 105.859px",
+          "105.859px 105.859px 105.859px 105.859px 105.859px 105.859px 105.859px 105.859px 105.859px 105.859px ",
+          "1058.66px",
+          "135.406px 135.422px 135.406px 135.422px 135.406px",
+          "149.328px 149.328px 149.328px 149.344px 149.328px 149.328px",
+          "259.188px 259.203px 259.203px 259.203px 259.203px",
+          "346.875px 346.891px 346.875px",
+          "348.875px",
+          "521.328px 521.328px",
+          "56.6406px 56.6406px 56.6406px 56.6406px 56.6406px 56.6406px 56.6406px 56.6406px 56.6406px 56.6406px "
+        ],
+        "gridTemplateRows": [
+          "144px 233.562px",
+          "14px 414.344px",
+          "192px",
+          "203.812px 242px 89.2812px",
+          "211.688px 222.844px 124.844px",
+          "219.219px",
+          "224px 42px",
+          "24px",
+          "266px",
+          "32px 32px 32px 32px"
+        ],
+        "height": [
+          "0px",
+          "100%",
+          "10443px",
+          "108px",
+          "12px",
+          "15px",
+          "16px",
+          "18px",
+          "2080px",
+          "24px"
+        ],
+        "isolation": [
+          "auto",
+          "isolate"
+        ],
+        "justifyContent": [
+          "center",
+          "flex-end",
+          "flex-start",
+          "normal",
+          "space-between"
+        ],
+        "left": [
+          "-0.5px",
+          "-12px",
+          "-1px",
+          "-26.7188px",
+          "-2px",
+          "-4px",
+          "0px",
+          "1056.66px",
+          "1122.66px",
+          "1180px"
+        ],
+        "letterSpacing": [
+          "-0.096px",
+          "-0.32px",
+          "-0.4px",
+          "-0.64px",
+          "-1.504px",
+          "-3.008px",
+          "-3.6px",
+          "0.07px",
+          "0.496px",
+          "0.55px"
+        ],
+        "lineHeight": [
+          "10px",
+          "11px",
+          "14.003px",
+          "14.85px",
+          "14px",
+          "15.008px",
+          "15px",
+          "16.002px",
+          "16px",
+          "18.004px"
+        ],
+        "marginBottom": [
+          "-1px",
+          "0px",
+          "12px",
+          "16px",
+          "20px",
+          "24px",
+          "32px",
+          "36px",
+          "40px",
+          "48px"
+        ],
+        "marginLeft": [
+          "-1px",
+          "-48px",
+          "0px",
+          "12px",
+          "144px",
+          "145.328px",
+          "169.875px",
+          "16px",
+          "184px",
+          "24px"
+        ],
+        "marginRight": [
+          "-1px",
+          "-48px",
+          "0px",
+          "10px",
+          "144px",
+          "145.328px",
+          "169.875px",
+          "184px",
+          "24px",
+          "32px"
+        ],
+        "marginTop": [
+          "-1px",
+          "-32px",
+          "0px",
+          "12px",
+          "14px",
+          "16px",
+          "24px",
+          "32px",
+          "40px",
+          "48px"
+        ],
+        "maxHeight": [
+          "720px",
+          "none"
+        ],
+        "maxWidth": [
+          "100%",
+          "1047.6px",
+          "1152px",
+          "1280px",
+          "132.192px",
+          "1324.8px",
+          "1536px",
+          "1600px",
+          "175px",
+          "1920px"
+        ],
+        "minHeight": [
+          "0px",
+          "auto"
+        ],
+        "minWidth": [
+          "0px",
+          "16px",
+          "80px",
+          "auto"
+        ],
+        "mixBlendMode": [
+          "luminosity",
+          "normal"
+        ],
+        "objectFit": [
+          "contain",
+          "cover",
+          "fill"
+        ],
+        "opacity": [
+          "0",
+          "0.4",
+          "0.5",
+          "0.6",
+          "0.75",
+          "0.8",
+          "0.961",
+          "1"
+        ],
+        "order": [
+          "0",
+          "1",
+          "2"
+        ],
+        "outline": [
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.6) none 0px",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.8) none 0px",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3) none 0px",
+          "rgb(0, 0, 0) none 0px",
+          "rgb(0, 12, 225) none 0px",
+          "rgb(156, 159, 165) none 0px",
+          "rgb(2, 9, 23) none 0px",
+          "rgb(206, 207, 210) none 0px",
+          "rgb(255, 255, 255) none 0px",
+          "rgb(255, 86, 0) none 0px"
+        ],
+        "overflow": [
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "overflowX": [
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "overflowY": [
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "paddingBottom": [
+          "0px",
+          "10px",
+          "12px",
+          "16px",
+          "200px",
+          "24px",
+          "2px",
+          "32px",
+          "36px",
+          "40px"
+        ],
+        "paddingLeft": [
+          "0px",
+          "10px",
+          "12px",
+          "14px",
+          "16px",
+          "20px",
+          "24px",
+          "32px",
+          "40px",
+          "48px"
+        ],
+        "paddingRight": [
+          "0px",
+          "12px",
+          "14px",
+          "16px",
+          "20px",
+          "24px",
+          "32px",
+          "40px",
+          "48px",
+          "4px"
+        ],
+        "paddingTop": [
+          "0px",
+          "10px",
+          "12px",
+          "16px",
+          "200px",
+          "208px",
+          "20px",
+          "24px",
+          "2px",
+          "32px"
+        ],
+        "pointerEvents": [
+          "auto",
+          "none"
+        ],
+        "position": [
+          "absolute",
+          "fixed",
+          "relative",
+          "static",
+          "sticky"
+        ],
+        "right": [
+          "-0.5px",
+          "-1px",
+          "-2px",
+          "0px",
+          "1056.66px",
+          "1122.66px",
+          "1180px",
+          "1210px",
+          "133.422px",
+          "135.422px"
+        ],
+        "rowGap": [
+          "0px",
+          "10px",
+          "12px",
+          "16px",
+          "20px",
+          "24px",
+          "28px",
+          "2px",
+          "32px",
+          "40px"
+        ],
+        "textAlign": [
+          "center",
+          "left",
+          "right",
+          "start"
+        ],
+        "textDecoration": [
+          "none",
+          "underline"
+        ],
+        "textDecorationColor": [
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.6)",
+          "oklab(0.999994 0.0000455677 0.0000200868 / 0.8)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3)",
+          "rgb(0, 0, 0)",
+          "rgb(123, 123, 120)",
+          "rgb(156, 159, 165)",
+          "rgb(2, 9, 23)",
+          "rgb(206, 207, 210)",
+          "rgb(255, 255, 255)",
+          "rgb(255, 86, 0)"
+        ],
+        "textTransform": [
+          "none",
+          "uppercase"
+        ],
+        "top": [
+          "-0.5px",
+          "-50px",
+          "0px",
+          "100%",
+          "1235.03px",
+          "1347.34px",
+          "172.031px",
+          "32px",
+          "414.344px",
+          "418px"
+        ],
+        "transform": [
+          "matrix(0, 0, 0, 1, 0, 0)",
+          "matrix(0.318893, 0, 0, 1, 0, 0)",
+          "matrix(1, 0, 0, 1, -73.8633, 0)",
+          "none"
+        ],
+        "transformOrigin": [
+          "0px 0px",
+          "12px 12px",
+          "16px 16px",
+          "179.062px 9px",
+          "258.422px 20px",
+          "37.1016px 9px",
+          "39.25px 12px",
+          "47.25px 20px",
+          "49.4609px 20px",
+          "50% 50%"
+        ],
+        "transition": [
+          "6s linear",
+          "all",
+          "background-size 0.2s cubic-bezier(0, 0, 0.2, 1)",
+          "background-size 0.2s cubic-bezier(0.165, 0.84, 0.44, 1)",
+          "color 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+          "color 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-",
+          "color 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-",
+          "color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), background-color 0.4s cubic-bezier(0.165, 0.84, 0.44,",
+          "height 0.5s cubic-bezier(0.77, 0, 0.175, 1), margin 0.5s cubic-bezier(0.77, 0, 0.175, 1)",
+          "opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1)"
+        ],
+        "transitionDuration": [
+          "0.15s",
+          "0.2s",
+          "0.3s",
+          "0.4s",
+          "0.5s",
+          "0s",
+          "30s",
+          "6s"
+        ],
+        "transitionProperty": [
+          "all",
+          "background-size",
+          "color",
+          "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-grad",
+          "height, margin",
+          "opacity",
+          "opacity, background-color",
+          "transform"
+        ],
+        "transitionTimingFunction": [
+          "cubic-bezier(0, 0, 0.2, 1)",
+          "cubic-bezier(0.165, 0.84, 0.44, 1)",
+          "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "cubic-bezier(0.4, 0, 0.2, 1)",
+          "cubic-bezier(0.77, 0, 0.175, 1)",
+          "ease",
+          "ease-out",
+          "linear"
+        ],
+        "verticalAlign": [
+          "baseline",
+          "middle",
+          "top"
+        ],
+        "whiteSpace": [
+          "normal",
+          "nowrap"
+        ],
+        "width": [
+          "0px",
+          "112.844px",
+          "122.031px",
+          "12px",
+          "138.031px",
+          "1400px",
+          "1416px",
+          "1440px",
+          "16px",
+          "24px"
+        ],
+        "willChange": [
+          "auto",
+          "transform, opacity, filter"
+        ],
+        "zIndex": [
+          "-1",
+          "0",
+          "1",
+          "10",
+          "1000",
+          "1001",
+          "2",
+          "20",
+          "8",
+          "999"
+        ]
+      }
+    },
+    "github": {
+      "file": "github-desktop.json",
+      "siteName": "github-desktop",
+      "url": "https://github.com/nicedayfor",
+      "viewport": "desktop",
+      "elementCount": 879,
+      "pageScroll": {
+        "scrollWidth": 1440,
+        "scrollHeight": 1187,
+        "clientWidth": 1440,
+        "clientHeight": 900
+      },
+      "scrollContainers": 1,
+      "fixedSticky": 5,
+      "images": 8,
+      "interactive": 490,
+      "textBlocks": 18,
+      "stackingContexts": 27,
+      "scrollBehaviorPositions": 5,
+      "cssPropertyCount": 118,
+      "totalStyleValues": 103722,
+      "avgStylesPerElement": 118.0,
+      "displayBreakdown": {
+        "block": 346,
+        "flex": 149,
+        "inline": 140,
+        "list-item": 133,
+        "none": 42,
+        "inline-block": 33,
+        "grid": 32,
+        "inline-flex": 2,
+        "inline-grid": 2
+      },
+      "positionBreakdown": {
+        "static": 763,
+        "relative": 67,
+        "absolute": 44,
+        "fixed": 5
+      },
+      "featureCounts": {
+        "flex": 149,
+        "grid": 34,
+        "gradient": 2,
+        "shadow": 28,
+        "transform": 26,
+        "animation": 2,
+        "transition": 75,
+        "borderRadius": 67,
+        "overflowHidden": 38
+      },
+      "topProperties": {
+        "display": 879,
+        "position": 879,
+        "top": 879,
+        "right": 879,
+        "bottom": 879,
+        "left": 879,
+        "width": 879,
+        "height": 879,
+        "minWidth": 879,
+        "minHeight": 879,
+        "maxWidth": 879,
+        "maxHeight": 879,
+        "overflow": 879,
+        "overflowX": 879,
+        "overflowY": 879,
+        "boxSizing": 879,
+        "float": 879,
+        "clear": 879,
+        "flexDirection": 879,
+        "flexWrap": 879,
+        "justifyContent": 879,
+        "alignItems": 879,
+        "alignContent": 879,
+        "flexGrow": 879,
+        "flexShrink": 879,
+        "flexBasis": 879,
+        "alignSelf": 879,
+        "order": 879,
+        "flex": 879,
+        "gap": 879
+      },
+      "uniqueValuesPerProp": {
+        "alignContent": [
+          "center",
+          "normal"
+        ],
+        "alignItems": [
+          "center",
+          "flex-start",
+          "normal",
+          "start"
+        ],
+        "alignSelf": [
+          "auto",
+          "center",
+          "flex-start",
+          "stretch"
+        ],
+        "animation": [
+          "0.2s cubic-bezier(0.33, 1, 0.68, 1) Overlay--motion-scaleFade",
+          "none"
+        ],
+        "animationDuration": [
+          "0.2s",
+          "0s"
+        ],
+        "animationName": [
+          "Overlay--motion-scaleFade",
+          "none"
+        ],
+        "backgroundColor": [
+          "rgb(239, 239, 239)",
+          "rgb(246, 248, 250)",
+          "rgb(255, 255, 255)",
+          "rgb(31, 136, 61)",
+          "rgb(36, 41, 47)",
+          "rgb(37, 41, 46)",
+          "rgb(66, 74, 83)",
+          "rgb(9, 105, 218)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(129, 139, 152, 0.12)"
+        ],
+        "backgroundImage": [
+          "linear-gradient(rgb(255, 235, 233), rgb(255, 235, 233))",
+          "linear-gradient(rgb(255, 248, 197), rgb(255, 248, 197))",
+          "none"
+        ],
+        "backgroundPosition": [
+          "0% 0%",
+          "0px 0px",
+          "calc(100% - 8px) 50%"
+        ],
+        "backgroundRepeat": [
+          "no-repeat",
+          "repeat"
+        ],
+        "borderBottomColor": [
+          "rgb(0, 0, 0)",
+          "rgb(110, 119, 129)",
+          "rgb(129, 139, 152)",
+          "rgb(154, 103, 0)",
+          "rgb(209, 217, 224)",
+          "rgb(209, 36, 47)",
+          "rgb(216, 185, 255)",
+          "rgb(255, 255, 255)",
+          "rgb(31, 35, 40)",
+          "rgb(37, 41, 46)"
+        ],
+        "borderBottomLeftRadius": [
+          "0px",
+          "12px",
+          "3px",
+          "6px"
+        ],
+        "borderBottomRightRadius": [
+          "0px",
+          "12px",
+          "3px",
+          "6px"
+        ],
+        "borderBottomStyle": [
+          "none",
+          "solid"
+        ],
+        "borderBottomWidth": [
+          "0px",
+          "1px"
+        ],
+        "borderLeftColor": [
+          "rgb(0, 0, 0)",
+          "rgb(110, 119, 129)",
+          "rgb(129, 139, 152)",
+          "rgb(154, 103, 0)",
+          "rgb(209, 217, 224)",
+          "rgb(209, 36, 47)",
+          "rgb(216, 185, 255)",
+          "rgb(255, 255, 255)",
+          "rgb(31, 35, 40)",
+          "rgb(37, 41, 46)"
+        ],
+        "borderLeftStyle": [
+          "none",
+          "solid"
+        ],
+        "borderLeftWidth": [
+          "0px",
+          "1px"
+        ],
+        "borderRightColor": [
+          "rgb(0, 0, 0)",
+          "rgb(110, 119, 129)",
+          "rgb(129, 139, 152)",
+          "rgb(154, 103, 0)",
+          "rgb(209, 217, 224)",
+          "rgb(209, 36, 47)",
+          "rgb(216, 185, 255)",
+          "rgb(255, 255, 255)",
+          "rgb(31, 35, 40)",
+          "rgb(37, 41, 46)"
+        ],
+        "borderRightStyle": [
+          "none",
+          "solid"
+        ],
+        "borderRightWidth": [
+          "0px",
+          "1px"
+        ],
+        "borderTopColor": [
+          "rgb(0, 0, 0)",
+          "rgb(110, 119, 129)",
+          "rgb(129, 139, 152)",
+          "rgb(154, 103, 0)",
+          "rgb(209, 217, 224)",
+          "rgb(209, 36, 47)",
+          "rgb(216, 185, 255)",
+          "rgb(255, 255, 255)",
+          "rgb(31, 35, 40)",
+          "rgb(37, 41, 46)"
+        ],
+        "borderTopLeftRadius": [
+          "0px",
+          "12px",
+          "3px",
+          "6px"
+        ],
+        "borderTopRightRadius": [
+          "0px",
+          "12px",
+          "3px",
+          "6px"
+        ],
+        "borderTopStyle": [
+          "none",
+          "solid"
+        ],
+        "borderTopWidth": [
+          "0px",
+          "1px"
+        ],
+        "bottom": [
+          "-281px",
+          "-306px",
+          "-337px",
+          "-35px",
+          "-362px",
+          "-402px",
+          "0px",
+          "24px",
+          "32px",
+          "46px"
+        ],
+        "boxShadow": [
+          "none",
+          "rgb(209, 217, 224) 0px -1px 0px 0px inset",
+          "rgb(209, 217, 224) 0px 1px 0px 0px inset",
+          "rgba(209, 217, 224, 0) 0px 0px 0px 1px, rgba(37, 41, 46, 0.24) 0px 40px 80px 0px",
+          "rgba(209, 217, 224, 0.5) 0px 0px 0px 1px, rgba(37, 41, 46, 0.04) 0px 6px 12px -3px, rgba(37, 41, 46,",
+          "rgba(255, 255, 255, 0) 0px 0px 0px 1px inset",
+          "rgba(31, 35, 40, 0.04) 0px 1px 0px 0px inset",
+          "rgba(37, 41, 46, 0.04) 0px 6px 12px -3px, rgba(37, 41, 46, 0.12) 0px 6px 18px 0px"
+        ],
+        "clear": [
+          "both",
+          "none"
+        ],
+        "clipPath": [
+          "inset(0px 100% 100% 0px)",
+          "none",
+          "url(\"#a\")"
+        ],
+        "color": [
+          "rgb(0, 0, 0)",
+          "rgb(154, 103, 0)",
+          "rgb(209, 36, 47)",
+          "rgb(216, 185, 255)",
+          "rgb(255, 255, 255)",
+          "rgb(31, 35, 40)",
+          "rgb(37, 41, 46)",
+          "rgb(89, 99, 110)",
+          "rgb(9, 105, 218)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "columnGap": [
+          "16px",
+          "20px",
+          "24px",
+          "40px",
+          "4px",
+          "8px",
+          "normal"
+        ],
+        "contain": [
+          "layout",
+          "none"
+        ],
+        "cursor": [
+          "auto",
+          "default",
+          "not-allowed",
+          "pointer",
+          "text"
+        ],
+        "display": [
+          "block",
+          "flex",
+          "grid",
+          "inline",
+          "inline-block",
+          "inline-flex",
+          "inline-grid",
+          "list-item",
+          "none"
+        ],
+        "flex": [
+          "0 0 auto",
+          "0 1 auto",
+          "1 0 auto",
+          "1 1 0%",
+          "1 1 auto"
+        ],
+        "flexBasis": [
+          "0%",
+          "auto"
+        ],
+        "flexDirection": [
+          "column",
+          "row"
+        ],
+        "flexGrow": [
+          "0",
+          "1"
+        ],
+        "flexShrink": [
+          "0",
+          "1"
+        ],
+        "flexWrap": [
+          "nowrap",
+          "wrap"
+        ],
+        "float": [
+          "none",
+          "right"
+        ],
+        "fontFamily": [
+          "\"Mona Sans VF\", -apple-system, \"system-ui\", \"Segoe UI\", \"Noto Sans\", Helvetica, Arial, sans-serif, \"",
+          "\"Mona Sans\", \"Mona Sans Fallback\", -apple-system, \"system-ui\", \"Segoe UI\", Helvetica, Arial, sans-se",
+          "\"Segoe UI\", SegoeUI, Arial, sans-serif",
+          "ui-monospace, SFMono-Regular, \"SF Mono\", Menlo, Consolas, \"Liberation Mono\", monospace"
+        ],
+        "fontSize": [
+          "12px",
+          "13px",
+          "14px",
+          "15px",
+          "16px",
+          "18px",
+          "20px",
+          "24px",
+          "32px"
+        ],
+        "fontWeight": [
+          "400",
+          "500",
+          "600",
+          "700"
+        ],
+        "gap": [
+          "0px 16px",
+          "16px",
+          "20px",
+          "24px",
+          "40px",
+          "4px",
+          "4px 40px",
+          "8px",
+          "normal",
+          "normal 16px"
+        ],
+        "gridAutoFlow": [
+          "column",
+          "row"
+        ],
+        "gridColumn": [
+          "1",
+          "2",
+          "auto",
+          "label",
+          "text"
+        ],
+        "gridColumnEnd": [
+          "auto",
+          "label",
+          "text"
+        ],
+        "gridColumnStart": [
+          "1",
+          "2",
+          "auto",
+          "label",
+          "text"
+        ],
+        "gridRow": [
+          "1",
+          "2",
+          "auto",
+          "label",
+          "span 2",
+          "text"
+        ],
+        "gridRowEnd": [
+          "auto",
+          "label",
+          "text"
+        ],
+        "gridRowStart": [
+          "1",
+          "2",
+          "auto",
+          "label",
+          "span 2",
+          "text"
+        ],
+        "gridTemplateColumns": [
+          "200px 200px 200px",
+          "231.078px 200px 200px",
+          "241.172px 262.172px",
+          "249.625px 202.703px 235.438px 200px",
+          "24px 127.141px",
+          "24px 145.938px",
+          "24px 149.078px",
+          "24px 150.562px",
+          "24px 160.406px",
+          "24px 162.703px"
+        ],
+        "gridTemplateRows": [
+          "16px",
+          "217px",
+          "21px",
+          "242px",
+          "24px 21px",
+          "282px",
+          "min-content",
+          "none"
+        ],
+        "height": [
+          "0px",
+          "100%",
+          "1187px",
+          "16px",
+          "175px",
+          "18px",
+          "1px",
+          "21px",
+          "240px",
+          "24px"
+        ],
+        "isolation": [
+          "auto",
+          "isolate"
+        ],
+        "justifyContent": [
+          "center",
+          "flex-end",
+          "normal",
+          "space-between"
+        ],
+        "left": [
+          "-20px",
+          "-228.531px",
+          "0px",
+          "102.719px",
+          "134.828px",
+          "137.719px",
+          "171.719px",
+          "210.719px",
+          "242.719px",
+          "276.719px"
+        ],
+        "letterSpacing": [
+          "0.5px",
+          "normal"
+        ],
+        "lineHeight": [
+          "0px",
+          "12px",
+          "13px",
+          "14px",
+          "15px",
+          "16px",
+          "17.5px",
+          "18px",
+          "19.5px",
+          "20px"
+        ],
+        "marginBottom": [
+          "-16px",
+          "0px",
+          "10px",
+          "12px",
+          "13px",
+          "15px",
+          "16px",
+          "24px",
+          "2px",
+          "32px"
+        ],
+        "marginLeft": [
+          "-2px",
+          "-487px",
+          "-80px",
+          "0px",
+          "12px",
+          "16px",
+          "19px",
+          "214px",
+          "250px",
+          "2px"
+        ],
+        "marginRight": [
+          "0px",
+          "12px",
+          "16px",
+          "214px",
+          "250px",
+          "2px",
+          "34px",
+          "36px",
+          "3px",
+          "400px"
+        ],
+        "marginTop": [
+          "-16px",
+          "-1px",
+          "-4px",
+          "0px",
+          "15px",
+          "16px",
+          "20px",
+          "24px",
+          "2px",
+          "32px"
+        ],
+        "maxHeight": [
+          "0px",
+          "100%",
+          "540px",
+          "720px",
+          "none"
+        ],
+        "maxWidth": [
+          "0px",
+          "100%",
+          "1012px",
+          "1280px",
+          "285px",
+          "320px",
+          "none"
+        ],
+        "minHeight": [
+          "0px",
+          "16px",
+          "900px",
+          "auto"
+        ],
+        "minWidth": [
+          "0px",
+          "100%",
+          "192px",
+          "200px",
+          "320px",
+          "460px",
+          "auto",
+          "fit-content",
+          "max-content"
+        ],
+        "opacity": [
+          "0",
+          "0.4",
+          "0.5",
+          "1"
+        ],
+        "order": [
+          "0",
+          "2"
+        ],
+        "outline": [
+          "rgb(0, 0, 0) none 0px",
+          "rgb(154, 103, 0) none 0px",
+          "rgb(209, 36, 47) none 0px",
+          "rgb(216, 185, 255) none 0px",
+          "rgb(255, 255, 255) none 0px",
+          "rgb(31, 35, 40) none 0px",
+          "rgb(37, 41, 46) none 0px",
+          "rgb(89, 99, 110) none 0px",
+          "rgb(9, 105, 218) none 0px",
+          "rgba(0, 0, 0, 0) none 0px"
+        ],
+        "outlineOffset": [
+          "-1px",
+          "0px",
+          "2.39062px"
+        ],
+        "overflow": [
+          "auto",
+          "auto hidden",
+          "clip",
+          "hidden",
+          "hidden auto",
+          "scroll",
+          "visible"
+        ],
+        "overflowWrap": [
+          "break-word",
+          "normal"
+        ],
+        "overflowX": [
+          "auto",
+          "clip",
+          "hidden",
+          "scroll",
+          "visible"
+        ],
+        "overflowY": [
+          "auto",
+          "clip",
+          "hidden",
+          "scroll",
+          "visible"
+        ],
+        "paddingBottom": [
+          "0px",
+          "12px",
+          "16px",
+          "1px",
+          "20px",
+          "24px",
+          "32px",
+          "3px",
+          "4px",
+          "5px"
+        ],
+        "paddingLeft": [
+          "0px",
+          "12px",
+          "16px",
+          "24px",
+          "32px",
+          "3px",
+          "40px",
+          "4px",
+          "6px",
+          "8px"
+        ],
+        "paddingRight": [
+          "0px",
+          "12px",
+          "16px",
+          "24px",
+          "32px",
+          "3px",
+          "4px",
+          "6px",
+          "8px"
+        ],
+        "paddingTop": [
+          "0px",
+          "12px",
+          "16px",
+          "1px",
+          "20px",
+          "24px",
+          "2px",
+          "32px",
+          "3px",
+          "40px"
+        ],
+        "pointerEvents": [
+          "auto",
+          "none"
+        ],
+        "position": [
+          "absolute",
+          "fixed",
+          "relative",
+          "static"
+        ],
+        "right": [
+          "-124px",
+          "-23.875px",
+          "-497.188px",
+          "-631.953px",
+          "-640.844px",
+          "-644.484px",
+          "-974.344px",
+          "-9px",
+          "0px",
+          "1008.34px"
+        ],
+        "rowGap": [
+          "0px",
+          "16px",
+          "20px",
+          "24px",
+          "40px",
+          "4px",
+          "8px",
+          "normal"
+        ],
+        "textAlign": [
+          "center",
+          "left",
+          "right",
+          "start"
+        ],
+        "textDecoration": [
+          "none",
+          "underline"
+        ],
+        "textDecorationColor": [
+          "rgb(0, 0, 0)",
+          "rgb(154, 103, 0)",
+          "rgb(209, 36, 47)",
+          "rgb(216, 185, 255)",
+          "rgb(255, 255, 255)",
+          "rgb(31, 35, 40)",
+          "rgb(37, 41, 46)",
+          "rgb(89, 99, 110)",
+          "rgb(9, 105, 218)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "textOverflow": [
+          "clip",
+          "ellipsis"
+        ],
+        "textTransform": [
+          "none",
+          "uppercase"
+        ],
+        "top": [
+          "-10px",
+          "-20px",
+          "-6px",
+          "0px",
+          "113px",
+          "150px",
+          "16px",
+          "24px",
+          "25px",
+          "263px"
+        ],
+        "transform": [
+          "matrix(0, 1, -1, 0, 0, 0)",
+          "matrix(0.99, 0, 0, 0.99, 0, -11.088)",
+          "matrix(1, 0, 0, 1, -8, 0)",
+          "matrix(1, 0, 0, 1, 0, 0)",
+          "none"
+        ],
+        "transformOrigin": [
+          "0.5px 0.5px",
+          "0px 0px",
+          "0px 1px",
+          "100% 0px",
+          "100% 100%",
+          "16px 16px",
+          "16px 17.5px",
+          "24px 17.5px",
+          "309.695px 20px",
+          "48.7109px 20px"
+        ],
+        "transition": [
+          "0.25s ease-in",
+          "all",
+          "background 0.033333s linear",
+          "box-shadow 0.2s, outline 0.2s, border-color 0.2s",
+          "color 0.08s cubic-bezier(0.33, 1, 0.68, 1), background-color 0.08s cubic-bezier(0.33, 1, 0.68, 1), b",
+          "color 0.08s cubic-bezier(0.65, 0, 0.35, 1), fill 0.08s cubic-bezier(0.65, 0, 0.35, 1), background-co",
+          "color 0.2s cubic-bezier(0.3, 0, 0.5, 1), background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1), border-",
+          "none",
+          "opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+          "opacity 0.4s linear 0.4s"
+        ],
+        "transitionDelay": [
+          "0.4s",
+          "0s",
+          "0s, 0s, 0s",
+          "0s, 0s, 0s, 0s"
+        ],
+        "transitionDuration": [
+          "0.033333s",
+          "0.08s",
+          "0.08s, 0.08s, 0.08s, 0.08s",
+          "0.25s",
+          "0.2s",
+          "0.2s, 0.2s, 0.2s",
+          "0.3s",
+          "0.4s",
+          "0.5s",
+          "0s"
+        ],
+        "transitionProperty": [
+          "all",
+          "background",
+          "box-shadow, outline, border-color",
+          "color, background-color, border-color",
+          "color, background-color, box-shadow, border-color",
+          "color, fill, background-color, border-color",
+          "none",
+          "opacity",
+          "opacity, transform",
+          "top"
+        ],
+        "transitionTimingFunction": [
+          "cubic-bezier(0.16, 1, 0.3, 1)",
+          "cubic-bezier(0.3, 0, 0.5, 1), cubic-bezier(0.3, 0, 0.5, 1), cubic-bezier(0.3, 0, 0.5, 1)",
+          "cubic-bezier(0.33, 1, 0.68, 1), cubic-bezier(0.33, 1, 0.68, 1), cubic-bezier(0.33, 1, 0.68, 1), cubi",
+          "cubic-bezier(0.65, 0, 0.35, 1)",
+          "ease",
+          "ease, ease, ease",
+          "ease-in",
+          "ease-in-out",
+          "linear"
+        ],
+        "verticalAlign": [
+          "baseline",
+          "middle",
+          "text-bottom",
+          "text-top"
+        ],
+        "visibility": [
+          "hidden",
+          "visible"
+        ],
+        "whiteSpace": [
+          "normal",
+          "nowrap",
+          "pre",
+          "pre-wrap"
+        ],
+        "width": [
+          "0px",
+          "100%",
+          "1071.77px",
+          "1328px",
+          "1440px",
+          "160.406px",
+          "16px",
+          "1px",
+          "200.406px",
+          "209.625px"
+        ],
+        "wordBreak": [
+          "break-word",
+          "normal"
+        ],
+        "zIndex": [
+          "0",
+          "1",
+          "10",
+          "100",
+          "1000",
+          "10000",
+          "32",
+          "35",
+          "4",
+          "5"
+        ]
+      }
+    },
+    "gumroad": {
+      "file": "gumroad-desktop.json",
+      "siteName": "gumroad-desktop",
+      "url": "https://gumroad.com/",
+      "viewport": "desktop",
+      "elementCount": 633,
+      "pageScroll": {
+        "scrollWidth": 1440,
+        "scrollHeight": 900,
+        "clientWidth": 1440,
+        "clientHeight": 900
+      },
+      "scrollContainers": 1,
+      "fixedSticky": 2,
+      "images": 129,
+      "interactive": 173,
+      "textBlocks": 19,
+      "stackingContexts": 22,
+      "scrollBehaviorPositions": 1,
+      "cssPropertyCount": 118,
+      "totalStyleValues": 74693,
+      "avgStylesPerElement": 118.0,
+      "displayBreakdown": {
+        "block": 362,
+        "flex": 193,
+        "inline": 58,
+        "none": 10,
+        "inline-flex": 5,
+        "inline-block": 3,
+        "grid": 2
+      },
+      "positionBreakdown": {
+        "static": 574,
+        "absolute": 31,
+        "relative": 26,
+        "sticky": 1,
+        "fixed": 1
+      },
+      "featureCounts": {
+        "flex": 193,
+        "grid": 2,
+        "gradient": 0,
+        "shadow": 0,
+        "transform": 11,
+        "animation": 4,
+        "transition": 15,
+        "borderRadius": 163,
+        "overflowHidden": 28
+      },
+      "topProperties": {
+        "display": 633,
+        "position": 633,
+        "top": 633,
+        "right": 633,
+        "bottom": 633,
+        "left": 633,
+        "width": 633,
+        "height": 633,
+        "minWidth": 633,
+        "minHeight": 633,
+        "maxWidth": 633,
+        "maxHeight": 633,
+        "overflow": 633,
+        "overflowX": 633,
+        "overflowY": 633,
+        "boxSizing": 633,
+        "float": 633,
+        "clear": 633,
+        "flexDirection": 633,
+        "flexWrap": 633,
+        "justifyContent": 633,
+        "alignItems": 633,
+        "alignContent": 633,
+        "flexGrow": 633,
+        "flexShrink": 633,
+        "flexBasis": 633,
+        "alignSelf": 633,
+        "order": 633,
+        "flex": 633,
+        "gap": 633
+      },
+      "uniqueValuesPerProp": {
+        "alignItems": [
+          "center",
+          "normal"
+        ],
+        "animation": [
+          "60s linear infinite marquee",
+          "none"
+        ],
+        "animationDuration": [
+          "0s",
+          "60s",
+          "auto"
+        ],
+        "animationName": [
+          "marquee",
+          "none",
+          "parallax-scroll"
+        ],
+        "backgroundColor": [
+          "rgb(0, 0, 0)",
+          "rgb(220, 52, 30)",
+          "rgb(241, 243, 51)",
+          "rgb(244, 244, 240)",
+          "rgb(255, 144, 232)",
+          "rgb(255, 201, 0)",
+          "rgb(255, 255, 255)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "borderBottomColor": [
+          "oklab(0.259939 -0.000510752 0.00176638 / 0.5)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3)",
+          "oklch(0.872 0.01 258.338)",
+          "rgb(0, 0, 0)",
+          "rgb(255, 255, 255)",
+          "rgb(36, 36, 35)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "borderBottomLeftRadius": [
+          "0px",
+          "16px",
+          "24px",
+          "3.35544e+07px",
+          "4px",
+          "6px"
+        ],
+        "borderBottomRightRadius": [
+          "0px",
+          "16px",
+          "24px",
+          "3.35544e+07px",
+          "4px",
+          "6px"
+        ],
+        "borderBottomStyle": [
+          "none",
+          "solid"
+        ],
+        "borderBottomWidth": [
+          "0px",
+          "1px"
+        ],
+        "borderLeftColor": [
+          "oklab(0.259939 -0.000510752 0.00176638 / 0.5)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3)",
+          "oklch(0.872 0.01 258.338)",
+          "rgb(0, 0, 0)",
+          "rgb(255, 255, 255)",
+          "rgb(36, 36, 35)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "borderLeftStyle": [
+          "none",
+          "solid"
+        ],
+        "borderLeftWidth": [
+          "0px",
+          "1px"
+        ],
+        "borderRightColor": [
+          "oklab(0.259939 -0.000510752 0.00176638 / 0.5)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3)",
+          "oklch(0.872 0.01 258.338)",
+          "rgb(0, 0, 0)",
+          "rgb(255, 255, 255)",
+          "rgb(36, 36, 35)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "borderRightStyle": [
+          "none",
+          "solid"
+        ],
+        "borderRightWidth": [
+          "0px",
+          "1px"
+        ],
+        "borderTopColor": [
+          "oklab(0.259939 -0.000510752 0.00176638 / 0.5)",
+          "oklab(0.999994 0.0000455678 0.0000200868 / 0.3)",
+          "oklch(0.872 0.01 258.338)",
+          "rgb(0, 0, 0)",
+          "rgb(255, 255, 255)",
+          "rgb(36, 36, 35)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "borderTopLeftRadius": [
+          "0px",
+          "16px",
+          "24px",
+          "3.35544e+07px",
+          "4px",
+          "6px"
+        ],
+        "borderTopRightRadius": [
+          "0px",
+          "16px",
+          "24px",
+          "3.35544e+07px",
+          "4px",
+          "6px"
+        ],
+        "borderTopStyle": [
+          "none",
+          "solid"
+        ],
+        "borderTopWidth": [
+          "0px",
+          "1px"
+        ],
+        "bottom": [
+          "-10px",
+          "-160.922px",
+          "-202px",
+          "-335.953px",
+          "-65px",
+          "-82px",
+          "-8px",
+          "0px",
+          "10900px",
+          "146.516px"
+        ],
+        "boxSizing": [
+          "border-box",
+          "content-box"
+        ],
+        "clipPath": [
+          "inset(50%)",
+          "none"
+        ],
+        "color": [
+          "oklab(0.259939 -0.000510752 0.00176638 / 0.5)",
+          "rgb(0, 0, 0)",
+          "rgb(255, 255, 255)",
+          "rgb(36, 36, 35)"
+        ],
+        "columnGap": [
+          "12px",
+          "16px",
+          "24px",
+          "32px",
+          "36px",
+          "40px",
+          "4px",
+          "64px",
+          "6px",
+          "8px"
+        ],
+        "cursor": [
+          "auto",
+          "default",
+          "pointer",
+          "text"
+        ],
+        "display": [
+          "block",
+          "flex",
+          "grid",
+          "inline",
+          "inline-block",
+          "inline-flex",
+          "none"
+        ],
+        "flex": [
+          "0 0 auto",
+          "0 1 33.3333%",
+          "0 1 66.6667%",
+          "0 1 auto",
+          "1 1 0%"
+        ],
+        "flexBasis": [
+          "0%",
+          "33.3333%",
+          "66.6667%",
+          "auto"
+        ],
+        "flexDirection": [
+          "column",
+          "row"
+        ],
+        "flexGrow": [
+          "0",
+          "1"
+        ],
+        "flexShrink": [
+          "0",
+          "1"
+        ],
+        "flexWrap": [
+          "nowrap",
+          "wrap"
+        ],
+        "fontFamily": [
+          "\"ABC Favorit\"",
+          "\"ABC Favorit\", Avenir, Montserrat, Corbel, \"URW Gothic\", source-sans-pro, sans-serif",
+          "\"lucida grande\", tahoma, verdana, arial, sans-serif",
+          "Arial"
+        ],
+        "fontSize": [
+          "11px",
+          "13.3333px",
+          "14px",
+          "16px",
+          "18px",
+          "192px",
+          "20px",
+          "24px",
+          "30px",
+          "36px"
+        ],
+        "fontWeight": [
+          "400",
+          "500",
+          "700"
+        ],
+        "gap": [
+          "12px",
+          "16px",
+          "24px",
+          "24px 16px",
+          "32px",
+          "36px",
+          "48px 32px",
+          "4px",
+          "64px",
+          "6px"
+        ],
+        "gridTemplateColumns": [
+          "1440px",
+          "544px 544px",
+          "none"
+        ],
+        "gridTemplateRows": [
+          "351px 351px",
+          "776px",
+          "none"
+        ],
+        "height": [
+          "100%",
+          "14px",
+          "16px",
+          "18px",
+          "1px",
+          "20px",
+          "2px",
+          "328px",
+          "32px",
+          "34px"
+        ],
+        "justifyContent": [
+          "center",
+          "normal",
+          "space-between"
+        ],
+        "left": [
+          "-32px",
+          "-48px",
+          "0px",
+          "1008px",
+          "1225.61px",
+          "1312px",
+          "246.625px",
+          "307px",
+          "32px",
+          "365.625px"
+        ],
+        "letterSpacing": [
+          "-0.4px",
+          "normal"
+        ],
+        "lineHeight": [
+          "11px",
+          "16px",
+          "172.8px",
+          "20px",
+          "22px",
+          "24px",
+          "26px",
+          "28px",
+          "32.5px",
+          "32px"
+        ],
+        "marginBottom": [
+          "-12px",
+          "-1px",
+          "0px",
+          "16px",
+          "24px",
+          "48px",
+          "4px",
+          "96px"
+        ],
+        "marginLeft": [
+          "-1px",
+          "-8px",
+          "0px",
+          "102.344px",
+          "144px",
+          "150.406px",
+          "214.406px",
+          "272px",
+          "305.734px",
+          "4px"
+        ],
+        "marginRight": [
+          "-1px",
+          "0px",
+          "102.344px",
+          "12px",
+          "144px",
+          "150.406px",
+          "214.406px",
+          "272px",
+          "305.734px",
+          "32px"
+        ],
+        "marginTop": [
+          "-12px",
+          "-1px",
+          "-80px",
+          "0px",
+          "16px",
+          "4px",
+          "8px"
+        ],
+        "maxWidth": [
+          "100%",
+          "1024px",
+          "1152px",
+          "672px",
+          "768px",
+          "896px",
+          "none"
+        ],
+        "minHeight": [
+          "0px",
+          "300px",
+          "900px",
+          "auto"
+        ],
+        "objectFit": [
+          "cover",
+          "fill"
+        ],
+        "outline": [
+          "oklab(0.259939 -0.000510752 0.00176638 / 0.5) none 0px",
+          "rgb(0, 0, 0) none 0px",
+          "rgb(255, 255, 255) none 0px",
+          "rgb(36, 36, 35) none 0px"
+        ],
+        "overflow": [
+          "auto",
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "overflowX": [
+          "auto",
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "overflowY": [
+          "auto",
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "paddingBottom": [
+          "0px",
+          "128px",
+          "16px",
+          "224px",
+          "256px",
+          "32px",
+          "40px",
+          "4px",
+          "56px",
+          "6px"
+        ],
+        "paddingLeft": [
+          "0px",
+          "115.2px",
+          "12px",
+          "160px",
+          "16px",
+          "24px",
+          "32px",
+          "40px",
+          "48px",
+          "4px"
+        ],
+        "paddingRight": [
+          "0px",
+          "115.2px",
+          "12px",
+          "160px",
+          "16px",
+          "24px",
+          "32px",
+          "40px",
+          "48px",
+          "4px"
+        ],
+        "paddingTop": [
+          "0px",
+          "128px",
+          "160px",
+          "16px",
+          "224px",
+          "256px",
+          "32px",
+          "40px",
+          "4px",
+          "56px"
+        ],
+        "pointerEvents": [
+          "auto",
+          "none"
+        ],
+        "position": [
+          "absolute",
+          "fixed",
+          "relative",
+          "static",
+          "sticky"
+        ],
+        "right": [
+          "-32px",
+          "-64px",
+          "-8px",
+          "0px",
+          "1220.81px",
+          "1232px",
+          "142.578px",
+          "1440px",
+          "147.25px",
+          "154.031px"
+        ],
+        "rowGap": [
+          "12px",
+          "16px",
+          "24px",
+          "32px",
+          "36px",
+          "48px",
+          "4px",
+          "64px",
+          "6px",
+          "8px"
+        ],
+        "textAlign": [
+          "center",
+          "left",
+          "start"
+        ],
+        "textDecoration": [
+          "none",
+          "underline"
+        ],
+        "textDecorationColor": [
+          "oklab(0.259939 -0.000510752 0.00176638 / 0.5)",
+          "rgb(0, 0, 0)",
+          "rgb(255, 255, 255)",
+          "rgb(36, 36, 35)"
+        ],
+        "top": [
+          "-10000px",
+          "-16px",
+          "-64px",
+          "0px",
+          "236px",
+          "250px",
+          "32px",
+          "334px",
+          "358px",
+          "400.25px"
+        ],
+        "transform": [
+          "matrix(1, 0, 0, 1, -155.6, 0)",
+          "matrix(1, 0, 0, 1, 0, -388)",
+          "matrix(1, 0, 0, 1, 0, 0)",
+          "none"
+        ],
+        "transformOrigin": [
+          "0px 0px",
+          "10px 10px",
+          "114.18px 16px",
+          "15.8438px 8px",
+          "166.023px 39.5px",
+          "27.8438px 10px",
+          "304.297px 23px",
+          "34.7812px 23px",
+          "41.3281px 23px",
+          "424.305px 39.5px"
+        ],
+        "transition": [
+          "0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+          "0.1s cubic-bezier(0.4, 0, 0.2, 1)",
+          "0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+          "all",
+          "color 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-",
+          "transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), translate 0.15s cubic-bezier(0.4, 0, 0.2, 1), scale 0.",
+          "transform 0.1s linear",
+          "transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), translate 0.2s cubic-bezier(0.4, 0, 0.2, 1), scale 0.2s"
+        ],
+        "transitionDuration": [
+          "0.15s",
+          "0.1s",
+          "0.2s",
+          "0s"
+        ],
+        "transitionProperty": [
+          "all",
+          "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-grad",
+          "transform",
+          "transform, translate, scale, rotate"
+        ],
+        "transitionTimingFunction": [
+          "cubic-bezier(0.4, 0, 0.2, 1)",
+          "ease",
+          "linear"
+        ],
+        "verticalAlign": [
+          "baseline",
+          "bottom"
+        ],
+        "whiteSpace": [
+          "normal",
+          "nowrap"
+        ],
+        "width": [
+          "102.719px",
+          "102px",
+          "1440px",
+          "14px",
+          "18px",
+          "20px",
+          "228.359px",
+          "240.016px",
+          "31.6875px",
+          "332.047px"
+        ],
+        "willChange": [
+          "auto",
+          "transform"
+        ],
+        "zIndex": [
+          "1",
+          "10",
+          "2",
+          "20",
+          "3",
+          "50",
+          "auto"
+        ]
+      }
+    },
+    "hacker-news": {
+      "file": "hacker-news-desktop.json",
+      "siteName": "hacker-news-desktop",
+      "url": "https://news.ycombinator.com/",
+      "viewport": "desktop",
+      "elementCount": 808,
+      "pageScroll": {
+        "scrollWidth": 1440,
+        "scrollHeight": 1217,
+        "clientWidth": 1440,
+        "clientHeight": 1217
+      },
+      "scrollContainers": 0,
+      "fixedSticky": 0,
+      "images": 2,
+      "interactive": 291,
+      "textBlocks": 0,
+      "stackingContexts": 0,
+      "scrollBehaviorPositions": 5,
+      "cssPropertyCount": 118,
+      "totalStyleValues": 95344,
+      "avgStylesPerElement": 118.0,
+      "displayBreakdown": {
+        "inline": 477,
+        "table-cell": 159,
+        "table-row": 98,
+        "block": 65,
+        "table": 4,
+        "table-row-group": 4,
+        "inline-block": 1
+      },
+      "positionBreakdown": {
+        "static": 808
+      },
+      "featureCounts": {
+        "flex": 0,
+        "grid": 0,
+        "gradient": 30,
+        "shadow": 0,
+        "transform": 0,
+        "animation": 0,
+        "transition": 0,
+        "borderRadius": 0,
+        "overflowHidden": 61
+      },
+      "topProperties": {
+        "display": 808,
+        "position": 808,
+        "top": 808,
+        "right": 808,
+        "bottom": 808,
+        "left": 808,
+        "width": 808,
+        "height": 808,
+        "minWidth": 808,
+        "minHeight": 808,
+        "maxWidth": 808,
+        "maxHeight": 808,
+        "overflow": 808,
+        "overflowX": 808,
+        "overflowY": 808,
+        "boxSizing": 808,
+        "float": 808,
+        "clear": 808,
+        "flexDirection": 808,
+        "flexWrap": 808,
+        "justifyContent": 808,
+        "alignItems": 808,
+        "alignContent": 808,
+        "flexGrow": 808,
+        "flexShrink": 808,
+        "flexBasis": 808,
+        "alignSelf": 808,
+        "order": 808,
+        "flex": 808,
+        "gap": 808
+      },
+      "uniqueValuesPerProp": {
+        "backgroundColor": [
+          "rgb(246, 246, 239)",
+          "rgb(255, 102, 0)",
+          "rgb(255, 255, 255)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "backgroundImage": [
+          "none",
+          "url(\"https://news.ycombinator.com/triangle.svg\"), linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)"
+        ],
+        "backgroundPosition": [
+          "0% 0%",
+          "0% 0%, 0% 0%"
+        ],
+        "backgroundRepeat": [
+          "repeat",
+          "repeat, no-repeat"
+        ],
+        "backgroundSize": [
+          "10px, 10px",
+          "auto"
+        ],
+        "borderBottomColor": [
+          "rgb(0, 0, 0)",
+          "rgb(118, 118, 118)",
+          "rgb(128, 128, 128)",
+          "rgb(130, 130, 130)",
+          "rgb(255, 255, 255)",
+          "rgb(34, 34, 34)"
+        ],
+        "borderBottomStyle": [
+          "inset",
+          "none",
+          "solid"
+        ],
+        "borderBottomWidth": [
+          "0px",
+          "1px",
+          "2px"
+        ],
+        "borderLeftColor": [
+          "rgb(0, 0, 0)",
+          "rgb(118, 118, 118)",
+          "rgb(128, 128, 128)",
+          "rgb(130, 130, 130)",
+          "rgb(255, 255, 255)",
+          "rgb(34, 34, 34)"
+        ],
+        "borderLeftStyle": [
+          "inset",
+          "none",
+          "solid"
+        ],
+        "borderLeftWidth": [
+          "0px",
+          "1px",
+          "2px"
+        ],
+        "borderRightColor": [
+          "rgb(0, 0, 0)",
+          "rgb(118, 118, 118)",
+          "rgb(128, 128, 128)",
+          "rgb(130, 130, 130)",
+          "rgb(255, 255, 255)",
+          "rgb(34, 34, 34)"
+        ],
+        "borderRightStyle": [
+          "inset",
+          "none",
+          "solid"
+        ],
+        "borderRightWidth": [
+          "0px",
+          "1px",
+          "2px"
+        ],
+        "borderTopColor": [
+          "rgb(0, 0, 0)",
+          "rgb(118, 118, 118)",
+          "rgb(128, 128, 128)",
+          "rgb(130, 130, 130)",
+          "rgb(255, 255, 255)",
+          "rgb(34, 34, 34)"
+        ],
+        "borderTopStyle": [
+          "inset",
+          "none",
+          "solid"
+        ],
+        "borderTopWidth": [
+          "0px",
+          "1px",
+          "2px"
+        ],
+        "boxSizing": [
+          "border-box",
+          "content-box"
+        ],
+        "color": [
+          "rgb(0, 0, 0)",
+          "rgb(130, 130, 130)",
+          "rgb(34, 34, 34)"
+        ],
+        "cursor": [
+          "auto",
+          "pointer",
+          "text"
+        ],
+        "display": [
+          "block",
+          "inline",
+          "inline-block",
+          "table",
+          "table-cell",
+          "table-row",
+          "table-row-group"
+        ],
+        "fontFamily": [
+          "Verdana, Geneva, sans-serif",
+          "monospace"
+        ],
+        "fontSize": [
+          "10.6667px",
+          "13.3333px",
+          "16px",
+          "9.33333px"
+        ],
+        "fontWeight": [
+          "400",
+          "700"
+        ],
+        "height": [
+          "0px",
+          "1076px",
+          "10px",
+          "11px",
+          "1201.33px",
+          "16px",
+          "18px",
+          "19px",
+          "20px",
+          "21px"
+        ],
+        "lineHeight": [
+          "12px",
+          "16px",
+          "normal"
+        ],
+        "marginBottom": [
+          "0px",
+          "13.3333px",
+          "6px",
+          "8px"
+        ],
+        "marginLeft": [
+          "0px",
+          "1px",
+          "2px",
+          "8px"
+        ],
+        "marginRight": [
+          "0px",
+          "2px",
+          "5px",
+          "8px"
+        ],
+        "marginTop": [
+          "0px",
+          "3px",
+          "8px"
+        ],
+        "minWidth": [
+          "0px",
+          "796px"
+        ],
+        "outline": [
+          "rgb(0, 0, 0) none 0px",
+          "rgb(130, 130, 130) none 0px",
+          "rgb(34, 34, 34) none 0px"
+        ],
+        "overflow": [
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "overflowX": [
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "overflowY": [
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "paddingBottom": [
+          "0px",
+          "1px",
+          "2px"
+        ],
+        "paddingLeft": [
+          "0px",
+          "1px",
+          "2px"
+        ],
+        "paddingRight": [
+          "0px",
+          "1px",
+          "2px",
+          "4px"
+        ],
+        "paddingTop": [
+          "0px",
+          "1px",
+          "2px"
+        ],
+        "textAlign": [
+          "-webkit-center",
+          "-webkit-right",
+          "right",
+          "start"
+        ],
+        "textDecorationColor": [
+          "rgb(0, 0, 0)",
+          "rgb(130, 130, 130)",
+          "rgb(34, 34, 34)"
+        ],
+        "transformOrigin": [
+          "0px 0px",
+          "10.9062px 9.5px",
+          "10px 10px",
+          "12px 10px",
+          "17.9062px 5.5px",
+          "297.656px 9.5px",
+          "315.562px 5.5px",
+          "315.562px 538px",
+          "315.562px 9.5px",
+          "43.7266px 10px"
+        ],
+        "verticalAlign": [
+          "baseline",
+          "middle",
+          "top"
+        ],
+        "width": [
+          "0px",
+          "1094.94px",
+          "10px",
+          "1206.39px",
+          "1208.39px",
+          "1210.39px",
+          "1424px",
+          "148px",
+          "14px",
+          "18px"
+        ],
+        "wordBreak": [
+          "break-word",
+          "normal"
+        ]
+      }
+    },
+    "linear": {
+      "file": "linear-desktop.json",
+      "siteName": "linear-desktop",
+      "url": "https://linear.app/",
+      "viewport": "desktop",
+      "elementCount": 3796,
+      "pageScroll": {
+        "scrollWidth": 1440,
+        "scrollHeight": 10777,
+        "clientWidth": 1440,
+        "clientHeight": 900
+      },
+      "scrollContainers": 0,
+      "fixedSticky": 4,
+      "images": 31,
+      "interactive": 589,
+      "textBlocks": 31,
+      "stackingContexts": 8,
+      "scrollBehaviorPositions": 5,
+      "cssPropertyCount": 118,
+      "totalStyleValues": 447928,
+      "avgStylesPerElement": 118.0,
+      "displayBreakdown": {
+        "inline": 2136,
+        "block": 971,
+        "flex": 490,
+        "grid": 98,
+        "none": 42,
+        "list-item": 40,
+        "inline-block": 13,
+        "flow-root": 4,
+        "inline-flex": 2
+      },
+      "positionBreakdown": {
+        "static": 3559,
+        "relative": 147,
+        "absolute": 86,
+        "fixed": 4
+      },
+      "featureCounts": {
+        "flex": 490,
+        "grid": 98,
+        "gradient": 46,
+        "shadow": 74,
+        "transform": 90,
+        "animation": 206,
+        "transition": 145,
+        "borderRadius": 237,
+        "overflowHidden": 495
+      },
+      "topProperties": {
+        "display": 3796,
+        "position": 3796,
+        "top": 3796,
+        "right": 3796,
+        "bottom": 3796,
+        "left": 3796,
+        "width": 3796,
+        "height": 3796,
+        "minWidth": 3796,
+        "minHeight": 3796,
+        "maxWidth": 3796,
+        "maxHeight": 3796,
+        "overflow": 3796,
+        "overflowX": 3796,
+        "overflowY": 3796,
+        "boxSizing": 3796,
+        "float": 3796,
+        "clear": 3796,
+        "flexDirection": 3796,
+        "flexWrap": 3796,
+        "justifyContent": 3796,
+        "alignItems": 3796,
+        "alignContent": 3796,
+        "flexGrow": 3796,
+        "flexShrink": 3796,
+        "flexBasis": 3796,
+        "alignSelf": 3796,
+        "order": 3796,
+        "flex": 3796,
+        "gap": 3796
+      },
+      "uniqueValuesPerProp": {
+        "alignItems": [
+          "baseline",
+          "center",
+          "flex-end",
+          "flex-start",
+          "normal",
+          "start"
+        ],
+        "alignSelf": [
+          "auto",
+          "center",
+          "stretch"
+        ],
+        "animation": [
+          "1.75s cubic-bezier(0.66, 0, 0, 1) infinite Hero_pulse__v7JR0",
+          "3.2s steps(1) infinite grid-dot-0-0-agent",
+          "3.2s steps(1) infinite grid-dot-0-1-agent",
+          "3.2s steps(1) infinite grid-dot-0-2-agent",
+          "3.2s steps(1) infinite grid-dot-0-3-agent",
+          "3.2s steps(1) infinite grid-dot-0-4-agent",
+          "3.2s steps(1) infinite grid-dot-1-0-agent",
+          "3.2s steps(1) infinite grid-dot-1-1-agent",
+          "3.2s steps(1) infinite grid-dot-1-2-agent",
+          "3.2s steps(1) infinite grid-dot-1-3-agent"
+        ],
+        "animationDuration": [
+          "0s",
+          "1.25s",
+          "1.2s",
+          "1.6s",
+          "1.75s",
+          "2.1s",
+          "2.8s",
+          "3.2s",
+          "30s"
+        ],
+        "animationName": [
+          "Hero_pulse__v7JR0",
+          "grid-dot-0-0-agent",
+          "grid-dot-0-1-agent",
+          "grid-dot-0-2-agent",
+          "grid-dot-0-3-agent",
+          "grid-dot-0-4-agent",
+          "grid-dot-1-0-agent",
+          "grid-dot-1-1-agent",
+          "grid-dot-1-2-agent",
+          "grid-dot-1-3-agent"
+        ],
+        "backdropFilter": [
+          "blur(20px)",
+          "none"
+        ],
+        "backgroundColor": [
+          "rgb(0, 0, 0)",
+          "rgb(15, 16, 17)",
+          "rgb(16, 17, 18)",
+          "rgb(18, 19, 20)",
+          "rgb(18, 20, 20)",
+          "rgb(22, 23, 24)",
+          "rgb(230, 230, 230)",
+          "rgb(235, 87, 87)",
+          "rgb(35, 37, 42)",
+          "rgb(8, 9, 10)"
+        ],
+        "backgroundImage": [
+          "linear-gradient(0deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), linear-gradient(r",
+          "linear-gradient(90deg, color(srgb 0 0 0 / 0) 0px, color(srgb 0.129412 0.701961 1 / 0.2) 100%), none",
+          "linear-gradient(90deg, color(srgb 0 0 0 / 0) 0px, color(srgb 0.6 0.231373 0.231373 / 0.2) 100%), non",
+          "linear-gradient(rgba(11, 11, 11, 0.8) 0px, oklab(0.149576 0.00000680983 0.00000298768 / 0.761905) 10",
+          "none",
+          "radial-gradient(50% 50%, rgb(255, 255, 255) 0px, rgba(255, 255, 255, 0) 90%)",
+          "radial-gradient(50% 50%, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0) 100%)",
+          "radial-gradient(50% 50%, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0) 90%)",
+          "radial-gradient(52.53% 57.5% at 50% 100%, rgba(8, 9, 10, 0) 0px, rgba(8, 9, 10, 0.5) 100%), linear-g",
+          "radial-gradient(circle, rgba(255, 255, 255, 0.02) 0px, rgba(0, 0, 0, 0) 50%)"
+        ],
+        "backgroundPosition": [
+          "-200px -2814.72px",
+          "-200px 0px",
+          "0% 0%",
+          "0% 0%, 0% 0%",
+          "112% 0px"
+        ],
+        "backgroundRepeat": [
+          "no-repeat",
+          "repeat",
+          "repeat, repeat"
+        ],
+        "backgroundSize": [
+          "1280px 832px",
+          "256px 256px",
+          "auto",
+          "auto, auto"
+        ],
+        "borderBottomColor": [
+          "rgb(109, 120, 213)",
+          "rgb(138, 143, 152)",
+          "rgb(208, 214, 224)",
+          "rgb(226, 228, 230)",
+          "rgb(226, 228, 231)",
+          "rgb(230, 230, 230)",
+          "rgb(247, 156, 224)",
+          "rgb(247, 248, 248)",
+          "rgb(255, 255, 255)",
+          "rgb(35, 37, 42)"
+        ],
+        "borderBottomLeftRadius": [
+          "0px",
+          "12px",
+          "16px",
+          "1px",
+          "20px",
+          "22px",
+          "2px",
+          "400px",
+          "4px",
+          "50%"
+        ],
+        "borderBottomRightRadius": [
+          "0px",
+          "12px",
+          "16px",
+          "1px",
+          "20px",
+          "22px",
+          "2px",
+          "400px",
+          "4px",
+          "50%"
+        ],
+        "borderBottomStyle": [
+          "none",
+          "solid"
+        ],
+        "borderBottomWidth": [
+          "0px",
+          "1px"
+        ],
+        "borderLeftColor": [
+          "rgb(109, 120, 213)",
+          "rgb(138, 143, 152)",
+          "rgb(208, 214, 224)",
+          "rgb(226, 228, 230)",
+          "rgb(226, 228, 231)",
+          "rgb(230, 230, 230)",
+          "rgb(247, 156, 224)",
+          "rgb(247, 248, 248)",
+          "rgb(255, 255, 255)",
+          "rgb(35, 37, 42)"
+        ],
+        "borderLeftStyle": [
+          "none",
+          "solid"
+        ],
+        "borderLeftWidth": [
+          "0px",
+          "1px",
+          "2px"
+        ],
+        "borderRightColor": [
+          "rgb(109, 120, 213)",
+          "rgb(138, 143, 152)",
+          "rgb(208, 214, 224)",
+          "rgb(226, 228, 230)",
+          "rgb(226, 228, 231)",
+          "rgb(230, 230, 230)",
+          "rgb(247, 156, 224)",
+          "rgb(247, 248, 248)",
+          "rgb(255, 255, 255)",
+          "rgb(35, 37, 42)"
+        ],
+        "borderRightStyle": [
+          "none",
+          "solid"
+        ],
+        "borderRightWidth": [
+          "0px",
+          "1px"
+        ],
+        "borderTopColor": [
+          "rgb(109, 120, 213)",
+          "rgb(138, 143, 152)",
+          "rgb(208, 214, 224)",
+          "rgb(226, 228, 230)",
+          "rgb(226, 228, 231)",
+          "rgb(230, 230, 230)",
+          "rgb(247, 156, 224)",
+          "rgb(247, 248, 248)",
+          "rgb(255, 255, 255)",
+          "rgb(35, 37, 42)"
+        ],
+        "borderTopLeftRadius": [
+          "0px",
+          "12px",
+          "16px",
+          "1px",
+          "20px",
+          "22px",
+          "2px",
+          "400px",
+          "4px",
+          "50%"
+        ],
+        "borderTopRightRadius": [
+          "0px",
+          "12px",
+          "16px",
+          "1px",
+          "20px",
+          "22px",
+          "2px",
+          "400px",
+          "4px",
+          "50%"
+        ],
+        "borderTopStyle": [
+          "none",
+          "solid"
+        ],
+        "borderTopWidth": [
+          "0px",
+          "1px"
+        ],
+        "bottom": [
+          "-720px",
+          "-9px",
+          "0px",
+          "118.016px",
+          "12px",
+          "1px",
+          "209.094px",
+          "20px",
+          "261.078px",
+          "302px"
+        ],
+        "boxShadow": [
+          "none",
+          "rgb(35, 37, 42) 0px 0px 0px 1px inset",
+          "rgb(35, 37, 42) 1px 0px 0px 0px inset",
+          "rgba(0, 0, 0, 0) 0px 8px 2px 0px, rgba(0, 0, 0, 0.01) 0px 5px 2px 0px, rgba(0, 0, 0, 0.04) 0px 3px 2",
+          "rgba(0, 0, 0, 0.03) 0px 1.2px 0px 0px",
+          "rgba(0, 0, 0, 0.1) 0px 0px 0px 2px",
+          "rgba(0, 0, 0, 0.2) 0px 0px 0px 1px",
+          "rgba(0, 0, 0, 0.2) 0px 0px 12px 0px inset",
+          "rgba(0, 0, 0, 0.33) 0px 0px 0px 1px",
+          "rgba(0, 0, 0, 0.4) 0px 1px 0px 0px"
+        ],
+        "clipPath": [
+          "inset(0px 100% 0px 0px)",
+          "inset(50%)",
+          "none",
+          "url(\"#clip0_1018_1842\")",
+          "url(\"#clip0_2237_10003\")",
+          "url(\"#clip0_2237_10020\")",
+          "url(\"#clip0_3272_13\")",
+          "url(\"#clip0_451_36944\")",
+          "url(\"#clip0_6363_3716\")",
+          "url(\"#clip0_910_71992\")"
+        ],
+        "color": [
+          "rgb(109, 120, 213)",
+          "rgb(137, 209, 150)",
+          "rgb(138, 143, 152)",
+          "rgb(143, 164, 255)",
+          "rgb(208, 214, 224)",
+          "rgb(226, 228, 230)",
+          "rgb(226, 228, 231)",
+          "rgb(235, 87, 87)",
+          "rgb(247, 156, 224)",
+          "rgb(247, 248, 248)"
+        ],
+        "columnGap": [
+          "0px",
+          "12px",
+          "15px",
+          "16px",
+          "20px",
+          "24px",
+          "2px",
+          "32px",
+          "3px",
+          "40px"
+        ],
+        "cursor": [
+          "auto",
+          "default",
+          "pointer",
+          "text"
+        ],
+        "display": [
+          "block",
+          "flex",
+          "flow-root",
+          "grid",
+          "inline",
+          "inline-block",
+          "inline-flex",
+          "list-item",
+          "none"
+        ],
+        "filter": [
+          "blur(0px)",
+          "brightness(0.75)",
+          "brightness(1)",
+          "none",
+          "url(\"#filter0_d_3072_54146\")",
+          "url(\"#filter0_d_3357_5865\")",
+          "url(\"#filter0_f_451_36944\")",
+          "url(\"#filter1_d_3357_5865\")",
+          "url(\"#filter1_f_451_36944\")",
+          "url(\"#filter2_d_3357_5865\")"
+        ],
+        "flex": [
+          "0 0 auto",
+          "0 1 auto",
+          "1 1 0%",
+          "1 1 auto"
+        ],
+        "flexBasis": [
+          "0%",
+          "auto"
+        ],
+        "flexDirection": [
+          "column",
+          "row"
+        ],
+        "flexGrow": [
+          "0",
+          "1"
+        ],
+        "flexShrink": [
+          "0",
+          "1"
+        ],
+        "fontFamily": [
+          "\"Berkeley Mono\", ui-monospace, \"SF Mono\", Menlo, monospace",
+          "\"Inter Variable\", \"SF Pro Display\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, Oxygen, Ubuntu, "
+        ],
+        "fontSize": [
+          "10px",
+          "11px",
+          "12.25px",
+          "12px",
+          "13.3333px",
+          "13px",
+          "14px",
+          "15px",
+          "16px",
+          "17px"
+        ],
+        "fontVariant": [
+          "lining-nums tabular-nums slashed-zero",
+          "normal"
+        ],
+        "fontWeight": [
+          "300",
+          "400",
+          "510",
+          "590"
+        ],
+        "gap": [
+          "0px",
+          "12px",
+          "15px",
+          "16px",
+          "20px",
+          "24px",
+          "2px",
+          "32px",
+          "3px",
+          "40px"
+        ],
+        "gridAutoFlow": [
+          "column",
+          "row"
+        ],
+        "gridColumn": [
+          "-2 / -1",
+          "1",
+          "2",
+          "3 / -2",
+          "a",
+          "auto",
+          "b",
+          "c"
+        ],
+        "gridColumnEnd": [
+          "-1",
+          "-2",
+          "a",
+          "auto",
+          "b",
+          "c"
+        ],
+        "gridColumnStart": [
+          "-2",
+          "1",
+          "2",
+          "3",
+          "a",
+          "auto",
+          "b",
+          "c"
+        ],
+        "gridRow": [
+          "1",
+          "a",
+          "auto",
+          "b",
+          "c"
+        ],
+        "gridRowEnd": [
+          "a",
+          "auto",
+          "b",
+          "c"
+        ],
+        "gridRowStart": [
+          "1",
+          "a",
+          "auto",
+          "b",
+          "c"
+        ],
+        "gridTemplateColumns": [
+          "1344px",
+          "1440px",
+          "16px",
+          "20px",
+          "22px",
+          "232px 1072px",
+          "24px",
+          "26px",
+          "28px",
+          "52px"
+        ],
+        "gridTemplateRows": [
+          "120px",
+          "168.719px",
+          "16px",
+          "18px",
+          "20px",
+          "22px",
+          "24px",
+          "26px",
+          "28px",
+          "28px 28px"
+        ],
+        "height": [
+          "0px",
+          "10241.4px",
+          "1025px",
+          "10313.4px",
+          "10777.4px",
+          "128px",
+          "16px",
+          "186px",
+          "1px",
+          "22px"
+        ],
+        "isolation": [
+          "auto",
+          "isolate"
+        ],
+        "justifyContent": [
+          "center",
+          "flex-end",
+          "flex-start",
+          "normal",
+          "space-around",
+          "space-between",
+          "space-evenly"
+        ],
+        "left": [
+          "0px",
+          "12px",
+          "144.094px",
+          "1px",
+          "240px",
+          "26.6%",
+          "294px",
+          "32px",
+          "47.4%",
+          "50%"
+        ],
+        "letterSpacing": [
+          "-0.12px",
+          "-0.13px",
+          "-0.15px",
+          "-0.165px",
+          "-0.182px",
+          "-0.24px",
+          "-0.288px",
+          "-0.704px",
+          "-1.056px",
+          "-1.408px"
+        ],
+        "lineHeight": [
+          "0px",
+          "15.4px",
+          "15.925px",
+          "15px",
+          "16.8px",
+          "18px",
+          "19.5px",
+          "21px",
+          "22.5px",
+          "22px"
+        ],
+        "marginBottom": [
+          "-16px",
+          "-1px",
+          "0px",
+          "224px",
+          "22px",
+          "24px",
+          "48px",
+          "4px",
+          "6px"
+        ],
+        "marginLeft": [
+          "-16px",
+          "-1px",
+          "-2px",
+          "-6px",
+          "-720px",
+          "-78px",
+          "-8px",
+          "0px",
+          "12px",
+          "131.641px"
+        ],
+        "marginRight": [
+          "-16px",
+          "-1px",
+          "-24px",
+          "-57px",
+          "-720px",
+          "-78px",
+          "0px",
+          "12px",
+          "1px",
+          "2px"
+        ],
+        "marginTop": [
+          "-1px",
+          "0px",
+          "111px",
+          "11px",
+          "123px",
+          "131px",
+          "199px",
+          "19px",
+          "21px",
+          "23px"
+        ],
+        "maxHeight": [
+          "100%",
+          "336px",
+          "352px",
+          "none"
+        ],
+        "maxWidth": [
+          "100%",
+          "1250px",
+          "1320px",
+          "1416px",
+          "1436px",
+          "250px",
+          "368px",
+          "392.5px",
+          "400px",
+          "440px"
+        ],
+        "minHeight": [
+          "0px",
+          "1px",
+          "28px",
+          "336px",
+          "72px",
+          "900px",
+          "auto"
+        ],
+        "minWidth": [
+          "0px",
+          "100%",
+          "1200px",
+          "1px",
+          "auto",
+          "fit-content",
+          "max-content"
+        ],
+        "mixBlendMode": [
+          "lighten",
+          "normal",
+          "overlay"
+        ],
+        "objectFit": [
+          "cover",
+          "fill"
+        ],
+        "opacity": [
+          "0",
+          "0.04",
+          "0.08",
+          "0.15",
+          "0.2",
+          "0.25",
+          "0.3",
+          "0.4",
+          "0.5",
+          "0.6"
+        ],
+        "outline": [
+          "rgb(208, 214, 224) none 0px",
+          "rgb(247, 248, 248) none 0px",
+          "rgba(0, 0, 0, 0) none 0px"
+        ],
+        "overflow": [
+          "auto",
+          "clip",
+          "hidden",
+          "hidden auto",
+          "scroll hidden",
+          "visible"
+        ],
+        "overflowWrap": [
+          "anywhere",
+          "break-word",
+          "normal"
+        ],
+        "overflowX": [
+          "auto",
+          "clip",
+          "hidden",
+          "scroll",
+          "visible"
+        ],
+        "overflowY": [
+          "auto",
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "paddingBottom": [
+          "0px",
+          "1.225px",
+          "128px",
+          "12px",
+          "14px",
+          "16px",
+          "17px",
+          "1px",
+          "20px",
+          "24px"
+        ],
+        "paddingLeft": [
+          "0px",
+          "12px",
+          "14px",
+          "15px",
+          "16px",
+          "20px",
+          "24px",
+          "2px",
+          "30px",
+          "31px"
+        ],
+        "paddingRight": [
+          "0px",
+          "10px",
+          "12px",
+          "14px",
+          "16px",
+          "20px",
+          "22px",
+          "24px",
+          "30px",
+          "32px"
+        ],
+        "paddingTop": [
+          "0px",
+          "1.225px",
+          "10px",
+          "12px",
+          "14px",
+          "16px",
+          "17px",
+          "1px",
+          "20px",
+          "22px"
+        ],
+        "pointerEvents": [
+          "all",
+          "auto",
+          "none"
+        ],
+        "position": [
+          "absolute",
+          "fixed",
+          "relative",
+          "static"
+        ],
+        "right": [
+          "-1320px",
+          "-61.7969px",
+          "-720px",
+          "0px",
+          "12px",
+          "1320px",
+          "143.906px",
+          "1px",
+          "207.141px",
+          "20px"
+        ],
+        "rowGap": [
+          "0px",
+          "12px",
+          "15px",
+          "16px",
+          "20px",
+          "24px",
+          "2px",
+          "32px",
+          "3px",
+          "40px"
+        ],
+        "textAlign": [
+          "center",
+          "left",
+          "start"
+        ],
+        "textDecorationColor": [
+          "rgb(109, 120, 213)",
+          "rgb(137, 209, 150)",
+          "rgb(138, 143, 152)",
+          "rgb(143, 164, 255)",
+          "rgb(208, 214, 224)",
+          "rgb(226, 228, 230)",
+          "rgb(226, 228, 231)",
+          "rgb(235, 87, 87)",
+          "rgb(247, 156, 224)",
+          "rgb(247, 248, 248)"
+        ],
+        "textIndent": [
+          "-12.8px",
+          "-12px",
+          "0px"
+        ],
+        "textOverflow": [
+          "clip",
+          "ellipsis"
+        ],
+        "textTransform": [
+          "none",
+          "uppercase"
+        ],
+        "top": [
+          "-28px",
+          "-36.0469px",
+          "-41px",
+          "0px",
+          "1.4%",
+          "146.984px",
+          "19.9%",
+          "1px",
+          "242px",
+          "24px"
+        ],
+        "transform": [
+          "matrix(-1, 0, 0, -1, 28, 28)",
+          "matrix(0, 0, 0, 0, 0, 0)",
+          "matrix(0, 1, -1, 0, 0, 0)",
+          "matrix(1, 0, 0, 1, -0.5, 0)",
+          "matrix(1, 0, 0, 1, -120, 0)",
+          "matrix(1, 0, 0, 1, -14.1875, 0)",
+          "matrix(1, 0, 0, 1, -200, -200)",
+          "matrix(1, 0, 0, 1, -24, 0)",
+          "matrix(1, 0, 0, 1, -31.4922, 0)",
+          "matrix(1, 0, 0, 1, -400, -160)"
+        ],
+        "transformOrigin": [
+          "0px 0px",
+          "221.227px 16px",
+          "26px 16px",
+          "310px 16px",
+          "327px 16px",
+          "33.3516px 16px",
+          "36.0547px 16px",
+          "44.3281px 16px",
+          "44px 11px",
+          "45.3516px 16px"
+        ],
+        "transition": [
+          "0.16s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "all",
+          "background 0.16s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "background 0.4s ease-out",
+          "border 0.16s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.16s cubic-bezier(0.25, 0.46, 0",
+          "color",
+          "color 0.16s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "color 0.1s",
+          "color 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94",
+          "filter 0.16s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+        ],
+        "transitionDelay": [
+          "0s",
+          "0s, 0s"
+        ],
+        "transitionDuration": [
+          "0.15s",
+          "0.16s",
+          "0.16s, 0.16s",
+          "0.1s",
+          "0.2s",
+          "0.4s",
+          "0s"
+        ],
+        "transitionProperty": [
+          "all",
+          "background",
+          "border, background-color, color, box-shadow, opacity, filter, transform",
+          "color",
+          "color, background",
+          "filter",
+          "filter, transform",
+          "opacity, transform",
+          "transform"
+        ],
+        "transitionTimingFunction": [
+          "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "cubic-bezier(0.25, 0.46, 0.45, 0.94), cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "ease",
+          "ease-out"
+        ],
+        "visibility": [
+          "hidden",
+          "visible"
+        ],
+        "whiteSpace": [
+          "normal",
+          "nowrap",
+          "pre",
+          "pre-wrap"
+        ],
+        "width": [
+          "104px",
+          "1282px",
+          "142.531px",
+          "1436px",
+          "1440px",
+          "1px",
+          "442.453px",
+          "52px",
+          "620px",
+          "654px"
+        ],
+        "willChange": [
+          "auto",
+          "filter, transform",
+          "transform"
+        ],
+        "zIndex": [
+          "1",
+          "100",
+          "10000",
+          "3",
+          "50",
+          "5000",
+          "auto"
+        ]
+      }
+    },
+    "tailadmin": {
+      "file": "tailadmin-desktop.json",
+      "siteName": "tailadmin-desktop",
+      "url": "https://demo.tailadmin.com/",
+      "viewport": "desktop",
+      "elementCount": 1321,
+      "pageScroll": {
+        "scrollWidth": 1440,
+        "scrollHeight": 900,
+        "clientWidth": 1440,
+        "clientHeight": 900
+      },
+      "scrollContainers": 2,
+      "fixedSticky": 3,
+      "images": 21,
+      "interactive": 400,
+      "textBlocks": 2,
+      "stackingContexts": 34,
+      "scrollBehaviorPositions": 1,
+      "cssPropertyCount": 118,
+      "totalStyleValues": 155878,
+      "avgStylesPerElement": 118.0,
+      "displayBreakdown": {
+        "inline": 503,
+        "block": 362,
+        "flex": 266,
+        "list-item": 96,
+        "none": 50,
+        "table-cell": 24,
+        "inline-block": 9,
+        "table-row": 6,
+        "grid": 2,
+        "table": 1
+      },
+      "positionBreakdown": {
+        "static": 1103,
+        "relative": 163,
+        "absolute": 52,
+        "fixed": 2,
+        "sticky": 1
+      },
+      "featureCounts": {
+        "flex": 266,
+        "grid": 2,
+        "gradient": 0,
+        "shadow": 21,
+        "transform": 21,
+        "animation": 2,
+        "transition": 4,
+        "borderRadius": 242,
+        "overflowHidden": 103
+      },
+      "topProperties": {
+        "display": 1321,
+        "position": 1321,
+        "top": 1321,
+        "right": 1321,
+        "bottom": 1321,
+        "left": 1321,
+        "width": 1321,
+        "height": 1321,
+        "minWidth": 1321,
+        "minHeight": 1321,
+        "maxWidth": 1321,
+        "maxHeight": 1321,
+        "overflow": 1321,
+        "overflowX": 1321,
+        "overflowY": 1321,
+        "boxSizing": 1321,
+        "float": 1321,
+        "clear": 1321,
+        "flexDirection": 1321,
+        "flexWrap": 1321,
+        "justifyContent": 1321,
+        "alignItems": 1321,
+        "alignContent": 1321,
+        "flexGrow": 1321,
+        "flexShrink": 1321,
+        "flexBasis": 1321,
+        "alignSelf": 1321,
+        "order": 1321,
+        "flex": 1321,
+        "gap": 1321
+      },
+      "uniqueValuesPerProp": {
+        "alignItems": [
+          "center",
+          "flex-end",
+          "flex-start",
+          "normal"
+        ],
+        "animation": [
+          "1s cubic-bezier(0, 0, 0.2, 1) infinite ping",
+          "1s linear infinite spin",
+          "none"
+        ],
+        "animationDuration": [
+          "0s",
+          "1s"
+        ],
+        "animationName": [
+          "none",
+          "ping",
+          "spin"
+        ],
+        "backgroundColor": [
+          "oklab(0.20991 -0.003893 -0.0339065 / 0.5)",
+          "rgb(152, 162, 179)",
+          "rgb(156, 185, 255)",
+          "rgb(18, 183, 106)",
+          "rgb(228, 231, 236)",
+          "rgb(236, 239, 241)",
+          "rgb(236, 243, 255)",
+          "rgb(236, 253, 243)",
+          "rgb(240, 68, 56)",
+          "rgb(242, 244, 247)"
+        ],
+        "borderBottomColor": [
+          "rgb(102, 112, 133)",
+          "rgb(144, 164, 174)",
+          "rgb(208, 213, 221)",
+          "rgb(221, 221, 221)",
+          "rgb(228, 231, 236)",
+          "rgb(242, 244, 247)",
+          "rgb(249, 250, 251)",
+          "rgb(255, 255, 255)",
+          "rgb(29, 41, 57)",
+          "rgb(70, 95, 255)"
+        ],
+        "borderBottomLeftRadius": [
+          "0px",
+          "12px",
+          "150px",
+          "16px",
+          "2px",
+          "3.35544e+07px",
+          "3px",
+          "4px",
+          "50%",
+          "50px"
+        ],
+        "borderBottomRightRadius": [
+          "0px",
+          "12px",
+          "150px",
+          "16px",
+          "2px",
+          "3.35544e+07px",
+          "3px",
+          "4px",
+          "50%",
+          "50px"
+        ],
+        "borderBottomStyle": [
+          "none",
+          "solid"
+        ],
+        "borderBottomWidth": [
+          "0px",
+          "1px",
+          "4px"
+        ],
+        "borderLeftColor": [
+          "rgb(102, 112, 133)",
+          "rgb(144, 164, 174)",
+          "rgb(208, 213, 221)",
+          "rgb(228, 231, 236)",
+          "rgb(242, 244, 247)",
+          "rgb(249, 250, 251)",
+          "rgb(255, 255, 255)",
+          "rgb(29, 41, 57)",
+          "rgb(70, 95, 255)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "borderLeftStyle": [
+          "none",
+          "solid"
+        ],
+        "borderLeftWidth": [
+          "0px",
+          "1px",
+          "4px"
+        ],
+        "borderRightColor": [
+          "rgb(102, 112, 133)",
+          "rgb(144, 164, 174)",
+          "rgb(208, 213, 221)",
+          "rgb(228, 231, 236)",
+          "rgb(242, 244, 247)",
+          "rgb(249, 250, 251)",
+          "rgb(255, 255, 255)",
+          "rgb(29, 41, 57)",
+          "rgb(70, 95, 255)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "borderRightStyle": [
+          "none",
+          "solid"
+        ],
+        "borderRightWidth": [
+          "0px",
+          "1px",
+          "4px"
+        ],
+        "borderTopColor": [
+          "rgb(102, 112, 133)",
+          "rgb(144, 164, 174)",
+          "rgb(208, 213, 221)",
+          "rgb(228, 231, 236)",
+          "rgb(242, 244, 247)",
+          "rgb(249, 250, 251)",
+          "rgb(255, 255, 255)",
+          "rgb(29, 41, 57)",
+          "rgb(70, 95, 255)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "borderTopLeftRadius": [
+          "0px",
+          "12px",
+          "150px",
+          "16px",
+          "2px",
+          "3.35544e+07px",
+          "3px",
+          "4px",
+          "50%",
+          "50px"
+        ],
+        "borderTopRightRadius": [
+          "0px",
+          "12px",
+          "150px",
+          "16px",
+          "2px",
+          "3.35544e+07px",
+          "3px",
+          "4px",
+          "50%",
+          "50px"
+        ],
+        "borderTopStyle": [
+          "none",
+          "solid"
+        ],
+        "borderTopWidth": [
+          "0px",
+          "1px",
+          "4px"
+        ],
+        "bottom": [
+          "-10px",
+          "-5px",
+          "0px",
+          "10px",
+          "134px",
+          "1800px",
+          "264px",
+          "2px",
+          "32px",
+          "5.25px"
+        ],
+        "boxShadow": [
+          "none",
+          "rgb(230, 230, 230) 1px 0px 0px 0px, rgb(230, 230, 230) -1px 0px 0px 0px, rgb(230, 230, 230) 0px 1px ",
+          "rgb(249, 250, 251) -5px 0px 0px 0px, rgb(249, 250, 251) 5px 0px 0px 0px",
+          "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px",
+          "rgba(0, 0, 0, 0.2) 1px 2px 12px 0px"
+        ],
+        "clipPath": [
+          "none",
+          "url(\"#gridRectBarMaskkkin6ysm\")",
+          "url(\"#gridRectMarkerMaskkkin6ysm\")",
+          "url(\"#gridRectMaskwag83mbi\")"
+        ],
+        "color": [
+          "rgb(0, 0, 0)",
+          "rgb(102, 112, 133)",
+          "rgb(152, 162, 179)",
+          "rgb(16, 24, 40)",
+          "rgb(2, 122, 72)",
+          "rgb(217, 45, 32)",
+          "rgb(220, 104, 3)",
+          "rgb(255, 255, 255)",
+          "rgb(29, 41, 57)",
+          "rgb(3, 152, 85)"
+        ],
+        "columnGap": [
+          "12px",
+          "16px",
+          "20px",
+          "24px",
+          "2px",
+          "32px",
+          "4px",
+          "8px",
+          "normal"
+        ],
+        "cursor": [
+          "auto",
+          "default",
+          "move",
+          "pointer",
+          "text"
+        ],
+        "display": [
+          "block",
+          "flex",
+          "grid",
+          "inline",
+          "inline-block",
+          "list-item",
+          "none",
+          "table",
+          "table-cell",
+          "table-header-group"
+        ],
+        "flex": [
+          "0 1 14.2857%",
+          "0 1 auto",
+          "1 1 0%",
+          "1 1 auto"
+        ],
+        "flexBasis": [
+          "0%",
+          "14.2857%",
+          "auto"
+        ],
+        "flexDirection": [
+          "column",
+          "row"
+        ],
+        "flexGrow": [
+          "0",
+          "1"
+        ],
+        "flexWrap": [
+          "nowrap",
+          "wrap"
+        ],
+        "fontFamily": [
+          "Outfit",
+          "Outfit, sans-serif",
+          "sans-serif, Verdana"
+        ],
+        "fontSize": [
+          "10px",
+          "11px",
+          "12px",
+          "13.3333px",
+          "13px",
+          "14px",
+          "16px",
+          "18.9px",
+          "18px",
+          "30px"
+        ],
+        "fontWeight": [
+          "300",
+          "400",
+          "500",
+          "600",
+          "700"
+        ],
+        "gap": [
+          "12px",
+          "16px",
+          "20px",
+          "24px",
+          "2px",
+          "32px",
+          "4px",
+          "8px",
+          "normal"
+        ],
+        "gridColumn": [
+          "auto",
+          "span 12 / span 12",
+          "span 2 / span 2",
+          "span 4 / span 4",
+          "span 5 / span 5",
+          "span 7 / span 7"
+        ],
+        "gridColumnEnd": [
+          "auto",
+          "span 12",
+          "span 2",
+          "span 4",
+          "span 5",
+          "span 7"
+        ],
+        "gridColumnStart": [
+          "auto",
+          "span 12",
+          "span 2",
+          "span 4",
+          "span 5",
+          "span 7"
+        ],
+        "gridTemplateColumns": [
+          "304.406px 304.422px",
+          "69.8281px 69.8281px 69.8281px 69.8281px 69.8281px 69.8281px 69.8281px 69.8281px 69.8281px 69.8281px ",
+          "none"
+        ],
+        "gridTemplateRows": [
+          "188px",
+          "463px 447px 506px",
+          "none"
+        ],
+        "height": [
+          "1140px",
+          "128px",
+          "164px",
+          "192px",
+          "20px",
+          "24px",
+          "304px",
+          "312px",
+          "32px",
+          "352px"
+        ],
+        "justifyContent": [
+          "center",
+          "flex-end",
+          "left",
+          "normal",
+          "space-around",
+          "space-between"
+        ],
+        "left": [
+          "-1440px",
+          "0px",
+          "12.5%",
+          "153.531px",
+          "161.531px",
+          "16px",
+          "197.578px",
+          "219px",
+          "28px",
+          "34px"
+        ],
+        "letterSpacing": [
+          "-0.2px",
+          "normal"
+        ],
+        "lineHeight": [
+          "14px",
+          "16.5px",
+          "16px",
+          "18.9px",
+          "18px",
+          "19.5px",
+          "20px",
+          "21px",
+          "24px",
+          "28px"
+        ],
+        "marginBottom": [
+          "-24px",
+          "0px",
+          "12px",
+          "16px",
+          "20px",
+          "24px",
+          "40px",
+          "4px",
+          "6px",
+          "8px"
+        ],
+        "marginLeft": [
+          "-16px",
+          "-20px",
+          "-24px",
+          "0px",
+          "4.5px",
+          "5.895px",
+          "5px",
+          "7.57812px",
+          "auto"
+        ],
+        "marginRight": [
+          "-24px",
+          "0px",
+          "12px",
+          "4.5px",
+          "4px",
+          "6px",
+          "7.59375px",
+          "auto"
+        ],
+        "marginTop": [
+          "-24px",
+          "0px",
+          "12px",
+          "17px",
+          "1px",
+          "20px",
+          "24px",
+          "2px",
+          "4px",
+          "6px"
+        ],
+        "maxHeight": [
+          "155px",
+          "195px",
+          "90px",
+          "none"
+        ],
+        "maxWidth": [
+          "100%",
+          "100px",
+          "10px",
+          "140px",
+          "1536px",
+          "160px",
+          "240px",
+          "307.875px",
+          "32px",
+          "380px"
+        ],
+        "minHeight": [
+          "0px",
+          "195px",
+          "229px",
+          "325px",
+          "auto"
+        ],
+        "minWidth": [
+          "0px",
+          "100%",
+          "307.875px",
+          "auto"
+        ],
+        "opacity": [
+          "0",
+          "1",
+          "1.17929e-05"
+        ],
+        "order": [
+          "0",
+          "1",
+          "2"
+        ],
+        "outline": [
+          "rgb(0, 0, 0) none 0px",
+          "rgb(102, 112, 133) none 0px",
+          "rgb(152, 162, 179) none 0px",
+          "rgb(16, 24, 40) none 0px",
+          "rgb(2, 122, 72) none 0px",
+          "rgb(217, 45, 32) none 0px",
+          "rgb(220, 104, 3) none 0px",
+          "rgb(255, 255, 255) none 0px",
+          "rgb(29, 41, 57) none 0px",
+          "rgb(3, 152, 85) none 0px"
+        ],
+        "overflow": [
+          "auto",
+          "clip",
+          "hidden",
+          "hidden auto",
+          "visible"
+        ],
+        "overflowX": [
+          "auto",
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "overflowY": [
+          "auto",
+          "clip",
+          "hidden",
+          "visible"
+        ],
+        "paddingBottom": [
+          "0px",
+          "10px",
+          "12px",
+          "16px",
+          "20px",
+          "24px",
+          "28px",
+          "2px",
+          "3px",
+          "4.5px"
+        ],
+        "paddingLeft": [
+          "0px",
+          "10px",
+          "12px",
+          "16px",
+          "18px",
+          "20px",
+          "24px",
+          "2px",
+          "36px",
+          "44px"
+        ],
+        "paddingRight": [
+          "0px",
+          "10px",
+          "12px",
+          "16px",
+          "18px",
+          "20px",
+          "24px",
+          "2px",
+          "4px",
+          "56px"
+        ],
+        "paddingTop": [
+          "0px",
+          "10px",
+          "12px",
+          "16px",
+          "20px",
+          "24px",
+          "2px",
+          "32px",
+          "3px",
+          "4.5px"
+        ],
+        "pointerEvents": [
+          "auto",
+          "none"
+        ],
+        "position": [
+          "absolute",
+          "fixed",
+          "relative",
+          "static",
+          "sticky"
+        ],
+        "right": [
+          "0px",
+          "1038px",
+          "10px",
+          "124px",
+          "12px",
+          "147px",
+          "21px",
+          "2878px",
+          "28px",
+          "394px"
+        ],
+        "rowGap": [
+          "12px",
+          "16px",
+          "20px",
+          "24px",
+          "2px",
+          "32px",
+          "4px",
+          "8px",
+          "normal"
+        ],
+        "textAlign": [
+          "center",
+          "left",
+          "start"
+        ],
+        "textDecorationColor": [
+          "rgb(0, 0, 0)",
+          "rgb(102, 112, 133)",
+          "rgb(152, 162, 179)",
+          "rgb(16, 24, 40)",
+          "rgb(2, 122, 72)",
+          "rgb(217, 45, 32)",
+          "rgb(220, 104, 3)",
+          "rgb(255, 255, 255)",
+          "rgb(29, 41, 57)",
+          "rgb(3, 152, 85)"
+        ],
+        "textTransform": [
+          "none",
+          "uppercase"
+        ],
+        "top": [
+          "-900px",
+          "0px",
+          "100%",
+          "10px",
+          "165.75px",
+          "180px",
+          "20px",
+          "22px",
+          "28px",
+          "2px"
+        ],
+        "transform": [
+          "matrix(0.340363, 0, 0, 0.340363, 19.3368, 0)",
+          "matrix(1, 0, 0, 1, 0, -4)",
+          "matrix(1, 0, 0, 1, 0, 0)",
+          "matrix(1, 0, 0, 1, 16.125, 0)",
+          "matrix(1, 0, 0, 1, 18.0156, 0)",
+          "matrix(1, 0, 0, 1, 32.5, 1)",
+          "matrix(1, 0, 0, 1, 46.125, 30)",
+          "matrix(1, 0, 0, 1, 48.0156, 30)",
+          "matrix(1.99998, 0, 0, 1.99998, 0, 0)",
+          "none"
+        ],
+        "transformOrigin": [
+          "0px 0px",
+          "106.5px 20px",
+          "10px 10px",
+          "124.5px 10px",
+          "124.5px 152px",
+          "124.5px 156px",
+          "124.5px 176px",
+          "124.5px 20px",
+          "124.5px 352px",
+          "124.5px 370px"
+        ],
+        "transition": [
+          "0.15s",
+          "0.25s",
+          "0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          "0.3s linear",
+          "all",
+          "color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), borde",
+          "fill 0.1s"
+        ],
+        "transitionDuration": [
+          "0.15s",
+          "0.1s",
+          "0.25s",
+          "0.3s",
+          "0s"
+        ],
+        "transitionProperty": [
+          "all",
+          "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-grad",
+          "fill"
+        ],
+        "transitionTimingFunction": [
+          "cubic-bezier(0.4, 0, 0.2, 1)",
+          "ease",
+          "linear"
+        ],
+        "verticalAlign": [
+          "baseline",
+          "middle"
+        ],
+        "visibility": [
+          "hidden",
+          "visible"
+        ],
+        "whiteSpace": [
+          "normal",
+          "nowrap"
+        ],
+        "width": [
+          "1440px",
+          "154px",
+          "20px",
+          "213px",
+          "249px",
+          "24px",
+          "28.2344px",
+          "290px",
+          "30.7031px",
+          "37.7969px"
+        ],
+        "zIndex": [
+          "-1",
+          "1",
+          "10",
+          "12",
+          "3",
+          "40",
+          "50",
+          "9999",
+          "99999",
+          "999999"
+        ]
+      }
+    }
+  }
+}

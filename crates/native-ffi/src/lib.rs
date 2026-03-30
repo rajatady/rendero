@@ -374,6 +374,8 @@ pub extern "C" fn rendero_set_auto_layout(
                     primary_sizing: SizingMode::Hug,
                     counter_sizing: SizingMode::Hug,
                     align: LayoutAlign::Start,
+                    justify: LayoutJustify::Start,
+                    wrap: LayoutWrap::NoWrap,
                 });
             }
             e.invalidate_cache();

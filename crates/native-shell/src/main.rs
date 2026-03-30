@@ -237,7 +237,7 @@ impl ApplicationHandler for App {
         self.initialized = true;
 
         let attrs = WindowAttributes::default()
-            .with_title("Codex Version — Rendero Native Runtime")
+            .with_title("Rendero — React on Native Rust Engine")
             .with_inner_size(LogicalSize::new(1024u32, 768u32));
 
         let window = event_loop.create_window(attrs).expect("Failed to create window");
@@ -271,14 +271,13 @@ impl ApplicationHandler for App {
             }
             WindowEvent::MouseWheel { delta, .. } => {
                 let dy = match delta {
-                    MouseScrollDelta::LineDelta(_, y) => y * 40.0,
-                    MouseScrollDelta::PixelDelta(pos) => pos.y as f32,
+                    MouseScrollDelta::LineDelta(_, y) => -y * 40.0,
+                    MouseScrollDelta::PixelDelta(pos) => -pos.y as f32,
                 };
                 if dy.abs() > 0.0 {
-                    let script = format!("window.scrollBy(0, {});", dy);
-                    if let Err(err) = self.js.evaluate(&script) {
-                        eprintln!("[Rendero] Scroll dispatch error: {err}");
-                    }
+                    // Move camera directly — no JS round-trip needed
+                    let mut e = self.engine.borrow_mut();
+                    e.cam_y = (e.cam_y + dy).max(0.0);
                 }
             }
             _ => {}

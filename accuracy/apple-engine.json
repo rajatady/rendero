@@ -1,0 +1,2430 @@
+{
+  "url": "http://localhost:5555/demos/dom-shim/?v=1774909250371",
+  "title": "DOM Shim Demo \u2014 Apple on Rendero",
+  "timestamp": "2026-03-30T22:20:56.208Z",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "elementCount": 108,
+  "elements": [
+    {
+      "id": 0,
+      "parentId": null,
+      "depth": 0,
+      "tag": "body",
+      "engineId": 4,
+      "text": "",
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900
+      },
+      "styles": {
+        "width": "100vw",
+        "height": "100vh"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 1,
+      "parentId": 0,
+      "depth": 1,
+      "tag": "div",
+      "engineId": 5,
+      "text": "",
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 1617
+      },
+      "styles": {},
+      "childCount": 1
+    },
+    {
+      "id": 2,
+      "parentId": 1,
+      "depth": 2,
+      "tag": "div",
+      "engineId": 181,
+      "text": "",
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 1617
+      },
+      "styles": {
+        "width": "100%",
+        "minHeight": "100vh"
+      },
+      "childCount": 6
+    },
+    {
+      "id": 3,
+      "parentId": 2,
+      "depth": 3,
+      "tag": "nav",
+      "engineId": 31,
+      "text": "",
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 44
+      },
+      "styles": {
+        "position": "fixed",
+        "top": "0",
+        "left": "0",
+        "width": "100%",
+        "height": "44px",
+        "backgroundColor": "rgba(22,22,23,0.8)",
+        "display": "flex",
+        "flexDirection": "row",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "zIndex": "100"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 4,
+      "parentId": 3,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 30,
+      "text": "",
+      "bounds": {
+        "x": 230,
+        "y": 12,
+        "width": 980,
+        "height": 21
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "row",
+        "alignItems": "center",
+        "rowGap": "32px",
+        "columnGap": "32px",
+        "maxWidth": "980px",
+        "width": "100%",
+        "paddingTop": "0",
+        "paddingRight": "22px",
+        "paddingBottom": "0",
+        "paddingLeft": "22px"
+      },
+      "childCount": 12
+    },
+    {
+      "id": 5,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 6,
+      "text": "\uf8ff",
+      "bounds": {
+        "x": 252,
+        "y": 12,
+        "width": 13,
+        "height": 21
+      },
+      "styles": {
+        "fontSize": "18px",
+        "fontWeight": "600",
+        "color": "#ffffff"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 6,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 8,
+      "text": "Store",
+      "bounds": {
+        "x": 297,
+        "y": 15,
+        "width": 31,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 7,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 10,
+      "text": "Mac",
+      "bounds": {
+        "x": 360,
+        "y": 15,
+        "width": 24,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 8,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 12,
+      "text": "iPad",
+      "bounds": {
+        "x": 416,
+        "y": 15,
+        "width": 25,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 9,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 14,
+      "text": "iPhone",
+      "bounds": {
+        "x": 473,
+        "y": 15,
+        "width": 39,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 10,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 16,
+      "text": "Watch",
+      "bounds": {
+        "x": 544,
+        "y": 15,
+        "width": 36,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 11,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 18,
+      "text": "Vision",
+      "bounds": {
+        "x": 612,
+        "y": 15,
+        "width": 35,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 12,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 20,
+      "text": "AirPods",
+      "bounds": {
+        "x": 679,
+        "y": 15,
+        "width": 44,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 13,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 22,
+      "text": "TV & Home",
+      "bounds": {
+        "x": 755,
+        "y": 15,
+        "width": 65,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 14,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 24,
+      "text": "Entertainment",
+      "bounds": {
+        "x": 852,
+        "y": 15,
+        "width": 80,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 15,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 26,
+      "text": "Accessories",
+      "bounds": {
+        "x": 964,
+        "y": 15,
+        "width": 69,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 16,
+      "parentId": 4,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 28,
+      "text": "Support",
+      "bounds": {
+        "x": 1065,
+        "y": 15,
+        "width": 46,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#d2d2d7",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 17,
+      "parentId": 2,
+      "depth": 3,
+      "tag": "section",
+      "engineId": 47,
+      "text": "",
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 777
+      },
+      "styles": {
+        "width": "100%",
+        "backgroundColor": "#000000",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "paddingTop": "120px",
+        "paddingRight": "0",
+        "paddingBottom": "60px",
+        "paddingLeft": "0"
+      },
+      "childCount": 5
+    },
+    {
+      "id": 18,
+      "parentId": 17,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 36,
+      "text": "",
+      "bounds": {
+        "x": 583,
+        "y": 160,
+        "width": 275,
+        "height": 33
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "row",
+        "alignItems": "center",
+        "rowGap": "8px",
+        "columnGap": "8px",
+        "marginTop": "40px",
+        "backgroundColor": "rgba(255,255,255,0.08)",
+        "_tl": "20",
+        "_tr": "20",
+        "_br": "20",
+        "_bl": "20",
+        "paddingTop": "8px",
+        "paddingRight": "20px",
+        "paddingBottom": "8px",
+        "paddingLeft": "20px"
+      },
+      "childCount": 2
+    },
+    {
+      "id": 19,
+      "parentId": 18,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 32,
+      "text": "New",
+      "bounds": {
+        "x": 603,
+        "y": 168,
+        "width": 29,
+        "height": 17
+      },
+      "styles": {
+        "fontSize": "14px",
+        "color": "#ff6b35"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 20,
+      "parentId": 18,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 34,
+      "text": "Apple Intelligence everywhere.",
+      "bounds": {
+        "x": 640,
+        "y": 168,
+        "width": 198,
+        "height": 17
+      },
+      "styles": {
+        "fontSize": "14px",
+        "color": "#d2d2d7"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 21,
+      "parentId": 17,
+      "depth": 4,
+      "tag": "h1",
+      "engineId": 37,
+      "text": "iPhone 16 Pro",
+      "bounds": {
+        "x": 544,
+        "y": 193,
+        "width": 352,
+        "height": 1
+      },
+      "styles": {
+        "fontSize": "56px",
+        "fontWeight": "700",
+        "color": "#ffffff",
+        "textAlign": "center",
+        "lineHeight": "1.05"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 22,
+      "parentId": 17,
+      "depth": 4,
+      "tag": "p",
+      "engineId": 39,
+      "text": "Hello, Apple Intelligence.",
+      "bounds": {
+        "x": 573,
+        "y": 200,
+        "width": 295,
+        "height": 33
+      },
+      "styles": {
+        "fontSize": "28px",
+        "fontWeight": "400",
+        "color": "#86868b",
+        "textAlign": "center",
+        "marginTop": "6px"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 23,
+      "parentId": 17,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 45,
+      "text": "",
+      "bounds": {
+        "x": 621,
+        "y": 253,
+        "width": 198,
+        "height": 24
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "row",
+        "rowGap": "24px",
+        "columnGap": "24px",
+        "marginTop": "20px"
+      },
+      "childCount": 2
+    },
+    {
+      "id": 24,
+      "parentId": 23,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 41,
+      "text": "Learn more >",
+      "bounds": {
+        "x": 621,
+        "y": 253,
+        "width": 121,
+        "height": 24
+      },
+      "styles": {
+        "fontSize": "21px",
+        "color": "#0071e3",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 25,
+      "parentId": 23,
+      "depth": 5,
+      "tag": "span",
+      "engineId": 43,
+      "text": "Buy >",
+      "bounds": {
+        "x": 766,
+        "y": 253,
+        "width": 53,
+        "height": 24
+      },
+      "styles": {
+        "fontSize": "21px",
+        "color": "#0071e3",
+        "fontWeight": "400",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 26,
+      "parentId": 17,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 46,
+      "text": "",
+      "bounds": {
+        "x": 370,
+        "y": 317,
+        "width": 700,
+        "height": 400
+      },
+      "styles": {
+        "width": "700px",
+        "height": "400px",
+        "marginTop": "40px",
+        "_tl": "20",
+        "_tr": "20",
+        "_br": "20",
+        "_bl": "20",
+        "backgroundImage": "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)"
+      },
+      "childCount": 0
+    },
+    {
+      "id": 27,
+      "parentId": 2,
+      "depth": 3,
+      "tag": "div",
+      "engineId": 92,
+      "text": "",
+      "bounds": {
+        "x": 0,
+        "y": 777,
+        "width": 1200,
+        "height": 1036
+      },
+      "styles": {
+        "width": "100%",
+        "maxWidth": "1200px",
+        "marginTop": "0",
+        "marginRight": "auto",
+        "marginBottom": "0",
+        "marginLeft": "auto",
+        "paddingTop": "12px",
+        "paddingRight": "12px",
+        "paddingBottom": "12px",
+        "paddingLeft": "12px",
+        "display": "flex",
+        "flexDirection": "row",
+        "flexWrap": "wrap",
+        "rowGap": "12px",
+        "columnGap": "12px"
+      },
+      "childCount": 4
+    },
+    {
+      "id": 28,
+      "parentId": 27,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 58,
+      "text": "",
+      "bounds": {
+        "x": 12,
+        "y": 789,
+        "width": 582,
+        "height": 500
+      },
+      "styles": {
+        "flexGrow": "1",
+        "flexShrink": "1",
+        "flexBasis": "auto",
+        "minWidth": "400px",
+        "height": "500px",
+        "_tl": "18",
+        "_tr": "18",
+        "_br": "18",
+        "_bl": "18",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "paddingTop": "48px",
+        "paddingRight": "40px",
+        "paddingBottom": "48px",
+        "paddingLeft": "40px",
+        "overflow": "hidden",
+        "position": "relative",
+        "backgroundColor": "#000000"
+      },
+      "childCount": 4
+    },
+    {
+      "id": 29,
+      "parentId": 28,
+      "depth": 5,
+      "tag": "h2",
+      "engineId": 48,
+      "text": "MacBook Pro",
+      "bounds": {
+        "x": 181,
+        "y": 837,
+        "width": 245,
+        "height": 1
+      },
+      "styles": {
+        "fontSize": "40px",
+        "fontWeight": "700",
+        "textAlign": "center",
+        "lineHeight": "1.1",
+        "color": "#ffffff"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 30,
+      "parentId": 28,
+      "depth": 5,
+      "tag": "p",
+      "engineId": 50,
+      "text": "Mind-blowing. Head-turning.",
+      "bounds": {
+        "x": 171,
+        "y": 844,
+        "width": 265,
+        "height": 24
+      },
+      "styles": {
+        "fontSize": "21px",
+        "fontWeight": "400",
+        "textAlign": "center",
+        "marginTop": "6px",
+        "color": "#86868b"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 31,
+      "parentId": 28,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 56,
+      "text": "",
+      "bounds": {
+        "x": 221,
+        "y": 882,
+        "width": 165,
+        "height": 20
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "row",
+        "rowGap": "20px",
+        "columnGap": "20px",
+        "marginTop": "14px"
+      },
+      "childCount": 2
+    },
+    {
+      "id": 32,
+      "parentId": 31,
+      "depth": 6,
+      "tag": "span",
+      "engineId": 52,
+      "text": "Learn more >",
+      "bounds": {
+        "x": 221,
+        "y": 882,
+        "width": 101,
+        "height": 20
+      },
+      "styles": {
+        "fontSize": "17px",
+        "color": "#0071e3",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 33,
+      "parentId": 31,
+      "depth": 6,
+      "tag": "span",
+      "engineId": 54,
+      "text": "Buy >",
+      "bounds": {
+        "x": 342,
+        "y": 882,
+        "width": 44,
+        "height": 20
+      },
+      "styles": {
+        "fontSize": "17px",
+        "color": "#0071e3",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 34,
+      "parentId": 28,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 57,
+      "text": "",
+      "bounds": {
+        "x": -417,
+        "y": 932,
+        "width": 1440,
+        "height": 280
+      },
+      "styles": {
+        "width": "100%",
+        "height": "280px",
+        "marginTop": "30px",
+        "_tl": "16",
+        "_tr": "16",
+        "_br": "16",
+        "_bl": "16",
+        "backgroundImage": "linear-gradient(135deg, #0c0c0c 0%, #2d2d2d 50%, #1a1a1a 100%)"
+      },
+      "childCount": 0
+    },
+    {
+      "id": 35,
+      "parentId": 27,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 69,
+      "text": "",
+      "bounds": {
+        "x": 606,
+        "y": 789,
+        "width": 582,
+        "height": 500
+      },
+      "styles": {
+        "flexGrow": "1",
+        "flexShrink": "1",
+        "flexBasis": "auto",
+        "minWidth": "400px",
+        "height": "500px",
+        "_tl": "18",
+        "_tr": "18",
+        "_br": "18",
+        "_bl": "18",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "paddingTop": "48px",
+        "paddingRight": "40px",
+        "paddingBottom": "48px",
+        "paddingLeft": "40px",
+        "overflow": "hidden",
+        "position": "relative",
+        "backgroundColor": "#f5f5f7"
+      },
+      "childCount": 4
+    },
+    {
+      "id": 36,
+      "parentId": 35,
+      "depth": 5,
+      "tag": "h2",
+      "engineId": 59,
+      "text": "MacBook Air",
+      "bounds": {
+        "x": 780,
+        "y": 837,
+        "width": 235,
+        "height": 1
+      },
+      "styles": {
+        "fontSize": "40px",
+        "fontWeight": "700",
+        "textAlign": "center",
+        "lineHeight": "1.1",
+        "color": "#1d1d1f"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 37,
+      "parentId": 35,
+      "depth": 5,
+      "tag": "p",
+      "engineId": 61,
+      "text": "Lean. Mean. M3 machine.",
+      "bounds": {
+        "x": 780,
+        "y": 844,
+        "width": 234,
+        "height": 24
+      },
+      "styles": {
+        "fontSize": "21px",
+        "fontWeight": "400",
+        "textAlign": "center",
+        "marginTop": "6px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 38,
+      "parentId": 35,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 67,
+      "text": "",
+      "bounds": {
+        "x": 815,
+        "y": 882,
+        "width": 165,
+        "height": 20
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "row",
+        "rowGap": "20px",
+        "columnGap": "20px",
+        "marginTop": "14px"
+      },
+      "childCount": 2
+    },
+    {
+      "id": 39,
+      "parentId": 38,
+      "depth": 6,
+      "tag": "span",
+      "engineId": 63,
+      "text": "Learn more >",
+      "bounds": {
+        "x": 815,
+        "y": 882,
+        "width": 101,
+        "height": 20
+      },
+      "styles": {
+        "fontSize": "17px",
+        "color": "#0071e3",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 40,
+      "parentId": 38,
+      "depth": 6,
+      "tag": "span",
+      "engineId": 65,
+      "text": "Buy >",
+      "bounds": {
+        "x": 936,
+        "y": 882,
+        "width": 44,
+        "height": 20
+      },
+      "styles": {
+        "fontSize": "17px",
+        "color": "#0071e3",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 41,
+      "parentId": 35,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 68,
+      "text": "",
+      "bounds": {
+        "x": 177,
+        "y": 932,
+        "width": 1440,
+        "height": 280
+      },
+      "styles": {
+        "width": "100%",
+        "height": "280px",
+        "marginTop": "30px",
+        "_tl": "16",
+        "_tr": "16",
+        "_br": "16",
+        "_bl": "16",
+        "backgroundImage": "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)"
+      },
+      "childCount": 0
+    },
+    {
+      "id": 42,
+      "parentId": 27,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 80,
+      "text": "",
+      "bounds": {
+        "x": 12,
+        "y": 1301,
+        "width": 582,
+        "height": 500
+      },
+      "styles": {
+        "flexGrow": "1",
+        "flexShrink": "1",
+        "flexBasis": "auto",
+        "minWidth": "400px",
+        "height": "500px",
+        "_tl": "18",
+        "_tr": "18",
+        "_br": "18",
+        "_bl": "18",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "paddingTop": "48px",
+        "paddingRight": "40px",
+        "paddingBottom": "48px",
+        "paddingLeft": "40px",
+        "overflow": "hidden",
+        "position": "relative",
+        "backgroundColor": "#000000"
+      },
+      "childCount": 4
+    },
+    {
+      "id": 43,
+      "parentId": 42,
+      "depth": 5,
+      "tag": "h2",
+      "engineId": 70,
+      "text": "iPad Pro",
+      "bounds": {
+        "x": 227,
+        "y": 1349,
+        "width": 152,
+        "height": 1
+      },
+      "styles": {
+        "fontSize": "40px",
+        "fontWeight": "700",
+        "textAlign": "center",
+        "lineHeight": "1.1",
+        "color": "#ffffff"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 44,
+      "parentId": 42,
+      "depth": 5,
+      "tag": "p",
+      "engineId": 72,
+      "text": "Thinpossible.",
+      "bounds": {
+        "x": 242,
+        "y": 1356,
+        "width": 122,
+        "height": 24
+      },
+      "styles": {
+        "fontSize": "21px",
+        "fontWeight": "400",
+        "textAlign": "center",
+        "marginTop": "6px",
+        "color": "#86868b"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 45,
+      "parentId": 42,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 78,
+      "text": "",
+      "bounds": {
+        "x": 221,
+        "y": 1394,
+        "width": 165,
+        "height": 20
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "row",
+        "rowGap": "20px",
+        "columnGap": "20px",
+        "marginTop": "14px"
+      },
+      "childCount": 2
+    },
+    {
+      "id": 46,
+      "parentId": 45,
+      "depth": 6,
+      "tag": "span",
+      "engineId": 74,
+      "text": "Learn more >",
+      "bounds": {
+        "x": 221,
+        "y": 1394,
+        "width": 101,
+        "height": 20
+      },
+      "styles": {
+        "fontSize": "17px",
+        "color": "#0071e3",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 47,
+      "parentId": 45,
+      "depth": 6,
+      "tag": "span",
+      "engineId": 76,
+      "text": "Buy >",
+      "bounds": {
+        "x": 342,
+        "y": 1394,
+        "width": 44,
+        "height": 20
+      },
+      "styles": {
+        "fontSize": "17px",
+        "color": "#0071e3",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 48,
+      "parentId": 42,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 79,
+      "text": "",
+      "bounds": {
+        "x": -417,
+        "y": 1444,
+        "width": 1440,
+        "height": 280
+      },
+      "styles": {
+        "width": "100%",
+        "height": "280px",
+        "marginTop": "30px",
+        "_tl": "16",
+        "_tr": "16",
+        "_br": "16",
+        "_bl": "16",
+        "backgroundImage": "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)"
+      },
+      "childCount": 0
+    },
+    {
+      "id": 49,
+      "parentId": 27,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 91,
+      "text": "",
+      "bounds": {
+        "x": 606,
+        "y": 1301,
+        "width": 582,
+        "height": 500
+      },
+      "styles": {
+        "flexGrow": "1",
+        "flexShrink": "1",
+        "flexBasis": "auto",
+        "minWidth": "400px",
+        "height": "500px",
+        "_tl": "18",
+        "_tr": "18",
+        "_br": "18",
+        "_bl": "18",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "paddingTop": "48px",
+        "paddingRight": "40px",
+        "paddingBottom": "48px",
+        "paddingLeft": "40px",
+        "overflow": "hidden",
+        "position": "relative",
+        "backgroundColor": "#f5f5f7"
+      },
+      "childCount": 4
+    },
+    {
+      "id": 50,
+      "parentId": 49,
+      "depth": 5,
+      "tag": "h2",
+      "engineId": 81,
+      "text": "iPad Air",
+      "bounds": {
+        "x": 826,
+        "y": 1349,
+        "width": 142,
+        "height": 1
+      },
+      "styles": {
+        "fontSize": "40px",
+        "fontWeight": "700",
+        "textAlign": "center",
+        "lineHeight": "1.1",
+        "color": "#1d1d1f"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 51,
+      "parentId": 49,
+      "depth": 5,
+      "tag": "p",
+      "engineId": 83,
+      "text": "Fresh Air.",
+      "bounds": {
+        "x": 855,
+        "y": 1356,
+        "width": 85,
+        "height": 24
+      },
+      "styles": {
+        "fontSize": "21px",
+        "fontWeight": "400",
+        "textAlign": "center",
+        "marginTop": "6px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 52,
+      "parentId": 49,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 89,
+      "text": "",
+      "bounds": {
+        "x": 815,
+        "y": 1394,
+        "width": 165,
+        "height": 20
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "row",
+        "rowGap": "20px",
+        "columnGap": "20px",
+        "marginTop": "14px"
+      },
+      "childCount": 2
+    },
+    {
+      "id": 53,
+      "parentId": 52,
+      "depth": 6,
+      "tag": "span",
+      "engineId": 85,
+      "text": "Learn more >",
+      "bounds": {
+        "x": 815,
+        "y": 1394,
+        "width": 101,
+        "height": 20
+      },
+      "styles": {
+        "fontSize": "17px",
+        "color": "#0071e3",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 54,
+      "parentId": 52,
+      "depth": 6,
+      "tag": "span",
+      "engineId": 87,
+      "text": "Buy >",
+      "bounds": {
+        "x": 936,
+        "y": 1394,
+        "width": 44,
+        "height": 20
+      },
+      "styles": {
+        "fontSize": "17px",
+        "color": "#0071e3",
+        "cursor": "pointer"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 55,
+      "parentId": 49,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 90,
+      "text": "",
+      "bounds": {
+        "x": 177,
+        "y": 1444,
+        "width": 1440,
+        "height": 280
+      },
+      "styles": {
+        "width": "100%",
+        "height": "280px",
+        "marginTop": "30px",
+        "_tl": "16",
+        "_tr": "16",
+        "_br": "16",
+        "_bl": "16",
+        "backgroundImage": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+      },
+      "childCount": 0
+    },
+    {
+      "id": 56,
+      "parentId": 2,
+      "depth": 3,
+      "tag": "section",
+      "engineId": 120,
+      "text": "",
+      "bounds": {
+        "x": 0,
+        "y": 1813,
+        "width": 1440,
+        "height": 444
+      },
+      "styles": {
+        "width": "100%",
+        "backgroundColor": "#f5f5f7",
+        "paddingTop": "80px",
+        "paddingRight": "0",
+        "paddingBottom": "80px",
+        "paddingLeft": "0",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center"
+      },
+      "childCount": 2
+    },
+    {
+      "id": 57,
+      "parentId": 56,
+      "depth": 4,
+      "tag": "h2",
+      "engineId": 93,
+      "text": "Why Apple.",
+      "bounds": {
+        "x": 593,
+        "y": 1893,
+        "width": 254,
+        "height": 56
+      },
+      "styles": {
+        "fontSize": "48px",
+        "fontWeight": "700",
+        "color": "#1d1d1f",
+        "textAlign": "center"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 58,
+      "parentId": 56,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 119,
+      "text": "",
+      "bounds": {
+        "x": 230,
+        "y": 1999,
+        "width": 980,
+        "height": 178
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "row",
+        "rowGap": "30px",
+        "columnGap": "30px",
+        "maxWidth": "980px",
+        "width": "100%",
+        "paddingTop": "0",
+        "paddingRight": "22px",
+        "paddingBottom": "0",
+        "paddingLeft": "22px",
+        "marginTop": "50px"
+      },
+      "childCount": 3
+    },
+    {
+      "id": 59,
+      "parentId": 58,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 102,
+      "text": "",
+      "bounds": {
+        "x": 252,
+        "y": 1999,
+        "width": 394,
+        "height": 178
+      },
+      "styles": {
+        "flexGrow": "1",
+        "flexShrink": "1",
+        "flexBasis": "auto",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "rowGap": "16px",
+        "columnGap": "16px",
+        "paddingTop": "30px",
+        "paddingRight": "30px",
+        "paddingBottom": "30px",
+        "paddingLeft": "30px"
+      },
+      "childCount": 3
+    },
+    {
+      "id": 60,
+      "parentId": 59,
+      "depth": 6,
+      "tag": "div",
+      "engineId": 97,
+      "text": "",
+      "bounds": {
+        "x": 421,
+        "y": 2029,
+        "width": 56,
+        "height": 56
+      },
+      "styles": {
+        "width": "56px",
+        "height": "56px",
+        "_tl": "14",
+        "_tr": "14",
+        "_br": "14",
+        "_bl": "14",
+        "display": "flex",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "backgroundImage": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 61,
+      "parentId": 60,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 95,
+      "text": "\ud83e\udde0",
+      "bounds": {
+        "x": 435,
+        "y": 2041,
+        "width": 28,
+        "height": 33
+      },
+      "styles": {
+        "fontSize": "28px"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 62,
+      "parentId": 59,
+      "depth": 6,
+      "tag": "h3",
+      "engineId": 98,
+      "text": "Apple Intelligence",
+      "bounds": {
+        "x": 348,
+        "y": 2101,
+        "width": 202,
+        "height": 28
+      },
+      "styles": {
+        "fontSize": "24px",
+        "fontWeight": "700",
+        "color": "#1d1d1f",
+        "textAlign": "center"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 63,
+      "parentId": 59,
+      "depth": 6,
+      "tag": "p",
+      "engineId": 100,
+      "text": "Personal, private, powerful AI that understands you.",
+      "bounds": {
+        "x": 282,
+        "y": 2145,
+        "width": 334,
+        "height": 2
+      },
+      "styles": {
+        "fontSize": "14px",
+        "color": "#6e6e73",
+        "textAlign": "center",
+        "lineHeight": "1.5"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 64,
+      "parentId": 58,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 110,
+      "text": "",
+      "bounds": {
+        "x": 676,
+        "y": 1999,
+        "width": 311,
+        "height": 178
+      },
+      "styles": {
+        "flexGrow": "1",
+        "flexShrink": "1",
+        "flexBasis": "auto",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "rowGap": "16px",
+        "columnGap": "16px",
+        "paddingTop": "30px",
+        "paddingRight": "30px",
+        "paddingBottom": "30px",
+        "paddingLeft": "30px"
+      },
+      "childCount": 3
+    },
+    {
+      "id": 65,
+      "parentId": 64,
+      "depth": 6,
+      "tag": "div",
+      "engineId": 105,
+      "text": "",
+      "bounds": {
+        "x": 804,
+        "y": 2029,
+        "width": 56,
+        "height": 56
+      },
+      "styles": {
+        "width": "56px",
+        "height": "56px",
+        "_tl": "14",
+        "_tr": "14",
+        "_br": "14",
+        "_bl": "14",
+        "display": "flex",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "backgroundImage": "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 66,
+      "parentId": 65,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 103,
+      "text": "\ud83d\udd12",
+      "bounds": {
+        "x": 818,
+        "y": 2041,
+        "width": 28,
+        "height": 33
+      },
+      "styles": {
+        "fontSize": "28px"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 67,
+      "parentId": 64,
+      "depth": 6,
+      "tag": "h3",
+      "engineId": 106,
+      "text": "Privacy",
+      "bounds": {
+        "x": 790,
+        "y": 2101,
+        "width": 83,
+        "height": 28
+      },
+      "styles": {
+        "fontSize": "24px",
+        "fontWeight": "700",
+        "color": "#1d1d1f",
+        "textAlign": "center"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 68,
+      "parentId": 64,
+      "depth": 6,
+      "tag": "p",
+      "engineId": 108,
+      "text": "Your data stays on your device. Period.",
+      "bounds": {
+        "x": 706,
+        "y": 2145,
+        "width": 251,
+        "height": 2
+      },
+      "styles": {
+        "fontSize": "14px",
+        "color": "#6e6e73",
+        "textAlign": "center",
+        "lineHeight": "1.5"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 69,
+      "parentId": 58,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 118,
+      "text": "",
+      "bounds": {
+        "x": 1017,
+        "y": 1999,
+        "width": 297,
+        "height": 178
+      },
+      "styles": {
+        "flexGrow": "1",
+        "flexShrink": "1",
+        "flexBasis": "auto",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "rowGap": "16px",
+        "columnGap": "16px",
+        "paddingTop": "30px",
+        "paddingRight": "30px",
+        "paddingBottom": "30px",
+        "paddingLeft": "30px"
+      },
+      "childCount": 3
+    },
+    {
+      "id": 70,
+      "parentId": 69,
+      "depth": 6,
+      "tag": "div",
+      "engineId": 113,
+      "text": "",
+      "bounds": {
+        "x": 1138,
+        "y": 2029,
+        "width": 56,
+        "height": 56
+      },
+      "styles": {
+        "width": "56px",
+        "height": "56px",
+        "_tl": "14",
+        "_tr": "14",
+        "_br": "14",
+        "_bl": "14",
+        "display": "flex",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "backgroundImage": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 71,
+      "parentId": 70,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 111,
+      "text": "\u267b\ufe0f",
+      "bounds": {
+        "x": 1152,
+        "y": 2041,
+        "width": 28,
+        "height": 33
+      },
+      "styles": {
+        "fontSize": "28px"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 72,
+      "parentId": 69,
+      "depth": 6,
+      "tag": "h3",
+      "engineId": 114,
+      "text": "Environment",
+      "bounds": {
+        "x": 1095,
+        "y": 2101,
+        "width": 142,
+        "height": 28
+      },
+      "styles": {
+        "fontSize": "24px",
+        "fontWeight": "700",
+        "color": "#1d1d1f",
+        "textAlign": "center"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 73,
+      "parentId": 69,
+      "depth": 6,
+      "tag": "p",
+      "engineId": 116,
+      "text": "Carbon neutral by 2030. We mean it.",
+      "bounds": {
+        "x": 1047,
+        "y": 2145,
+        "width": 237,
+        "height": 2
+      },
+      "styles": {
+        "fontSize": "14px",
+        "color": "#6e6e73",
+        "textAlign": "center",
+        "lineHeight": "1.5"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 74,
+      "parentId": 2,
+      "depth": 3,
+      "tag": "section",
+      "engineId": 127,
+      "text": "",
+      "bounds": {
+        "x": 0,
+        "y": 2257,
+        "width": 1440,
+        "height": 378
+      },
+      "styles": {
+        "width": "100%",
+        "backgroundColor": "#000000",
+        "paddingTop": "100px",
+        "paddingRight": "0",
+        "paddingBottom": "100px",
+        "paddingLeft": "0",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "rowGap": "20px",
+        "columnGap": "20px"
+      },
+      "childCount": 3
+    },
+    {
+      "id": 75,
+      "parentId": 74,
+      "depth": 4,
+      "tag": "h2",
+      "engineId": 121,
+      "text": "Get the new iPhone.",
+      "bounds": {
+        "x": 500,
+        "y": 2357,
+        "width": 441,
+        "height": 56
+      },
+      "styles": {
+        "fontSize": "48px",
+        "fontWeight": "700",
+        "color": "#ffffff",
+        "textAlign": "center"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 76,
+      "parentId": 74,
+      "depth": 4,
+      "tag": "p",
+      "engineId": 123,
+      "text": "From $999 or $41.62/mo. for 24 mo. before trade-in.",
+      "bounds": {
+        "x": 480,
+        "y": 2433,
+        "width": 480,
+        "height": 24
+      },
+      "styles": {
+        "fontSize": "21px",
+        "color": "#86868b",
+        "textAlign": "center",
+        "maxWidth": "600px"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 77,
+      "parentId": 74,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 125,
+      "text": "",
+      "bounds": {
+        "x": 656,
+        "y": 2487,
+        "width": 129,
+        "height": 48
+      },
+      "styles": {
+        "backgroundColor": "#0071e3",
+        "color": "#ffffff",
+        "fontSize": "17px",
+        "fontWeight": "600",
+        "paddingTop": "12px",
+        "paddingRight": "28px",
+        "paddingBottom": "12px",
+        "paddingLeft": "28px",
+        "_tl": "980",
+        "_tr": "980",
+        "_br": "980",
+        "_bl": "980",
+        "cursor": "pointer",
+        "border": "none",
+        "marginTop": "10px"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 78,
+      "parentId": 2,
+      "depth": 3,
+      "tag": "footer",
+      "engineId": 180,
+      "text": "",
+      "bounds": {
+        "x": 0,
+        "y": 2635,
+        "width": 1440,
+        "height": 237
+      },
+      "styles": {
+        "width": "100%",
+        "backgroundColor": "#f5f5f7",
+        "paddingTop": "20px",
+        "paddingRight": "0",
+        "paddingBottom": "20px",
+        "paddingLeft": "0",
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 79,
+      "parentId": 78,
+      "depth": 4,
+      "tag": "div",
+      "engineId": 179,
+      "text": "",
+      "bounds": {
+        "x": 230,
+        "y": 2655,
+        "width": 980,
+        "height": 197
+      },
+      "styles": {
+        "maxWidth": "980px",
+        "width": "100%",
+        "paddingTop": "0",
+        "paddingRight": "22px",
+        "paddingBottom": "0",
+        "paddingLeft": "22px",
+        "display": "flex",
+        "flexDirection": "column",
+        "rowGap": "20px",
+        "columnGap": "20px"
+      },
+      "childCount": 2
+    },
+    {
+      "id": 80,
+      "parentId": 79,
+      "depth": 5,
+      "tag": "div",
+      "engineId": 176,
+      "text": "",
+      "bounds": {
+        "x": 252,
+        "y": 2655,
+        "width": 656,
+        "height": 153
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "row",
+        "rowGap": "40px",
+        "columnGap": "40px",
+        "justifyContent": "center"
+      },
+      "childCount": 4
+    },
+    {
+      "id": 81,
+      "parentId": 80,
+      "depth": 6,
+      "tag": "div",
+      "engineId": 142,
+      "text": "",
+      "bounds": {
+        "x": 252,
+        "y": 2655,
+        "width": 94,
+        "height": 153
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "column",
+        "rowGap": "8px",
+        "columnGap": "8px"
+      },
+      "childCount": 7
+    },
+    {
+      "id": 82,
+      "parentId": 81,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 128,
+      "text": "Shop and Learn",
+      "bounds": {
+        "x": 252,
+        "y": 2655,
+        "width": 94,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "color": "#1d1d1f"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 83,
+      "parentId": 81,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 130,
+      "text": "Store",
+      "bounds": {
+        "x": 252,
+        "y": 2678,
+        "width": 31,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 84,
+      "parentId": 81,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 132,
+      "text": "Mac",
+      "bounds": {
+        "x": 252,
+        "y": 2701,
+        "width": 24,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 85,
+      "parentId": 81,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 134,
+      "text": "iPad",
+      "bounds": {
+        "x": 252,
+        "y": 2724,
+        "width": 25,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 86,
+      "parentId": 81,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 136,
+      "text": "iPhone",
+      "bounds": {
+        "x": 252,
+        "y": 2747,
+        "width": 39,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 87,
+      "parentId": 81,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 138,
+      "text": "Watch",
+      "bounds": {
+        "x": 252,
+        "y": 2770,
+        "width": 36,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 88,
+      "parentId": 81,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 140,
+      "text": "AirPods",
+      "bounds": {
+        "x": 252,
+        "y": 2793,
+        "width": 44,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 89,
+      "parentId": 80,
+      "depth": 6,
+      "tag": "div",
+      "engineId": 155,
+      "text": "",
+      "bounds": {
+        "x": 386,
+        "y": 2655,
+        "width": 77,
+        "height": 130
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "column",
+        "rowGap": "8px",
+        "columnGap": "8px"
+      },
+      "childCount": 6
+    },
+    {
+      "id": 90,
+      "parentId": 89,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 143,
+      "text": "Services",
+      "bounds": {
+        "x": 386,
+        "y": 2655,
+        "width": 53,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "color": "#1d1d1f"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 91,
+      "parentId": 89,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 145,
+      "text": "Apple Music",
+      "bounds": {
+        "x": 386,
+        "y": 2678,
+        "width": 70,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 92,
+      "parentId": 89,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 147,
+      "text": "Apple TV+",
+      "bounds": {
+        "x": 386,
+        "y": 2701,
+        "width": 59,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 93,
+      "parentId": 89,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 149,
+      "text": "Apple Arcade",
+      "bounds": {
+        "x": 386,
+        "y": 2724,
+        "width": 77,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 94,
+      "parentId": 89,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 151,
+      "text": "iCloud",
+      "bounds": {
+        "x": 386,
+        "y": 2747,
+        "width": 37,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 95,
+      "parentId": 89,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 153,
+      "text": "Apple One",
+      "bounds": {
+        "x": 386,
+        "y": 2770,
+        "width": 60,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 96,
+      "parentId": 80,
+      "depth": 6,
+      "tag": "div",
+      "engineId": 164,
+      "text": "",
+      "bounds": {
+        "x": 503,
+        "y": 2655,
+        "width": 126,
+        "height": 84
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "column",
+        "rowGap": "8px",
+        "columnGap": "8px"
+      },
+      "childCount": 4
+    },
+    {
+      "id": 97,
+      "parentId": 96,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 156,
+      "text": "Account",
+      "bounds": {
+        "x": 503,
+        "y": 2655,
+        "width": 50,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "color": "#1d1d1f"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 98,
+      "parentId": 96,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 158,
+      "text": "Manage Your Apple ID",
+      "bounds": {
+        "x": 503,
+        "y": 2678,
+        "width": 126,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 99,
+      "parentId": 96,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 160,
+      "text": "Apple Store Account",
+      "bounds": {
+        "x": 503,
+        "y": 2701,
+        "width": 117,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 100,
+      "parentId": 96,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 162,
+      "text": "iCloud.com",
+      "bounds": {
+        "x": 503,
+        "y": 2724,
+        "width": 64,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 101,
+      "parentId": 80,
+      "depth": 6,
+      "tag": "div",
+      "engineId": 175,
+      "text": "",
+      "bounds": {
+        "x": 669,
+        "y": 2655,
+        "width": 239,
+        "height": 152
+      },
+      "styles": {
+        "display": "flex",
+        "flexDirection": "column",
+        "rowGap": "8px",
+        "columnGap": "8px"
+      },
+      "childCount": 5
+    },
+    {
+      "id": 102,
+      "parentId": 101,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 165,
+      "text": "Apple Values",
+      "bounds": {
+        "x": 669,
+        "y": 2655,
+        "width": 79,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "color": "#1d1d1f"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 103,
+      "parentId": 101,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 167,
+      "text": "Accessibility",
+      "bounds": {
+        "x": 669,
+        "y": 2687,
+        "width": 71,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 104,
+      "parentId": 101,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 169,
+      "text": "Environment",
+      "bounds": {
+        "x": 669,
+        "y": 2719,
+        "width": 71,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 105,
+      "parentId": 101,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 171,
+      "text": "Privacy",
+      "bounds": {
+        "x": 669,
+        "y": 2751,
+        "width": 42,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 106,
+      "parentId": 101,
+      "depth": 7,
+      "tag": "span",
+      "engineId": 173,
+      "text": "Supplier Responsibility",
+      "bounds": {
+        "x": 669,
+        "y": 2783,
+        "width": 129,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73"
+      },
+      "childCount": 1
+    },
+    {
+      "id": 107,
+      "parentId": 79,
+      "depth": 5,
+      "tag": "p",
+      "engineId": 177,
+      "text": "Copyright 2024 Apple Inc. All rights reserved.",
+      "bounds": {
+        "x": 252,
+        "y": 2828,
+        "width": 259,
+        "height": 15
+      },
+      "styles": {
+        "fontSize": "12px",
+        "color": "#6e6e73",
+        "textAlign": "center",
+        "paddingTop": "20px",
+        "borderTop": "1px solid #d2d2d7"
+      },
+      "childCount": 1
+    }
+  ]
+}

@@ -72,3 +72,40 @@ export function hitTest(...args) {
 export function flushAndRender(...args) {
     return activeEngine().flushAndRender(...args);
 }
+
+// ─── Browser-based text measurement (oracle) ───
+// Uses canvas.measureText() for accurate text dimensions on web.
+// On native, falls back to null (engine uses its own measurer).
+
+let _measureCanvas = null;
+let _measureCtx = null;
+
+export function measureTextBrowser(text, fontSize, fontWeight, fontFamily) {
+    if (globalThis.__RENDERO_NATIVE__) return null; // native path uses Rust measurer
+
+    if (!_measureCanvas) {
+        if (typeof document === 'undefined' || typeof document.createElement !== 'function') return null;
+        _measureCanvas = document.createElement('canvas');
+        _measureCtx = _measureCanvas.getContext('2d');
+    }
+    if (!_measureCtx) return null;
+
+    const weight = fontWeight || '400';
+    const family = fontFamily || '-apple-system, system-ui, sans-serif';
+    const size = fontSize || 16;
+    _measureCtx.font = `${weight} ${size}px ${family}`;
+
+    const metrics = _measureCtx.measureText(text || ' ');
+    const width = metrics.width;
+    // Height: use fontBoundingBox (full line height) if available,
+    // otherwise fall back to fontSize * 1.2 (standard line-height approximation).
+    // actualBoundingBox is too tight — it only covers visible glyph bounds.
+    let height;
+    if (metrics.fontBoundingBoxAscent !== undefined && metrics.fontBoundingBoxDescent !== undefined) {
+        height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+    } else {
+        height = size * 1.2;
+    }
+
+    return { width: Math.ceil(width), height: Math.ceil(height) };
+}

@@ -100,6 +100,10 @@ export function installShimNative() {
     // Use our standalone window shim (no browser window)
     const windowShim = createWindowShim(shimDoc);
     shimDoc.defaultView = windowShim;
+    installWindowScrollShim(windowShim, shimDoc, { patchRealWindow: false });
+    globalThis.__RENDERO_ON_FRAME__ = () => {
+        windowShim.__renderoUpdateScrollMetrics?.();
+    };
 
     return {
         document: shimDoc,

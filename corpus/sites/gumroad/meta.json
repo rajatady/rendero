@@ -1,0 +1,52 @@
+{
+  "name": "gumroad",
+  "url": "https://gumroad.com",
+  "capturedAt": "2026-03-30T22:37:31Z",
+  "viewports": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "label": "desktop"
+      },
+      "elementCount": 633,
+      "scrollHeight": 900,
+      "scrollContainers": 1,
+      "fixedSticky": 2,
+      "images": 129,
+      "interactive": 173,
+      "textBlocks": 19,
+      "stackingContexts": 22
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024,
+        "label": "tablet"
+      },
+      "elementCount": 633,
+      "scrollHeight": 1024,
+      "scrollContainers": 1,
+      "fixedSticky": 2,
+      "images": 129,
+      "interactive": 173,
+      "textBlocks": 20,
+      "stackingContexts": 22
+    },
+    {
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "label": "mobile"
+      },
+      "elementCount": 633,
+      "scrollHeight": 812,
+      "scrollContainers": 1,
+      "fixedSticky": 2,
+      "images": 129,
+      "interactive": 173,
+      "textBlocks": 27,
+      "stackingContexts": 22
+    }
+  ]
+}

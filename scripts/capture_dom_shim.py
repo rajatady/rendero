@@ -35,26 +35,16 @@ def main() -> int:
 
         page.goto(f"{base_url}/demos/dom-shim/?v={int(time.time() * 1000)}", wait_until="domcontentloaded")
         page.screenshot(path=str(out_dir / "react-web.png"), full_page=True)
-        page.evaluate("window.scrollTo(0, 1500)")
-        page.wait_for_timeout(500)
-        page.screenshot(path=str(out_dir / "react-web-scrolled.png"), full_page=False)
-        page.evaluate("window.scrollTo(0, 0)")
 
         page.get_by_role("button", name="React (Rendero)").click()
         page.wait_for_timeout(3000)
         page.screenshot(path=str(out_dir / "react-rendero.png"), full_page=False)
-        page.evaluate("window.scrollTo(0, 1500)")
-        page.wait_for_timeout(1000)
-        page.screenshot(path=str(out_dir / "react-rendero-scrolled.png"), full_page=False)
 
         state = page.evaluate(
             """() => ({
                 title: document.title,
                 label: document.getElementById('mode-label')?.textContent || null,
                 bodyClass: document.body.className,
-                scrollY: window.scrollY,
-                scrollHeight: document.documentElement.scrollHeight,
-                renderoCamera: globalThis.Rendero?.engine?.getCamera?.() || null,
                 canvas: (() => {
                     const c = document.getElementById('canvas');
                     return c ? {

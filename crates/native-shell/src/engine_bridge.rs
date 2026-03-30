@@ -337,10 +337,8 @@ impl Engine {
                         if let NodeKind::Text { ref mut runs, .. } = node.kind {
                             let sz = args[2] as f32;
                             for run in runs.iter_mut() { run.font_size = sz; }
-                            if let Some(run) = runs.first() {
-                                node.width = run.text.len() as f32 * sz * 0.65;
-                                node.height = sz * 1.5;
-                            }
+                            // Don't set width/height here — let Taffy's text measurer
+                            // or JS browser measurement handle sizing.
                         }
                     }
                 }
@@ -547,10 +545,8 @@ impl Engine {
                     if let Some(node) = page.tree.get_mut(&node_id) {
                         if let NodeKind::Text { ref mut runs, .. } = node.kind {
                             if let Some(run) = runs.first_mut() {
-                                let fs = run.font_size;
                                 run.text = text.to_string();
-                                node.width = text.len() as f32 * fs * 0.65;
-                                node.height = fs * 1.5;
+                                // Don't set width/height — let layout engine measure.
                             }
                         }
                     }
