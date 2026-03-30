@@ -60,16 +60,19 @@ export class RenderoUI {
         const { x = 0, y = 0, width = 0, height = 0 } = props;
         const [r, g, b, a] = this._parseColor(props.backgroundColor || 'transparent');
 
+        // Normalize: lowercase 'frame' and uppercase 'Frame' both work
+        const t = type.charAt(0).toUpperCase() + type.slice(1);
+
         let counter, clientId;
 
-        if (type === 'Frame') {
+        if (t === 'Frame') {
             const ids = this.engine.add_frame(`frame_${key}`, x, y, width || 100, height || 100, r, g, b, a);
             [counter, clientId] = ids;
-        } else if (type === 'Text') {
+        } else if (t === 'Text') {
             const [tr, tg, tb, ta] = this._parseColor(props.color || '#000000');
             const ids = this.engine.add_text(`text_${key}`, props.text || '', x, y, props.fontSize || 16, tr, tg, tb, ta);
             [counter, clientId] = ids;
-        } else if (type === 'TextInput') {
+        } else if (t === 'Textinput' || t === 'TextInput') {
             // ─── TextInput: Frame (border) + Text (value) + hidden HTML <input> ───
             // This is EXACTLY how React Native's TextInput works:
             // - iOS: invisible UITextField captures keyboard input
@@ -105,14 +108,25 @@ export class RenderoUI {
             if (props.secureTextEntry) inputEl.type = 'password';
             if (props.maxLength) inputEl.maxLength = props.maxLength;
 
+            // Position the real HTML input OVER the canvas-rendered input.
+            // This is exactly how React Native works on iOS:
+            // A real UITextField sits on top of the Skia canvas at the exact
+            // position of the visual TextInput. The OS handles focus, cursor,
+            // keyboard, IME, autocomplete — we just sync the value via onChange.
             Object.assign(inputEl.style, {
                 position: 'fixed',
-                opacity: '0',
-                pointerEvents: 'none',
-                // Positioned off-screen initially; repositioned on focus
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                color: 'transparent',       // Text invisible (canvas draws it)
+                caretColor: '#007AFF',      // But caret IS visible
+                fontSize: '16px',           // Prevents iOS zoom on focus
+                fontFamily: 'monospace',
+                padding: '12px',
+                zIndex: '100',
+                // Will be positioned by _syncInputPositions()
                 left: '-9999px', top: '-9999px',
                 width: '1px', height: '1px',
-                fontSize: '16px', // Prevents iOS zoom on focus
             });
             document.body.appendChild(inputEl);
 
@@ -142,7 +156,7 @@ export class RenderoUI {
             inputEl.addEventListener('focus', () => { this._dirty = true; });
             inputEl.addEventListener('blur', () => { this._dirty = true; });
 
-        } else if (type === 'Rect') {
+        } else if (t === 'Rect') {
             const ids = this.engine.add_rectangle(`rect_${key}`, x, y, width || 100, height || 100, r, g, b, a);
             [counter, clientId] = ids;
         } else {
@@ -151,7 +165,7 @@ export class RenderoUI {
             [counter, clientId] = ids;
         }
 
-        const node = { key, counter, clientId, type, props: { ...props }, parent: null };
+        const node = { key, counter, clientId, type: t, props: { ...props }, parent: null };
         this.nodes.set(key, node);
 
         // Apply non-creation props
@@ -254,13 +268,37 @@ export class RenderoUI {
     focusInput(key) {
         const info = this.inputs.get(key);
         if (!info) return;
-        info.el.style.left = '0px';
-        info.el.style.top = '0px';
-        info.el.style.opacity = '0';
-        info.el.style.pointerEvents = 'auto';
-        info.el.style.width = '100%';
-        info.el.style.height = '44px';
         info.el.focus();
+    }
+
+    // Position all HTML <input> elements over their canvas counterparts.
+    // Called every frame in the render loop.
+    // This is how React Native positions native views over the canvas.
+    _syncInputPositions() {
+        const cam = this.engine.get_camera();
+        const [camX, camY, zoom] = cam;
+
+        for (const [key, info] of this.inputs) {
+            const node = this.nodes.get(key);
+            if (!node) continue;
+
+            const bounds = this.engine.get_node_world_bounds(node.counter, node.clientId);
+            if (!bounds || bounds.length < 4) continue;
+
+            const [wx, wy, ww, wh] = bounds;
+            // World → screen coordinates
+            const sx = (wx - camX) * zoom;
+            const sy = (wy - camY) * zoom;
+            const sw = ww * zoom;
+            const sh = wh * zoom;
+
+            Object.assign(info.el.style, {
+                left: sx + 'px',
+                top: sy + 'px',
+                width: sw + 'px',
+                height: sh + 'px',
+            });
+        }
     }
 
     // ─── STEP 2: Layout Props (Yoga) ───
@@ -300,7 +338,7 @@ export class RenderoUI {
         }
 
         // ─── TextInput value sync ───
-        if (node.type === 'TextInput' && this.inputs.has(node.key)) {
+        if ((node.type === 'TextInput' || node.type === 'Textinput') && this.inputs.has(node.key)) {
             const info = this.inputs.get(node.key);
             const [tc, tci] = info.textNodeId;
 
@@ -329,7 +367,7 @@ export class RenderoUI {
         if ('fontWeight' in props) {
             this.engine.set_node_font_weight(counter, clientId, props.fontWeight);
         }
-        if ('color' in props && node.type === 'Text') {
+        if ('color' in props && node.type.toLowerCase() === 'text') {
             const [r, g, b, a] = this._parseColor(props.color);
             this.engine.set_node_fill(counter, clientId, r, g, b, a);
         }
@@ -352,9 +390,9 @@ export class RenderoUI {
             this.engine.set_auto_layout(counter, clientId, dir, gap, padT, padR, padB, padL);
         }
 
-        // Alignment
-        if ('alignItems' in props) {
-            // TODO: map to Rendero's align param when exposed
+        // Store onClick flag for cursor detection
+        if ('onClick' in props) {
+            node.props.onClick = props.onClick;
         }
     }
 
@@ -364,6 +402,20 @@ export class RenderoUI {
 
     _setupScroll() {
         const canvas = this.canvas;
+
+        // Cursor: pointer over clickable elements
+        canvas.addEventListener('mousemove', (e) => {
+            const hitKey = this.getNodeAtPoint(e.clientX, e.clientY);
+            if (hitKey && this.inputs.has(hitKey)) {
+                canvas.style.cursor = 'text';
+            } else if (hitKey) {
+                // Check if any node in the hit chain has an onClick
+                const node = this.nodes.get(hitKey);
+                canvas.style.cursor = (node && node.props.onClick) ? 'pointer' : 'default';
+            } else {
+                canvas.style.cursor = 'default';
+            }
+        });
 
         // Mouse wheel → scroll
         canvas.addEventListener('wheel', (e) => {
@@ -428,6 +480,8 @@ export class RenderoUI {
                 const dpr = window.devicePixelRatio || 1;
                 this.engine.render_canvas2d(this.ctx, this.canvas.width, this.canvas.height, dpr);
             }
+            // Keep HTML inputs positioned over their canvas counterparts
+            this._syncInputPositions();
             this._raf = requestAnimationFrame(loop);
         };
         loop();

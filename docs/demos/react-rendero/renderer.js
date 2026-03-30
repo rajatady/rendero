@@ -312,7 +312,7 @@ function rerender() {
 }
 
 export async function mount(Component, canvas) {
-    const { RenderoUI } = await import('./rendero-ui.js');
+    const { RenderoUI } = await import('./rendero-ui.js?v=13');
     ui = new RenderoUI();
     await ui.init(canvas);
 

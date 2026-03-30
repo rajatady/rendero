@@ -1,168 +1,224 @@
-// ═══════════════════════════════════════════════════════════════════
-// React Native on Rendero — ScrollView + TextInput
-// ═══════════════════════════════════════════════════════════════════
-
-import { h, useState, mount } from './renderer.js';
-import htm from 'https://esm.sh/htm@3.1.1';
-
-const html = htm.bind(h);
-
-// ─── StyleSheet ───
-
-const styles = {
-    card: {
-        width: 310, backgroundColor: '#ffffff', borderRadius: 16,
-        flexDirection: 'column', padding: 20, gap: 10,
+import { h, useState, mount } from "./renderer.js";
+function Button({ title, color = "#007AFF", onPress }) {
+  return /* @__PURE__ */ h(
+    "frame",
+    {
+      width: 200,
+      height: 38,
+      backgroundColor: color,
+      borderRadius: 8,
+      flexDirection: "row",
+      padding: 8,
+      onClick: onPress
     },
-    title: { fontSize: 20, color: '#1a1a2e', fontWeight: 700 },
-    body: { fontSize: 13, color: '#555555' },
-    accent: { fontSize: 13, color: '#007AFF', fontWeight: 600 },
-};
-
-// ─── Built-in Components ───
-
-function Button({ title, color = '#007AFF', onPress }) {
-    return html`
-        <Frame width=260 height=44 backgroundColor=${color} borderRadius=10
-               flexDirection="row" padding=11 onClick=${onPress}>
-            <Text text=${title} fontSize=15 color="#ffffff" fontWeight=700 />
-        </Frame>
-    `;
+    /* @__PURE__ */ h("text", { text: title, fontSize: 13, color: "#ffffff", fontWeight: 700 })
+  );
 }
-
-function TextInput({ value, placeholder, onChange, onSubmit, inputType, secureTextEntry, color = '#1a1a2e' }) {
-    return h('TextInput', {
-        width: 260, height: 44,
-        backgroundColor: '#f0f0f5',
-        borderRadius: 10,
-        padding: 12,
-        value: value || '',
-        placeholder: placeholder || '',
-        placeholderColor: '#999999',
-        color,
-        fontSize: 15,
-        onChange, onSubmit,
-        inputType: inputType || 'text',
-        secureTextEntry: secureTextEntry || false,
+function computeLayout(container, children) {
+  const { width, height, padding = 0, gap = 0, flexDirection = "column" } = container;
+  const isRow = flexDirection === "row";
+  const innerW = width - padding * 2;
+  const innerH = height - padding * 2;
+  const mainSize = isRow ? innerW : innerH;
+  const crossSize = isRow ? innerH : innerW;
+  let fixedTotal = 0;
+  let flexTotal = 0;
+  const gapTotal = Math.max(0, children.length - 1) * gap;
+  for (const child of children) {
+    if (child.flex) {
+      flexTotal += child.flex;
+    } else {
+      fixedTotal += isRow ? child.width || 0 : child.height || 0;
+    }
+  }
+  const remaining = mainSize - fixedTotal - gapTotal;
+  const perFlex = flexTotal > 0 ? remaining / flexTotal : 0;
+  let offset = padding;
+  const results = [];
+  for (const child of children) {
+    const childMain = child.flex ? perFlex * child.flex : isRow ? child.width : child.height;
+    const childCross = isRow ? child.height || crossSize : child.width || crossSize;
+    results.push({
+      ...child,
+      computedX: isRow ? offset : padding,
+      computedY: isRow ? padding : offset,
+      computedW: isRow ? childMain : childCross,
+      computedH: isRow ? childCross : childMain
     });
+    offset += childMain + gap;
+  }
+  return results;
 }
-
-function Label({ text }) {
-    return html`<Text text=${text} fontSize=12 color="#333" fontWeight=600 />`;
-}
-
-function Divider() {
-    return html`<Frame width=280 height=1 backgroundColor="#e0e0e0" />`;
-}
-
-// ─── ScrollView ───
-// Wraps content in a tall Frame. The camera-based scrolling handles the rest.
-// In React Native, ScrollView is a native component that clips + handles gestures.
-// Here we set the scrollable height based on total content.
-
-function ScrollView({ contentHeight = 900, children }) {
-    return html`
-        <Frame x=20 y=50 width=330 height=${contentHeight}
-               flexDirection="column" gap=14>
-            ${children}
-        </Frame>
-    `;
-}
-
-// ─── Screens ───
-
-function HomeScreen({ navigate }) {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [phone, setPhone] = useState('');
-    const [submitted, setSubmitted] = useState(false);
-
-    const el = document.getElementById('step-label');
-    if (el) el.textContent = `name="${name}" email="${email}"`;
-
-    if (submitted) {
-        return html`
-            <${ScrollView} contentHeight=350>
-                <Frame ...${styles.card} height=220>
-                    <Text ...${styles.title} text="Submitted!" />
-                    <Text ...${styles.body} text="Name: ${name}" />
-                    <Text ...${styles.body} text="Email: ${email}" />
-                    <Text ...${styles.body} text="Phone: ${phone}" />
-                    <Text ...${styles.accent}
-                        text="All state came from controlled\nTextInputs via useState." />
-                </Frame>
-                <${Button} title="Back to Form"
-                           onPress=${() => setSubmitted(false)} />
-            <//>
-        `;
-    }
-
-    return html`
-        <${ScrollView} contentHeight=900>
-            <Frame ...${styles.card} height=130>
-                <Text ...${styles.title} text="React Native Inputs" />
-                <Text ...${styles.body}
-                    text="Tap a field to type. Scroll to see\nmore. Each input is controlled." />
-            </Frame>
-
-            <Frame ...${styles.card} height=520>
-                <Text ...${styles.title} text="Sign Up Form" />
-
-                <${Label} text="NAME" />
-                <${TextInput} value=${name} placeholder="Enter your name"
-                              onChange=${setName} />
-
-                <${Divider} />
-                <${Label} text="EMAIL" />
-                <${TextInput} value=${email} placeholder="user@example.com"
-                              inputType="email" onChange=${setEmail} />
-
-                <${Divider} />
-                <${Label} text="PASSWORD" />
-                <${TextInput} value=${password} placeholder="Secret"
-                              secureTextEntry=${true} onChange=${setPassword} />
-
-                <${Divider} />
-                <${Label} text="PHONE" />
-                <${TextInput} value=${phone} placeholder="+1 (555) 000-0000"
-                              inputType="tel" onChange=${setPhone} />
-            </Frame>
-
-            <${Button}
-                title=${name ? `Submit as ${name}` : 'Fill in name to submit'}
-                color=${name ? '#34C759' : '#aaa'}
-                onPress=${() => { if (name) setSubmitted(true); }} />
-
-            <${Button} title="About this demo" color="#5856D6"
-                       onPress=${() => navigate('about')} />
-        <//>
-    `;
-}
-
-function AboutScreen({ navigate }) {
-    return html`
-        <${ScrollView} contentHeight=400>
-            <Frame ...${styles.card} height=250>
-                <Text ...${styles.title} text="How It Works" />
-                <Text ...${styles.body}
-                    text="1. You write components (app.js)\n2. htm parses JSX-like templates\n3. Reconciler diffs virtual trees\n4. Only changed nodes update\n5. Rendero engine draws pixels\n6. Hidden HTML inputs capture keyboard\n7. Camera offset handles scrolling" />
-            </Frame>
-            <${Button} title="Back" color="#5856D6"
-                       onPress=${() => navigate('home')} />
-        <//>
-    `;
-}
-
-// ─── Root ───
-
+const LAYOUTS = [
+  {
+    name: "Column + Fixed Heights",
+    desc: "Three children with fixed heights, stacked vertically.",
+    container: { width: 300, height: 300, padding: 16, gap: 10, flexDirection: "column" },
+    children: [
+      { label: "Header", height: 50, color: "#e74c3c" },
+      { label: "Content", height: 100, color: "#3498db" },
+      { label: "Footer", height: 50, color: "#2ecc71" }
+    ]
+  },
+  {
+    name: "Column + Flex",
+    desc: "Header is fixed, Content fills remaining space.",
+    container: { width: 300, height: 300, padding: 16, gap: 10, flexDirection: "column" },
+    children: [
+      { label: "Header", height: 50, color: "#e74c3c" },
+      { label: "Content (flex:1)", flex: 1, color: "#3498db" },
+      { label: "Footer", height: 50, color: "#2ecc71" }
+    ]
+  },
+  {
+    name: "Row Layout",
+    desc: "Three items side by side, middle one flexes.",
+    container: { width: 300, height: 200, padding: 12, gap: 8, flexDirection: "row" },
+    children: [
+      { label: "L", width: 60, color: "#9b59b6" },
+      { label: "Center (flex:1)", flex: 1, color: "#3498db" },
+      { label: "R", width: 60, color: "#e67e22" }
+    ]
+  },
+  {
+    name: "Flex Ratios",
+    desc: "flex:1 vs flex:2 \u2014 second child gets 2x the space.",
+    container: { width: 300, height: 200, padding: 12, gap: 8, flexDirection: "row" },
+    children: [
+      { label: "flex:1", flex: 1, color: "#e74c3c" },
+      { label: "flex:2", flex: 2, color: "#3498db" },
+      { label: "flex:1", flex: 1, color: "#2ecc71" }
+    ]
+  },
+  {
+    name: "Nested Layout",
+    desc: "Column with a row inside \u2014 like a real app.",
+    container: { width: 300, height: 300, padding: 16, gap: 10, flexDirection: "column" },
+    children: [
+      { label: "Title Bar", height: 44, color: "#34495e" },
+      {
+        label: "Button Row (flex:1)",
+        flex: 1,
+        color: "#ecf0f1",
+        isRow: true,
+        subChildren: [
+          { label: "A", flex: 1, color: "#e74c3c" },
+          { label: "B", flex: 1, color: "#3498db" },
+          { label: "C", flex: 1, color: "#2ecc71" }
+        ]
+      },
+      { label: "Status Bar", height: 30, color: "#7f8c8d" }
+    ]
+  }
+];
 function App() {
-    const [screen, setScreen] = useState('home');
-
-    if (screen === 'about') {
-        return html`<${AboutScreen} navigate=${setScreen} />`;
+  const [layoutIdx, setLayoutIdx] = useState(0);
+  const layout = LAYOUTS[layoutIdx];
+  const computed = computeLayout(layout.container, layout.children);
+  const el = document.getElementById("step-label");
+  if (el) el.textContent = `Yoga: ${layout.name}`;
+  const ctr = layout.container;
+  return /* @__PURE__ */ h("frame", { x: 20, y: 40, width: 330, height: 800, flexDirection: "column", gap: 12 }, /* @__PURE__ */ h(
+    "frame",
+    {
+      width: 310,
+      height: 70,
+      backgroundColor: "#ffffff",
+      borderRadius: 12,
+      flexDirection: "column",
+      padding: 14,
+      gap: 4
+    },
+    /* @__PURE__ */ h("text", { text: "Yoga Layout Algorithm", fontSize: 18, color: "#1a1a2e", fontWeight: 700 }),
+    /* @__PURE__ */ h("text", { text: layout.desc, fontSize: 11, color: "#666" })
+  ), /* @__PURE__ */ h("frame", { width: ctr.width, height: ctr.height, backgroundColor: "#dfe6e9", borderRadius: 8 }, computed.map((child) => {
+    if (child.subChildren) {
+      const subComputed = computeLayout(
+        { width: child.computedW, height: child.computedH, padding: 4, gap: 4, flexDirection: "row" },
+        child.subChildren
+      );
+      return /* @__PURE__ */ h(
+        "frame",
+        {
+          x: child.computedX,
+          y: child.computedY,
+          width: child.computedW,
+          height: child.computedH,
+          backgroundColor: child.color,
+          borderRadius: 4
+        },
+        subComputed.map(
+          (sub) => /* @__PURE__ */ h(
+            "frame",
+            {
+              x: sub.computedX,
+              y: sub.computedY,
+              width: sub.computedW,
+              height: sub.computedH,
+              backgroundColor: sub.color,
+              borderRadius: 4
+            },
+            /* @__PURE__ */ h("text", { text: sub.label, fontSize: 11, color: "#fff", fontWeight: 600 })
+          )
+        )
+      );
     }
-    return html`<${HomeScreen} navigate=${setScreen} />`;
+    return /* @__PURE__ */ h(
+      "frame",
+      {
+        x: child.computedX,
+        y: child.computedY,
+        width: child.computedW,
+        height: child.computedH,
+        backgroundColor: child.color,
+        borderRadius: 4
+      },
+      /* @__PURE__ */ h("text", { text: child.label, fontSize: 12, color: "#ffffff", fontWeight: 600 })
+    );
+  })), /* @__PURE__ */ h(
+    "frame",
+    {
+      width: 310,
+      height: 200,
+      backgroundColor: "#ffffff",
+      borderRadius: 12,
+      flexDirection: "column",
+      padding: 14,
+      gap: 6
+    },
+    /* @__PURE__ */ h("text", { text: "Computed Positions", fontSize: 14, color: "#1a1a2e", fontWeight: 700 }),
+    computed.map(
+      (child) => /* @__PURE__ */ h(
+        "text",
+        {
+          text: `${child.label}: x=${Math.round(child.computedX)} y=${Math.round(child.computedY)} w=${Math.round(child.computedW)} h=${Math.round(child.computedH)}`,
+          fontSize: 11,
+          color: "#333"
+        }
+      )
+    ),
+    /* @__PURE__ */ h(
+      "text",
+      {
+        text: `Container: ${ctr.width}x${ctr.height}, pad=${ctr.padding}, gap=${ctr.gap}, dir=${ctr.flexDirection}`,
+        fontSize: 10,
+        color: "#999"
+      }
+    )
+  ), /* @__PURE__ */ h("frame", { width: 310, height: 44, flexDirection: "row", gap: 8 }, /* @__PURE__ */ h(
+    Button,
+    {
+      title: "< Prev",
+      color: "#666",
+      onPress: () => setLayoutIdx((layoutIdx - 1 + LAYOUTS.length) % LAYOUTS.length)
+    }
+  ), /* @__PURE__ */ h(
+    Button,
+    {
+      title: "Next >",
+      color: "#007AFF",
+      onPress: () => setLayoutIdx((layoutIdx + 1) % LAYOUTS.length)
+    }
+  )));
 }
-
-mount(App, document.getElementById('canvas'));
+mount(App, document.getElementById("canvas"));
