@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>DOM Shim Demo — Apple on Rendero</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* Mode selector bar */
+        #mode-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex; align-items: center; justify-content: center;
+            gap: 12px; padding: 10px 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        #mode-bar .title {
+            color: #fff; font-size: 14px; font-weight: 600;
+            margin-right: 20px;
+        }
+        #mode-bar button {
+            background: rgba(255,255,255,0.1);
+            color: #ccc; border: 1px solid rgba(255,255,255,0.15);
+            padding: 6px 16px; border-radius: 6px;
+            font-size: 12px; cursor: pointer;
+            transition: all 0.15s;
+        }
+        #mode-bar button:hover { background: rgba(255,255,255,0.2); color: #fff; }
+        #mode-bar button.active {
+            background: #0071e3; color: #fff;
+            border-color: #0071e3;
+        }
+        #mode-label {
+            color: #86868b; font-size: 11px;
+            margin-left: auto;
+        }
+
+        /* Web mode: normal DOM rendering */
+        #root {
+            margin-top: 44px; /* space for mode bar */
+        }
+
+        /* Native mode: full-screen canvas */
+        #canvas {
+            display: none;
+            width: 100vw; height: 100vh;
+        }
+        body.native-mode #canvas {
+            display: block;
+            position: fixed; top: 44px; left: 0; right: 0; bottom: 0;
+        }
+        body.native-mode #root {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mode selector -->
+    <div id="mode-bar">
+        <span class="title">DOM Shim Demo</span>
+        <button id="btn-react-web" class="active" onclick="switchMode('react-web')">React (Web)</button>
+        <button id="btn-vue-web" onclick="switchMode('vue-web')">Vue (Web)</button>
+        <button id="btn-react-native" onclick="switchMode('react-native')">React (Rendero)</button>
+        <button id="btn-vue-native" onclick="switchMode('vue-native')">Vue (Rendero)</button>
+        <span id="mode-label">React + Browser DOM</span>
+    </div>
+
+    <!-- Web mode: real DOM -->
+    <div id="root"></div>
+
+    <!-- Native mode: Rendero canvas -->
+    <canvas id="canvas"></canvas>
+
+    <script>
+        let currentMode = null;
+
+        async function switchMode(mode) {
+            if (mode === currentMode) return;
+            currentMode = mode;
+
+            // Update buttons
+            document.querySelectorAll('#mode-bar button').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + mode).classList.add('active');
+
+            // Clear previous content
+            document.getElementById('root').innerHTML = '';
+            document.body.classList.toggle('native-mode', mode.includes('native'));
+
+            const label = document.getElementById('mode-label');
+
+            // Load the right bundle
+            const bundleMap = {
+                'react-web': { file: 'dist/react-web.js', label: 'React + Browser DOM' },
+                'vue-web': { file: 'dist/vue-web.js', label: 'Vue + Browser DOM' },
+                'react-native': { file: 'dist/react-native.js', label: 'React + DOM Shim → Rendero' },
+                'vue-native': { file: 'dist/vue-native.js', label: 'Vue + DOM Shim → Rendero' },
+            };
+
+            const info = bundleMap[mode];
+            label.textContent = info.label;
+
+            try {
+                window.__RENDERO_WASM_ASSET_VERSION__ = Date.now().toString();
+                window.__RENDERO_WASM_MODULE_URL__ = '/pkg/rendero.js';
+                window.__RENDERO_WASM_BINARY_URL__ = '/pkg/rendero_bg.wasm';
+                // Dynamic import — each bundle self-mounts
+                await import('./' + info.file + '?v=' + Date.now());
+            } catch (e) {
+                console.error('Failed to load bundle:', e);
+                label.textContent = 'Error: ' + e.message;
+            }
+        }
+
+        // Start with React Web
+        switchMode('react-web');
+    </script>
+</body>
+</html>

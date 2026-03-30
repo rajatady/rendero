@@ -231,6 +231,18 @@ pub struct Node {
     pub horizontal_sizing: SizingMode,
     pub vertical_sizing: SizingMode,
 
+    /// Spacing this node contributes around itself in parent auto-layout.
+    #[serde(default)]
+    pub margin: LayoutMargin,
+
+    /// When set, this node is taken out of flow and pinned at the given inset.
+    #[serde(default)]
+    pub layout_position: Option<LayoutPosition>,
+
+    /// Optional min/max width and height constraints used by layout engines.
+    #[serde(default)]
+    pub size_constraints: LayoutSizeConstraints,
+
     // Figma-style constraints: how child responds to parent resize
     pub constraint_horizontal: ConstraintType,
     pub constraint_vertical: ConstraintType,
@@ -258,6 +270,9 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -280,6 +295,9 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -303,6 +321,9 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -338,6 +359,9 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -357,6 +381,9 @@ impl Node {
             kind: NodeKind::Component,
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -379,6 +406,9 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -402,6 +432,9 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,

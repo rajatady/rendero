@@ -1,0 +1,17 @@
+[package]
+name = "rendero-native-shell"
+version.workspace = true
+edition.workspace = true
+description = "Pure Rust native shell — winit + QuickJS + Rendero engine"
+
+[[bin]]
+name = "rendero"
+path = "src/main.rs"
+
+[dependencies]
+rendero-core = { path = "../core" }
+rendero-renderer = { path = "../renderer" }
+glam = { workspace = true }
+winit = "0.30"
+softbuffer = "0.4"
+rquickjs = { version = "0.11", features = ["bindgen", "parallel"] }

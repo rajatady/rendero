@@ -9,5 +9,7 @@ pub mod properties;
 pub mod tree;
 pub mod id;
 pub mod hit_test;
+pub mod providers;
 pub mod layout;
+pub mod taffy_layout;
 pub mod boolean;

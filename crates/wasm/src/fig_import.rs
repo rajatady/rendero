@@ -421,6 +421,8 @@ fn get_auto_layout(val: &Value) -> Option<AutoLayout> {
         primary_sizing: SizingMode::Fixed,
         counter_sizing: SizingMode::Fixed,
         align: LayoutAlign::Start,
+        justify: LayoutJustify::Start,
+        wrap: LayoutWrap::NoWrap,
     })
 }
 
