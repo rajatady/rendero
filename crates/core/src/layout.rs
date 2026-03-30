@@ -14,10 +14,16 @@ use crate::providers::{LayoutEngine, HeuristicTextMeasurer};
 use crate::tree::DocumentTree;
 
 /// Default entry point — uses TaffyLayout with heuristic text measurement.
-/// Drop-in replacement: same signature as before, zero breaking changes.
+/// Reads viewport from root node dimensions; falls back to 1280×800.
 pub fn compute_layout(tree: &mut DocumentTree, root: &NodeId) {
+    let viewport = tree.get(root)
+        .map(|n| (
+            if n.width > 0.0 { n.width } else { 1280.0 },
+            if n.height > 0.0 { n.height } else { 800.0 },
+        ))
+        .unwrap_or((1280.0, 800.0));
     let mut engine = crate::taffy_layout::TaffyLayout::new(HeuristicTextMeasurer);
-    engine.compute(tree, root, (0.0, 0.0));
+    engine.compute(tree, root, viewport);
 }
 
 /// Layout with a custom engine — for testing, fallback, or mixing implementations.

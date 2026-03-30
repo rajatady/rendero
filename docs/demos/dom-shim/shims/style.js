@@ -7,7 +7,7 @@
 //
 // Uses a Proxy so ANY style property triggers sync.
 
-import { engineSetProp, markDirty } from './engine-runtime.js';
+import { engineSetProp, markDirty, measureTextBrowser } from './engine-runtime.js';
 import { parseColor, parseLength, parseFontWeight, parseBoxShadow, parseLinearGradient, expandShorthand } from './css-values.js';
 import { buildAutoLayout, resolveMargins } from './layout-style.js';
 
@@ -170,6 +170,25 @@ function syncToEngine(element) {
         if (v.color) {
             const c = parseColor(v.color);
             if (c) engineSetProp(id, 'fill', { r: c[0], g: c[1], b: c[2], a: c[3] });
+        }
+
+        // Browser-accurate text measurement (oracle approach).
+        // Use canvas.measureText() to get the real dimensions the browser would use,
+        // then send as the node's size. This overrides the Rust heuristic.
+        const textContent = element.textContent || '';
+        if (textContent.trim()) {
+            const measured = measureTextBrowser(
+                textContent,
+                parseLength(v.fontSize) || 16,
+                v.fontWeight || '400',
+                v.fontFamily || '',
+            );
+            if (measured) {
+                // Use line-height if set, otherwise use measured height
+                const lh = v.lineHeight ? parseLength(v.lineHeight) : 0;
+                const textH = lh > 0 ? lh : measured.height;
+                engineSetProp(id, 'size', { w: measured.width, h: textH });
+            }
         }
     }
 

@@ -5508,9 +5508,7 @@ impl CanvasEngine {
             if let Some(run) = runs.first_mut() {
                 let font_size = run.font_size;
                 run.text = text.to_string();
-                // Recalculate size
-                node.width = text.len() as f32 * font_size * 0.65;
-                node.height = font_size * 1.5;
+                // Don't recalculate here — let layout engine or JS browser measurement set size.
             }
             let tx = node.transform.tx;
             let ty = node.transform.ty;
@@ -5546,11 +5544,7 @@ impl CanvasEngine {
             for run in runs.iter_mut() {
                 run.font_size = size;
             }
-            // Recalculate size based on first run
-            if let Some(run) = runs.first() {
-                node.width = run.text.len() as f32 * size * 0.65;
-                node.height = size * 1.5;
-            }
+            // Don't recalculate here — let layout engine or JS browser measurement set size.
             let tx = node.transform.tx;
             let ty = node.transform.ty;
             let w = node.width;

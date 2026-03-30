@@ -4,6 +4,8 @@ members = [
     "crates/core",
     "crates/renderer",
     "crates/crdt",
+    "crates/css",
+    "crates/text",
     "crates/wasm",
     "crates/fig-import",
     "crates/native-ffi",
@@ -24,3 +26,5 @@ serde_json = "1"
 fontdue = "0.9"
 taffy = "0.9"
 fontdb = "0.23"
+lightningcss = "1.0.0-alpha.71"
+parley = "0.3"

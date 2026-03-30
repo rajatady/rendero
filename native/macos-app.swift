@@ -113,7 +113,7 @@ class RenderoView: NSView {
         layer?.backgroundColor = NSColor.black.cgColor
 
         appLog("[Rendero] Creating native engine...")
-        engine = "CodexNative".withCString { rendero_create($0, 1) }
+        engine = "RenderoNative".withCString { rendero_create($0, 1) }
         appLog("[Rendero] Engine created: \(engine!)")
 
         // Quick smoke test — create a frame directly without JS
@@ -250,7 +250,7 @@ class RenderoView: NSView {
             document.documentElement.appendChild(document.body);
             document.defaultView = window;
             document.activeElement = document.body;
-            var navigator = { userAgent: 'CodexNative/1.0', platform: 'macOS' };
+            var navigator = { userAgent: 'RenderoNative/1.0', platform: 'macOS' };
             var HTMLElement = function HTMLElement() {};
             var HTMLIFrameElement = function HTMLIFrameElement() {};
             var HTMLInputElement = function HTMLInputElement() {};
@@ -526,7 +526,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             backing: .buffered,
             defer: false
         )
-        window.title = "Codex Version — Rendero Native Runtime"
+        window.title = "Rendero — React on Native Rust Engine"
         window.minSize = NSSize(width: 400, height: 300)
 
         let view = RenderoView(frame: rect)
@@ -534,7 +534,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.contentView = view
         window.makeKeyAndOrderFront(nil)
 
-        appLog("[Rendero] Window open. Pipeline: DOM Shim → Rust Engine → Pixels (Codex Version)")
+        appLog("[Rendero] Window open. Pipeline: React → DOM Shim → Rust Engine → Pixels")
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {

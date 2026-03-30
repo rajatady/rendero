@@ -490,9 +490,23 @@ function Footer() {
     );
 }
 
-// ─── App Root ───
+// ─── Test: Simple colored rectangles ───
 
-export default function AppleApp() {
+function TestApp() {
+    return (
+        <div style={{ width: '100%', height: '100vh', backgroundColor: '#ffffff', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ width: '100%', height: '100px', backgroundColor: '#ff0000' }} />
+            <div style={{ width: '100%', height: '100px', backgroundColor: '#00ff00' }} />
+            <div style={{ width: '100%', height: '100px', backgroundColor: '#0000ff' }} />
+            <div style={{ width: '50%', height: '200px', backgroundColor: '#ff00ff' }} />
+        </div>
+    );
+}
+
+// ─── App Root: swap between TestApp and full Apple page ───
+// Comment/uncomment to switch:
+
+function AppleApp() {
     return (
         <div style={{ width: '100%', minHeight: '100vh' }}>
             <NavBar />
@@ -504,3 +518,5 @@ export default function AppleApp() {
         </div>
     );
 }
+// Switch between AppleApp and TestApp in one line now.
+export default function App() { return <AppleApp />; }

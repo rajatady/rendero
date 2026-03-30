@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rendero Layout Accuracy</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: #111; color: #eee; padding: 20px; }
+        h1 { margin-bottom: 10px; }
+        .summary { font-size: 24px; margin-bottom: 20px; }
+        .pass { color: #34c759; }
+        .fail { color: #ff3b30; }
+        .test-result { margin-bottom: 8px; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-family: monospace; }
+        .test-pass { background: #1a2e1a; }
+        .test-fail { background: #2e1a1a; }
+        .detail { color: #999; margin-left: 20px; }
+        #container { position: absolute; top: -9999px; left: -9999px; visibility: hidden; }
+    </style>
+</head>
+<body>
+    <h1>Rendero Layout Accuracy</h1>
+    <div class="summary" id="summary">Running...</div>
+    <div id="results"></div>
+    <div id="container"></div>
+
+    <script type="module">
+        import { CORPUS, VIEWPORT } from './test-corpus.js';
+
+        const container = document.getElementById('container');
+        const resultsDiv = document.getElementById('results');
+        const summaryDiv = document.getElementById('summary');
+
+        // ─── Build a real DOM tree from a test case definition ───
+
+        function buildDomTree(node, parent) {
+            const el = document.createElement(node.tag || 'div');
+            el.dataset.testId = node.id;
+
+            // Apply styles
+            if (node.style) {
+                for (const [key, value] of Object.entries(node.style)) {
+                    el.style[key] = typeof value === 'number' ? `${value}px` : value;
+                }
+            }
+
+            // Add text content
+            if (node.text) {
+                el.textContent = node.text;
+            }
+
+            // Recurse children
+            if (node.children) {
+                for (const child of node.children) {
+                    buildDomTree(child, el);
+                }
+            }
+
+            parent.appendChild(el);
+            return el;
+        }
+
+        // ─── Extract bounds for every element with data-test-id ───
+
+        function extractBounds(rootEl) {
+            const bounds = {};
+            const elements = rootEl.querySelectorAll('[data-test-id]');
+            // Include the root itself
+            if (rootEl.dataset.testId) {
+                const r = rootEl.getBoundingClientRect();
+                const pr = rootEl.parentElement.getBoundingClientRect();
+                bounds[rootEl.dataset.testId] = {
+                    x: Math.round(r.left - pr.left),
+                    y: Math.round(r.top - pr.top),
+                    width: Math.round(r.width),
+                    height: Math.round(r.height),
+                };
+            }
+            for (const el of elements) {
+                const r = el.getBoundingClientRect();
+                // Get position relative to the test container, not the page
+                const pr = rootEl.parentElement.getBoundingClientRect();
+                bounds[el.dataset.testId] = {
+                    x: Math.round(r.left - pr.left),
+                    y: Math.round(r.top - pr.top),
+                    width: Math.round(r.width),
+                    height: Math.round(r.height),
+                };
+            }
+            return bounds;
+        }
+
+        // ─── Run the sweep ───
+
+        const results = [];
+        let totalElements = 0;
+        let matchCount = 0;
+        let mismatchCount = 0;
+
+        for (const testCase of CORPUS) {
+            // Create a wrapper div to isolate each test
+            const wrapper = document.createElement('div');
+            wrapper.style.width = `${VIEWPORT.width}px`;
+            wrapper.style.position = 'relative';
+            container.appendChild(wrapper);
+
+            // Build the DOM tree
+            buildDomTree(testCase.tree, wrapper);
+
+            // Force layout
+            wrapper.getBoundingClientRect();
+
+            // Extract browser bounds (ground truth)
+            const browserBounds = extractBounds(wrapper.firstElementChild);
+
+            // Compare — for now, browser vs browser (baseline)
+            // When engine is wired in, this becomes browser vs engine
+            const elementMismatches = [];
+            for (const [id, bounds] of Object.entries(browserBounds)) {
+                totalElements++;
+                // Record as match (self-comparison always matches)
+                // This establishes the infrastructure — engine comparison plugs in here
+                matchCount++;
+            }
+
+            results.push({
+                label: testCase.label,
+                category: testCase.category,
+                browserBounds,
+                elementCount: Object.keys(browserBounds).length,
+                mismatches: elementMismatches,
+            });
+
+            container.removeChild(wrapper);
+        }
+
+        // ─── Render results ───
+
+        let html = '';
+        for (const result of results) {
+            const pass = result.mismatches.length === 0;
+            html += `<div class="test-result ${pass ? 'test-pass' : 'test-fail'}">`;
+            html += `${pass ? '✓' : '✗'} [${result.category}] ${result.label} — ${result.elementCount} elements`;
+            if (!pass) {
+                for (const m of result.mismatches) {
+                    html += `<div class="detail">${m}</div>`;
+                }
+            }
+            // Show browser bounds for verification
+            html += `<div class="detail">bounds: ${JSON.stringify(result.browserBounds)}</div>`;
+            html += `</div>`;
+        }
+        resultsDiv.innerHTML = html;
+
+        const pct = totalElements > 0 ? ((matchCount / totalElements) * 100).toFixed(1) : '0';
+        summaryDiv.innerHTML = `<span class="${mismatchCount === 0 ? 'pass' : 'fail'}">${matchCount}/${totalElements} elements match (${pct}%)</span> — ${results.length} test cases, ${mismatchCount} mismatches`;
+        summaryDiv.innerHTML += `<br><small>Browser ground truth captured. Engine comparison not yet wired.</small>`;
+
+        // ─── Publish report for automation ───
+
+        const report = {
+            status: 'ready',
+            total: totalElements,
+            matchCount,
+            mismatchCount,
+            testCases: results.map(r => ({
+                label: r.label,
+                category: r.category,
+                elementCount: r.elementCount,
+                mismatchCount: r.mismatches.length,
+                browserBounds: r.browserBounds,
+            })),
+        };
+
+        // Make available to automation
+        window.__LAYOUT_ACCURACY_REPORT__ = report;
+
+        // Hash-based report for headless collection
+        const params = new URLSearchParams(location.search);
+        if (params.get('report') === '1') {
+            location.hash = '#report=' + encodeURIComponent(JSON.stringify(report));
+        }
+    </script>
+</body>
+</html>

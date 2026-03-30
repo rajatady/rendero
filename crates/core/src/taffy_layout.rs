@@ -47,11 +47,18 @@ impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
 
             let mut taffy_style = node_to_taffy_style(rendero_node);
 
-            // For text nodes, measure and set explicit size
+            // For text nodes: use explicit size if already set (e.g. from JS browser
+            // measurement), otherwise fall back to the Rust text measurer.
             if let NodeKind::Text { ref runs, .. } = rendero_node.kind {
-                let (tw, th) = self.measurer.measure(runs, f32::INFINITY);
-                if tw > 0.0 { taffy_style.size.width = Dimension::length(tw); }
-                if th > 0.0 { taffy_style.size.height = Dimension::length(th); }
+                if rendero_node.width > 0.0 && rendero_node.height > 0.0 {
+                    // Pre-measured (browser canvas.measureText or explicit size)
+                    taffy_style.size.width = Dimension::length(rendero_node.width);
+                    taffy_style.size.height = Dimension::length(rendero_node.height);
+                } else {
+                    let (tw, th) = self.measurer.measure(runs, f32::INFINITY);
+                    if tw > 0.0 { taffy_style.size.width = Dimension::length(tw); }
+                    if th > 0.0 { taffy_style.size.height = Dimension::length(th); }
+                }
             }
 
             // Collect child Taffy IDs
@@ -98,8 +105,13 @@ impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
             if let Some(node) = tree.get_mut(node_id) {
                 node.transform.tx = layout.location.x;
                 node.transform.ty = layout.location.y;
-                if layout.size.width > 0.0 { node.width = layout.size.width; }
-                if layout.size.height > 0.0 { node.height = layout.size.height; }
+                let lw = layout.size.width;
+                let lh = layout.size.height;
+                // Apply finite sizes. If Taffy returns inf, the node has no
+                // constraint — leave its size as-is (0 or whatever was set).
+                // The renderer handles 0-height containers by not clipping children.
+                if lw > 0.0 && lw.is_finite() { node.width = lw; }
+                if lh > 0.0 && lh.is_finite() { node.height = lh; }
             }
         }
     }
@@ -155,6 +167,7 @@ fn node_to_taffy_style(node: &crate::node::Node) -> taffy::Style {
             LayoutJustify::SpaceAround => JustifyContent::SpaceAround,
             LayoutJustify::SpaceEvenly => JustifyContent::SpaceEvenly,
         });
+
         style.flex_wrap = match al.wrap {
             LayoutWrap::Wrap => FlexWrap::Wrap,
             LayoutWrap::NoWrap => FlexWrap::NoWrap,
@@ -188,17 +201,18 @@ fn node_to_taffy_style(node: &crate::node::Node) -> taffy::Style {
             Size { width: counter_dim, height: primary_dim }
         };
     } else {
-        // Not a flex container — leaf node (rectangle, text, ellipse, etc.)
-        // Use Flex so it participates correctly as a flex item in parent containers
+        // No explicit auto-layout. Frames default to vertical column (CSS block flow).
+        // Leaf nodes (rect, text, ellipse) just get explicit dimensions.
         style.display = Display::Flex;
-        if node.width > 0.0 {
-            style.size.width = Dimension::length(node.width);
-            style.flex_shrink = 0.0;
+        match &node.kind {
+            NodeKind::Frame { .. } => {
+                // Block-level container: stack children vertically (CSS default)
+                style.flex_direction = FlexDirection::Column;
+            }
+            _ => {}
         }
-        if node.height > 0.0 {
-            style.size.height = Dimension::length(node.height);
-            style.flex_shrink = 0.0;
-        }
+        if node.width > 0.0 { style.size.width = Dimension::length(node.width); }
+        if node.height > 0.0 { style.size.height = Dimension::length(node.height); }
     }
 
     // Child sizing within parent (flex item properties)
@@ -211,7 +225,6 @@ fn node_to_taffy_style(node: &crate::node::Node) -> taffy::Style {
         }
         SizingMode::Fixed if node.width > 0.0 => {
             style.size.width = Dimension::length(node.width);
-            style.flex_shrink = 0.0;
         }
         _ => {}
     }
@@ -223,11 +236,11 @@ fn node_to_taffy_style(node: &crate::node::Node) -> taffy::Style {
         }
         SizingMode::Fixed if node.height > 0.0 => {
             style.size.height = Dimension::length(node.height);
-            style.flex_shrink = 0.0;
         }
         _ => {}
     }
 
+    // Margin
     style.margin = taffy::Rect {
         top: LengthPercentageAuto::length(node.margin.top),
         right: LengthPercentageAuto::length(node.margin.right),
@@ -235,16 +248,18 @@ fn node_to_taffy_style(node: &crate::node::Node) -> taffy::Style {
         left: LengthPercentageAuto::length(node.margin.left),
     };
 
-    if let Some(layout_position) = node.layout_position {
+    // Absolute positioning
+    if let Some(lp) = node.layout_position {
         style.position = Position::Absolute;
         style.inset = taffy::Rect {
-            top: LengthPercentageAuto::length(layout_position.y),
+            top: LengthPercentageAuto::length(lp.y),
             right: LengthPercentageAuto::auto(),
             bottom: LengthPercentageAuto::auto(),
-            left: LengthPercentageAuto::length(layout_position.x),
+            left: LengthPercentageAuto::length(lp.x),
         };
     }
 
+    // Min/max size constraints
     if node.size_constraints.min_width > 0.0 {
         style.min_size.width = Dimension::length(node.size_constraints.min_width);
     }
@@ -311,6 +326,7 @@ mod tests {
                 counter_sizing: SizingMode::Fixed,
                 align: LayoutAlign::Start,
                 justify: LayoutJustify::Start,
+                wrap: LayoutWrap::NoWrap,
             });
         }
     }
@@ -390,6 +406,7 @@ mod tests {
                     counter_sizing: SizingMode::Fixed,
                     align: LayoutAlign::Start,
                     justify: LayoutJustify::Start,
+                    wrap: LayoutWrap::NoWrap,
                 });
             }
         }

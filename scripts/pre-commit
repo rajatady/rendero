@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Pre-commit hook: ensure README.md or docs/ are updated when source changes.
+#
+# If any src/, drizzle/, vercel.json, or package.json files are staged,
+# at least one file in README.md or docs/ must also be staged.
+# Skip with: git commit --no-verify
+
+STAGED=$(git diff --cached --name-only)
+
+# Check if any source files are staged
+HAS_SOURCE=$(echo "$STAGED" | grep -E '^(src/|drizzle/|vercel\.json|package\.json)' | head -1)
+
+if [ -z "$HAS_SOURCE" ]; then
+  exit 0  # No source changes, docs not required
+fi
+
+# Check if any docs are staged
+HAS_DOCS=$(echo "$STAGED" | grep -E '^(README\.md|docs/)' | head -1)
+
+if [ -z "$HAS_DOCS" ]; then
+  echo ""
+  echo "  COMMIT BLOCKED: source files changed but no docs updated."
+  echo ""
+  echo "  Staged source files:"
+  echo "$STAGED" | grep -E '^(src/|drizzle/|vercel\.json|package\.json)' | sed 's/^/    /'
+  echo ""
+  echo "  Update at least one of:"
+  echo "    - README.md"
+  echo "    - docs/*.md"
+  echo ""
+  echo "  Or skip with: git commit --no-verify"
+  echo ""
+  exit 1
+fi
+
+exit 0
