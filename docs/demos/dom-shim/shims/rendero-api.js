@@ -24,6 +24,8 @@ export function ensureRenderoNamespace({ engineBridge = null, nativeApi = null }
             hitTest: (x, y) => engineBridge?.hitTest?.(x, y) ?? null,
             getNodeIds: (engineId) => engineBridge?.getNodeIds?.(engineId) ?? null,
             getNodeBounds: (engineId) => engineBridge?.engineGetBounds?.(engineId) ?? { x: 0, y: 0, width: 0, height: 0 },
+            getCamera: () => engineBridge?.getCamera?.() ?? { x: 0, y: 0, zoom: 1 },
+            setCamera: (x, y, zoom) => engineBridge?.setCamera?.(x, y, zoom) ?? null,
         },
         native: {
             storage: nativeApi?.storage || existing.native?.storage || {

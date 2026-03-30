@@ -21,7 +21,7 @@
 
 import { initEngine } from '../shims/engine-native.js';
 import { ShimDocument } from '../shims/document.js';
-import { createWindowShim } from '../shims/window.js';
+import { createWindowShim, installWindowScrollShim } from '../shims/window.js';
 import { setViewport } from '../shims/css-values.js';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
@@ -46,6 +46,7 @@ Object.assign(globalThis, windowShim, {
     outerHeight: vpH,
     devicePixelRatio: 1,
 });
+installWindowScrollShim(globalThis, shimDoc);
 
 // Use globalThis as defaultView — it has our polyfilled HTMLIFrameElement etc.
 // React's getActiveElementDeep does `element instanceof containerInfo.HTMLIFrameElement`

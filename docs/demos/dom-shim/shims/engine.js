@@ -91,6 +91,8 @@ export function initEngine(engine, canvas) {
             hitTest,
             getNodeIds,
             engineGetBounds,
+            getCamera,
+            setCamera,
         },
         nativeApi: {
             storage: {
@@ -133,6 +135,17 @@ export function getEngine() { return _engine; }
 export function getCanvas() { return _canvas; }
 export function allocId() { return _nextId++; }
 export function markDirty() { _dirty = true; }
+export function getCamera() {
+    if (!_engine) return { x: 0, y: 0, zoom: 1 };
+    const [x, y, zoom] = _engine.get_camera();
+    return { x, y, zoom };
+}
+export function setCamera(x, y, zoom) {
+    if (!_engine) return;
+    const current = getCamera();
+    _engine.set_camera(x, y, zoom ?? current.zoom);
+    _dirty = true;
+}
 
 export function registerNode(engineId, counter, clientId) {
     _nodeRegistry.set(engineId, { counter, clientId });
@@ -350,6 +363,7 @@ export function flushAndRender() {
     if (_dirty) {
         _dirty = false;
         _renderer.render(_engine, _ctx, _canvas);
+        globalThis.__RENDERO_ON_FRAME__?.();
     }
 }
 

@@ -9,19 +9,80 @@ use rendero_core::properties::{PremultColor, Transform};
 use crate::tile::{TileBuffer, TileCoord, TILE_SIZE};
 
 use fontdue::Font;
+use fontdb::{Database, Family, Query, Weight};
 use glam::Vec2;
-use std::sync::OnceLock;
+use std::collections::HashMap;
+use std::sync::{Mutex, OnceLock};
 
 /// Embedded font — Roboto Mono, compiled into the binary.
 static DEFAULT_FONT: &[u8] = include_bytes!("../assets/RobotoMono.ttf");
 
 static PARSED_FONT: OnceLock<Font> = OnceLock::new();
+static FONT_DB: OnceLock<Database> = OnceLock::new();
+static FONT_CACHE: OnceLock<Mutex<HashMap<String, &'static Font>>> = OnceLock::new();
 
 fn font() -> &'static Font {
     PARSED_FONT.get_or_init(|| {
         Font::from_bytes(DEFAULT_FONT, fontdue::FontSettings::default())
             .expect("embedded font is valid TTF")
     })
+}
+
+fn font_db() -> &'static Database {
+    FONT_DB.get_or_init(|| {
+        let mut db = Database::new();
+        db.load_system_fonts();
+        #[cfg(target_os = "macos")]
+        db.set_sans_serif_family("Helvetica Neue");
+        db
+    })
+}
+
+fn font_cache() -> &'static Mutex<HashMap<String, &'static Font>> {
+    FONT_CACHE.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+fn resolve_font(family: &str, weight: u16) -> &'static Font {
+    let requested = family
+        .split(',')
+        .next()
+        .unwrap_or(family)
+        .trim()
+        .trim_matches('"')
+        .trim_matches('\'');
+    let cache_key = format!("{}:{}", requested.to_lowercase(), weight);
+    if let Some(font) = font_cache().lock().unwrap().get(&cache_key).copied() {
+        return font;
+    }
+
+    let families = if requested.is_empty() {
+        vec![Family::SansSerif]
+    } else {
+        vec![Family::Name(requested), Family::SansSerif]
+    };
+    let query = Query {
+        families: &families,
+        weight: Weight(weight),
+        ..Query::default()
+    };
+
+    let resolved = font_db()
+        .query(&query)
+        .and_then(|id| {
+            font_db().with_face_data(id, |data, face_index| {
+                let settings = fontdue::FontSettings {
+                    collection_index: face_index,
+                    ..fontdue::FontSettings::default()
+                };
+                Font::from_bytes(data.to_vec(), settings).ok()
+            })
+        })
+        .flatten()
+        .map(|font| Box::leak(Box::new(font)) as &'static Font)
+        .unwrap_or_else(font);
+
+    font_cache().lock().unwrap().insert(cache_key, resolved);
+    resolved
 }
 
 /// A positioned glyph ready for rasterization.
@@ -57,8 +118,6 @@ pub fn rasterize_text(
         return;
     }
 
-    let font = font();
-
     // Phase 1: rasterize all glyphs and compute positions
     let mut glyphs: Vec<PlacedGlyph> = Vec::new();
     let mut lines: Vec<Line> = Vec::new();
@@ -67,6 +126,7 @@ pub fn rasterize_text(
     let mut current_line_height: f32 = 0.0;
 
     for run in runs {
+        let font = resolve_font(&run.font_family, run.font_weight);
         let size = run.font_size;
         let color = run.color.premultiplied();
         let line_metrics = font.horizontal_line_metrics(size);

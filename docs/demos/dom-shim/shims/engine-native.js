@@ -49,6 +49,10 @@ function _legacyBridge() {
                 case 'set_node_opacity': return __rendero_set_node_opacity(args[0], args[1], args[2]);
                 case 'set_node_font_size': return __rendero_set_node_font_size(args[0], args[1], args[2]);
                 case 'set_node_font_weight': return __rendero_set_node_font_weight(args[0], args[1], args[2]);
+                case 'set_node_stroke': return __rendero_set_node_stroke(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+                case 'set_node_rotation': return __rendero_set_node_rotation(args[0], args[1], args[2]);
+                case 'add_drop_shadow': return __rendero_add_drop_shadow(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
+                case 'set_node_linear_gradient': return __rendero_set_node_linear_gradient(args[0], args[1], args[2], args[3], args[4], args[5], args[6], ...args.slice(7));
                 case 'set_auto_layout': return __rendero_set_auto_layout(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
                 case 'select_node': return __rendero_select_node(args[0], args[1]);
                 case 'delete_selected': return __rendero_delete_selected();
@@ -66,6 +70,8 @@ function _legacyBridge() {
                     return __rendero_add_text(name, value, args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
                 }
                 case 'set_node_text': return __rendero_set_node_text(args[0], args[1], text);
+                case 'set_node_font_family': return __rendero_set_node_font_family(args[0], args[1], text);
+                case 'set_text_align': return __rendero_set_text_align(args[0], args[1], text);
                 default: return undefined;
             }
         },
@@ -111,6 +117,8 @@ export function initEngine() {
             hitTest,
             getNodeIds,
             engineGetBounds,
+            getCamera,
+            setCamera,
         },
         nativeApi: globalThis.Rendero?.native || {
             storage: {
@@ -143,6 +151,15 @@ export function getCanvas() { return null; } // no canvas on native
 export function allocId() { return _nextId++; }
 
 export function markDirty() { _dirty = true; }
+export function getCamera() {
+    const cam = _bridge().getCamera();
+    return { x: cam.x || 0, y: cam.y || 0, zoom: cam.zoom || 1 };
+}
+export function setCamera(x, y, zoom) {
+    const current = getCamera();
+    _bridge().dispatch('set_camera', [x, y, zoom ?? current.zoom]);
+    _dirty = true;
+}
 
 export function registerNode(engineId, counter, clientId) {
     _nodeRegistry.set(engineId, { counter, clientId });
@@ -284,15 +301,40 @@ export function engineSetProp(engineId, prop, value) {
             case 'fontWeight':
                 bridge.dispatch('set_node_font_weight', [counter, clientId, value]);
                 break;
+            case 'fontFamily':
+                bridge.dispatchStr('set_node_font_family', [counter, clientId], value);
+                break;
+            case 'textAlign':
+                bridge.dispatchStr('set_text_align', [counter, clientId], value);
+                break;
             case 'autoLayout':
                 bridge.dispatch('set_auto_layout',
                     [counter, clientId, value.direction, value.spacing, value.padTop, value.padRight, value.padBottom, value.padLeft, value.align ?? 0, value.justify ?? 0, value.wrap ?? 0]);
                 break;
+            case 'stroke':
+                bridge.dispatch('set_node_stroke', [counter, clientId, value.r, value.g, value.b, value.a, value.weight]);
+                break;
+            case 'rotation':
+                bridge.dispatch('set_node_rotation', [counter, clientId, value]);
+                break;
+            case 'shadow':
+                bridge.dispatch('add_drop_shadow', [counter, clientId, value.r, value.g, value.b, value.a, value.ox, value.oy, value.blur, value.spread]);
+                break;
+            case 'linearGradient': {
+                const positions = Array.from(value.positions || []);
+                const colors = Array.from(value.colors || []);
+                bridge.dispatch('set_node_linear_gradient', [
+                    counter, clientId,
+                    value.startX, value.startY, value.endX, value.endY,
+                    positions.length,
+                    ...positions,
+                    ...colors,
+                ]);
+                break;
+            }
             case 'clipContent':
                 bridge.dispatch('set_node_clip_content', [counter, clientId, value ? 1 : 0]);
                 break;
-            // fontFamily, textAlign, stroke, rotation, shadow, linearGradient
-            // can be added as needed — engine supports them
             default:
                 break;
         }

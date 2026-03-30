@@ -4,7 +4,7 @@
 
 import { initEngine, flushAndRender as _flush } from '../shims/engine-native.js';
 import { ShimDocument } from '../shims/document.js';
-import { createWindowShim } from '../shims/window.js';
+import { createWindowShim, installWindowScrollShim } from '../shims/window.js';
 import { setViewport } from '../shims/css-values.js';
 import { createApp } from 'vue';
 import AppleApp from './apple-vue.js';
@@ -25,6 +25,7 @@ Object.assign(globalThis, windowShim, {
     outerHeight: vpH,
     devicePixelRatio: 1,
 });
+installWindowScrollShim(globalThis, shimDoc);
 shimDoc.defaultView = globalThis;
 globalThis.document = shimDoc;
 globalThis.window.document = shimDoc;

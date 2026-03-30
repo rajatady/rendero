@@ -357,6 +357,82 @@ impl Engine {
                 }
                 0.0
             }
+            "set_node_stroke" => {
+                let node_id = NodeId::new(args[0] as u64, args[1] as u32);
+                if let Some(page) = self.document.page_mut(self.current_page) {
+                    if let Some(node) = page.tree.get_mut(&node_id) {
+                        node.style.strokes = vec![Paint::Solid(Color::new(
+                            args[2] as f32,
+                            args[3] as f32,
+                            args[4] as f32,
+                            args[5] as f32,
+                        ))];
+                        node.style.stroke_weight = args[6] as f32;
+                    }
+                }
+                0.0
+            }
+            "set_node_rotation" => {
+                let node_id = NodeId::new(args[0] as u64, args[1] as u32);
+                if let Some(page) = self.document.page_mut(self.current_page) {
+                    if let Some(node) = page.tree.get_mut(&node_id) {
+                        let radians = (args[2] as f32).to_radians();
+                        let (s, c) = radians.sin_cos();
+                        let sx = (node.transform.a.powi(2) + node.transform.b.powi(2)).sqrt().max(1.0);
+                        let sy = (node.transform.c.powi(2) + node.transform.d.powi(2)).sqrt().max(1.0);
+                        node.transform.a = c * sx;
+                        node.transform.b = s * sx;
+                        node.transform.c = -s * sy;
+                        node.transform.d = c * sy;
+                    }
+                }
+                0.0
+            }
+            "add_drop_shadow" => {
+                let node_id = NodeId::new(args[0] as u64, args[1] as u32);
+                if let Some(page) = self.document.page_mut(self.current_page) {
+                    if let Some(node) = page.tree.get_mut(&node_id) {
+                        node.style.effects.push(Effect::DropShadow {
+                            color: Color::new(args[2] as f32, args[3] as f32, args[4] as f32, args[5] as f32),
+                            offset: Vec2::new(args[6] as f32, args[7] as f32),
+                            blur_radius: args[8] as f32,
+                            spread: args[9] as f32,
+                        });
+                    }
+                }
+                0.0
+            }
+            "set_node_linear_gradient" => {
+                let node_id = NodeId::new(args[0] as u64, args[1] as u32);
+                let stop_count = args.get(6).copied().unwrap_or(0.0).max(0.0) as usize;
+                let positions_start = 7;
+                let colors_start = positions_start + stop_count;
+                if args.len() < colors_start + stop_count * 4 {
+                    return 0.0;
+                }
+                let mut stops = Vec::with_capacity(stop_count);
+                for idx in 0..stop_count {
+                    let pos = args[positions_start + idx] as f32;
+                    let color_base = colors_start + idx * 4;
+                    let color = Color::new(
+                        args[color_base] as f32,
+                        args[color_base + 1] as f32,
+                        args[color_base + 2] as f32,
+                        args[color_base + 3] as f32,
+                    );
+                    stops.push(GradientStop::new(pos, color));
+                }
+                if let Some(page) = self.document.page_mut(self.current_page) {
+                    if let Some(node) = page.tree.get_mut(&node_id) {
+                        node.style.fills = vec![Paint::LinearGradient {
+                            stops,
+                            start: Vec2::new(args[2] as f32, args[3] as f32),
+                            end: Vec2::new(args[4] as f32, args[5] as f32),
+                        }];
+                    }
+                }
+                0.0
+            }
             "set_auto_layout" => {
                 let node_id = NodeId::new(args[0] as u64, args[1] as u32);
                 if let Some(page) = self.document.page_mut(self.current_page) {
@@ -481,6 +557,35 @@ impl Engine {
                 }
                 0.0
             }
+            "set_node_font_family" => {
+                let node_id = NodeId::new(args[0] as u64, args[1] as u32);
+                if let Some(page) = self.document.page_mut(self.current_page) {
+                    if let Some(node) = page.tree.get_mut(&node_id) {
+                        if let NodeKind::Text { ref mut runs, .. } = node.kind {
+                            for run in runs.iter_mut() {
+                                run.font_family = text.to_string();
+                            }
+                        }
+                    }
+                }
+                0.0
+            }
+            "set_text_align" => {
+                let node_id = NodeId::new(args[0] as u64, args[1] as u32);
+                if let Some(page) = self.document.page_mut(self.current_page) {
+                    if let Some(node) = page.tree.get_mut(&node_id) {
+                        if let NodeKind::Text { ref mut align, .. } = node.kind {
+                            *align = match text {
+                                "center" => rendero_core::node::TextAlign::Center,
+                                "right" => rendero_core::node::TextAlign::Right,
+                                "justify" | "justified" => rendero_core::node::TextAlign::Justified,
+                                _ => rendero_core::node::TextAlign::Left,
+                            };
+                        }
+                    }
+                }
+                0.0
+            }
             _ => 0.0,
         }
     }
@@ -588,6 +693,15 @@ pub fn register_engine_functions(ctx: &Ctx<'_>, engine: &Rc<RefCell<Engine>>, na
         function __rendero_set_node_text(c, ci, text) { return __RenderoHostBridge.dispatchStr('set_node_text', [c, ci], text); }
         function __rendero_set_node_font_size(c, ci, s) { return __RenderoHostBridge.dispatch('set_node_font_size', [c, ci, s]); }
         function __rendero_set_node_font_weight(c, ci, w) { return __RenderoHostBridge.dispatch('set_node_font_weight', [c, ci, w]); }
+        function __rendero_set_node_font_family(c, ci, family) { return __RenderoHostBridge.dispatchStr('set_node_font_family', [c, ci], family); }
+        function __rendero_set_text_align(c, ci, align) { return __RenderoHostBridge.dispatchStr('set_text_align', [c, ci], align); }
+        function __rendero_set_node_stroke(c, ci, r, g, b, a, w) { return __RenderoHostBridge.dispatch('set_node_stroke', [c, ci, r, g, b, a, w]); }
+        function __rendero_set_node_rotation(c, ci, degrees) { return __RenderoHostBridge.dispatch('set_node_rotation', [c, ci, degrees]); }
+        function __rendero_add_drop_shadow(c, ci, r, g, b, a, ox, oy, blur, spread) { return __RenderoHostBridge.dispatch('add_drop_shadow', [c, ci, r, g, b, a, ox, oy, blur, spread]); }
+        function __rendero_set_node_linear_gradient(c, ci, startX, startY, endX, endY, stopCount) {
+            const rest = Array.prototype.slice.call(arguments, 7);
+            return __RenderoHostBridge.dispatch('set_node_linear_gradient', [c, ci, startX, startY, endX, endY, stopCount].concat(rest));
+        }
         function __rendero_set_auto_layout(c, ci, dir, sp, pt, pr, pb, pl, align, justify, wrap) { return __RenderoHostBridge.dispatch('set_auto_layout', [c, ci, dir, sp, pt, pr, pb, pl, align, justify, wrap]); }
         function __rendero_select_node(c, ci) { return __RenderoHostBridge.dispatch('select_node', [c, ci]); }
         function __rendero_delete_selected() { return __RenderoHostBridge.dispatch('delete_selected', []); }

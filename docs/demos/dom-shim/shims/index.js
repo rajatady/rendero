@@ -20,7 +20,7 @@ import { ShimDocument } from './document.js';
 import { ShimElement } from './element.js';
 import { ShimTextNode } from './text-node.js';
 import { ShimEvent, ShimMouseEvent, ShimKeyboardEvent } from './events.js';
-import { createWindowShim } from './window.js';
+import { createWindowShim, installWindowScrollShim } from './window.js';
 
 async function loadBrowserEngineModule() {
     const version = globalThis.__RENDERO_WASM_ASSET_VERSION__;
@@ -53,6 +53,10 @@ export async function installShim(canvas) {
     const isInBrowser = typeof window !== 'undefined' && typeof window.HTMLElement !== 'undefined';
     const windowRef = isInBrowser ? window : createWindowShim(shimDoc);
     shimDoc.defaultView = windowRef;
+    installWindowScrollShim(windowRef, shimDoc, { patchRealWindow: isInBrowser });
+    globalThis.__RENDERO_ON_FRAME__ = () => {
+        windowRef.__renderoUpdateScrollMetrics?.();
+    };
 
     // Wire up real canvas events → shim event dispatch
     _wireCanvasEvents(canvas, shimDoc);
@@ -186,7 +190,11 @@ function _wireCanvasEvents(canvas, shimDoc) {
     // Scroll
     canvas.addEventListener('wheel', (e) => {
         e.preventDefault();
-        // TODO: per-element scroll containers
+        if (typeof window !== 'undefined' && typeof window.scrollBy === 'function') {
+            window.scrollBy(0, e.deltaY);
+        }
+        window.__renderoUpdateScrollMetrics?.();
+        window.__renderoSyncScrollFromViewport?.();
         markDirty();
     }, { passive: false });
 }

@@ -13,7 +13,7 @@ use std::rc::Rc;
 
 use winit::application::ApplicationHandler;
 use winit::dpi::LogicalSize;
-use winit::event::WindowEvent;
+use winit::event::{MouseScrollDelta, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, EventLoop};
 use winit::window::{Window, WindowAttributes, WindowId};
 
@@ -268,6 +268,18 @@ impl ApplicationHandler for App {
             }
             WindowEvent::RedrawRequested => {
                 self.render_frame();
+            }
+            WindowEvent::MouseWheel { delta, .. } => {
+                let dy = match delta {
+                    MouseScrollDelta::LineDelta(_, y) => y * 40.0,
+                    MouseScrollDelta::PixelDelta(pos) => pos.y as f32,
+                };
+                if dy.abs() > 0.0 {
+                    let script = format!("window.scrollBy(0, {});", dy);
+                    if let Err(err) = self.js.evaluate(&script) {
+                        eprintln!("[Rendero] Scroll dispatch error: {err}");
+                    }
+                }
             }
             _ => {}
         }
