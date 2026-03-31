@@ -1,8 +1,8 @@
 {
   "pipelineVersion": 1,
-  "url": "http://localhost:5555/demos/dom-shim/?v=1774956260621",
+  "url": "http://localhost:5555/demos/dom-shim/?v=1774956850804",
   "title": "DOM Shim Demo \u2014 Apple on Rendero",
-  "timestamp": "2026-03-31T11:24:26.569Z",
+  "timestamp": "2026-03-31T11:34:16.526Z",
   "viewport": {
     "width": 1440,
     "height": 900
@@ -8197,7 +8197,7 @@
       "styles": {
         "flexGrow": "1",
         "flexShrink": "1",
-        "flexBasis": "auto",
+        "flexBasis": "0%",
         "minWidth": "400px",
         "height": "500px",
         "_tl": "18",
@@ -8220,7 +8220,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "minWidth": "400px",
           "height": "500px",
           "_tl": 18,
@@ -10710,7 +10710,7 @@
       "styles": {
         "flexGrow": "1",
         "flexShrink": "1",
-        "flexBasis": "auto",
+        "flexBasis": "0%",
         "minWidth": "400px",
         "height": "500px",
         "_tl": "18",
@@ -10733,7 +10733,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "minWidth": "400px",
           "height": "500px",
           "_tl": 18,
@@ -13213,7 +13213,7 @@
       "styles": {
         "flexGrow": "1",
         "flexShrink": "1",
-        "flexBasis": "auto",
+        "flexBasis": "0%",
         "minWidth": "400px",
         "height": "500px",
         "_tl": "18",
@@ -13236,7 +13236,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "minWidth": "400px",
           "height": "500px",
           "_tl": 18,
@@ -15726,7 +15726,7 @@
       "styles": {
         "flexGrow": "1",
         "flexShrink": "1",
-        "flexBasis": "auto",
+        "flexBasis": "0%",
         "minWidth": "400px",
         "height": "500px",
         "_tl": "18",
@@ -15749,7 +15749,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "minWidth": "400px",
           "height": "500px",
           "_tl": 18,
@@ -19458,7 +19458,7 @@
       "styles": {
         "flexGrow": "1",
         "flexShrink": "1",
-        "flexBasis": "auto",
+        "flexBasis": "0%",
         "display": "flex",
         "flexDirection": "column",
         "alignItems": "center",
@@ -19474,7 +19474,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "display": "flex",
           "flexDirection": "column",
           "alignItems": "center",
@@ -20916,7 +20916,7 @@
       "styles": {
         "flexGrow": "1",
         "flexShrink": "1",
-        "flexBasis": "auto",
+        "flexBasis": "0%",
         "display": "flex",
         "flexDirection": "column",
         "alignItems": "center",
@@ -20932,7 +20932,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "display": "flex",
           "flexDirection": "column",
           "alignItems": "center",
@@ -22374,7 +22374,7 @@
       "styles": {
         "flexGrow": "1",
         "flexShrink": "1",
-        "flexBasis": "auto",
+        "flexBasis": "0%",
         "display": "flex",
         "flexDirection": "column",
         "alignItems": "center",
@@ -22390,7 +22390,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "display": "flex",
           "flexDirection": "column",
           "alignItems": "center",
@@ -57543,7 +57543,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "minWidth": "400px",
           "height": "500px",
           "_tl": 18,
@@ -57860,7 +57860,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "minWidth": "400px",
           "height": "500px",
           "_tl": 18,
@@ -58177,7 +58177,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "minWidth": "400px",
           "height": "500px",
           "_tl": 18,
@@ -58494,7 +58494,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "minWidth": "400px",
           "height": "500px",
           "_tl": 18,
@@ -58830,7 +58830,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "display": "flex",
           "flexDirection": "column",
           "alignItems": "center",
@@ -59060,7 +59060,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "display": "flex",
           "flexDirection": "column",
           "alignItems": "center",
@@ -59290,7 +59290,7 @@
         "raw": {
           "flexGrow": "1",
           "flexShrink": "1",
-          "flexBasis": "auto",
+          "flexBasis": "0%",
           "display": "flex",
           "flexDirection": "column",
           "alignItems": "center",

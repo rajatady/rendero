@@ -308,12 +308,18 @@ export function expandShorthand(prop, value) {
             };
         }
         case 'flex': {
+            // CSS spec: flex: <number> → grow=N, shrink=1, basis=0%
+            // flex: none → 0 0 auto. flex: auto → 1 1 auto.
+            if (str === 'none') return { flexGrow: '0', flexShrink: '0', flexBasis: 'auto' };
+            if (str === 'auto') return { flexGrow: '1', flexShrink: '1', flexBasis: 'auto' };
             const parts = str.split(/\s+/);
-            return {
-                flexGrow: parts[0] || '0',
-                flexShrink: parts[1] || '1',
-                flexBasis: parts[2] || 'auto',
-            };
+            if (parts.length === 1) {
+                return { flexGrow: parts[0], flexShrink: '1', flexBasis: '0%' };
+            }
+            if (parts.length === 2) {
+                return { flexGrow: parts[0], flexShrink: parts[1], flexBasis: '0%' };
+            }
+            return { flexGrow: parts[0], flexShrink: parts[1], flexBasis: parts[2] };
         }
         case 'background': {
             // Simple: treat as backgroundColor unless it's a gradient
