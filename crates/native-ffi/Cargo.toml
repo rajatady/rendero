@@ -1,0 +1,15 @@
+[package]
+name = "rendero-native-ffi"
+version.workspace = true
+edition.workspace = true
+description = "C-ABI FFI bridge for native platforms (macOS, iOS, Linux)"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+rendero-core = { path = "../core" }
+rendero-renderer = { path = "../renderer" }
+rendero-crdt = { path = "../crdt" }
+rendero-text = { path = "../text" }
+glam = { workspace = true }

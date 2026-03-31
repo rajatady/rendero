@@ -1,0 +1,8 @@
+[package]
+name = "rendero-css"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+rendero-core = { path = "../core" }
+lightningcss = { workspace = true }

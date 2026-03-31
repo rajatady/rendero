@@ -1,27 +1,63 @@
-//! Auto-layout engine — Figma's layout system.
+//! Auto-layout engine — provider-based architecture.
 //!
-//! Processes the document tree and resolves auto-layout constraints.
-//! Each frame with auto_layout set gets its children arranged.
+//! The default `compute_layout()` uses TaffyLayout (CSS flexbox).
+//! Use `compute_layout_with()` to swap in any LayoutEngine implementation.
 //!
-//! The algorithm is a single-pass top-down traversal:
-//! 1. For each auto-layout frame, compute children sizes
-//! 2. Arrange children along primary axis (horizontal or vertical)
-//! 3. Apply alignment on counter axis
-//! 4. Resolve hug/fill sizing
+//! Implementations:
+//!   - `TaffyLayout` (crate::taffy_layout) — full CSS flexbox via Taffy
+//!   - `LegacyLayout` (this file) — the original basic auto-layout
 
 use crate::id::NodeId;
 use crate::node::NodeKind;
 use crate::properties::*;
+use crate::providers::{HeuristicTextMeasurer, LayoutEngine, TextMeasurer};
 use crate::tree::DocumentTree;
 
-/// Run auto-layout on the entire tree from root.
+/// Default entry point — uses TaffyLayout with heuristic text measurement.
+/// Reads viewport from root node dimensions; falls back to 1280×800.
 pub fn compute_layout(tree: &mut DocumentTree, root: &NodeId) {
-    // Collect nodes to process in depth-first order
-    let traversal = tree.traverse_depth_first(root);
+    compute_layout_with_text_measurer(tree, root, HeuristicTextMeasurer);
+}
 
-    // Process bottom-up (children before parents) for "hug" sizing
-    for node_id in traversal.iter().rev() {
-        layout_node(tree, node_id);
+/// Default Taffy layout using a caller-supplied text measurer.
+pub fn compute_layout_with_text_measurer<M: TextMeasurer>(
+    tree: &mut DocumentTree,
+    root: &NodeId,
+    measurer: M,
+) {
+    let viewport = tree.get(root)
+        .map(|n| (
+            if n.width > 0.0 { n.width } else { 1280.0 },
+            if n.height > 0.0 { n.height } else { 800.0 },
+        ))
+        .unwrap_or((1280.0, 800.0));
+    let mut engine = crate::taffy_layout::TaffyLayout::new(measurer);
+    engine.compute(tree, root, viewport);
+}
+
+/// Layout with a custom engine — for testing, fallback, or mixing implementations.
+pub fn compute_layout_with(
+    engine: &mut dyn LayoutEngine,
+    tree: &mut DocumentTree,
+    root: &NodeId,
+    viewport: (f32, f32),
+) {
+    engine.compute(tree, root, viewport);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LegacyLayout — the original basic auto-layout, wrapped as a provider
+// ═══════════════════════════════════════════════════════════════
+
+/// The original single-pass layout engine. Kept as a fallback provider.
+pub struct LegacyLayout;
+
+impl LayoutEngine for LegacyLayout {
+    fn compute(&mut self, tree: &mut DocumentTree, root: &NodeId, _viewport: (f32, f32)) {
+        let traversal = tree.traverse_depth_first(root);
+        for node_id in traversal.iter().rev() {
+            layout_node(tree, node_id);
+        }
     }
 }
 

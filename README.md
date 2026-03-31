@@ -1,6 +1,11 @@
 # Rendero
 
-A Rust/WASM 2D rendering engine with a built-in scene graph, spatial indexing, and CRDT collaboration — designed for building infinite canvas applications in the browser.
+A Rust/WASM rendering engine and portable app runtime. The repo still contains
+the original infinite-canvas and design-tool work, and it now also carries the
+Rendero parity runtime for running unmodified React/Vue apps through a DOM shim
+in browser/WASM and native Rust shells.
+
+Current runtime docs and status live in [docs/project/README.md](docs/project/README.md).
 
 **[Live Demo](https://rajatady.github.io/Rendero/)** · [Earthquake Explorer](https://rajatady.github.io/Rendero/demos/earthquake-explorer/) · [Design Tool](https://rajatady.github.io/Rendero/demos/design-tool/) · [Gaussian Splats](https://rajatady.github.io/Rendero/demos/splat-viewer/) · [Genome Browser](https://rajatady.github.io/Rendero/demos/genome-browser/) · [Neural Net](https://rajatady.github.io/Rendero/demos/neural-net/)
 

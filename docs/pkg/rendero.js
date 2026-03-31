@@ -1491,10 +1491,13 @@ export class CanvasEngine {
      * @param {number} pad_right
      * @param {number} pad_bottom
      * @param {number} pad_left
+     * @param {number} align
+     * @param {number} justify
+     * @param {number} wrap
      * @returns {boolean}
      */
-    set_auto_layout(counter, client_id, direction, spacing, pad_top, pad_right, pad_bottom, pad_left) {
-        const ret = wasm.canvasengine_set_auto_layout(this.__wbg_ptr, counter, client_id, direction, spacing, pad_top, pad_right, pad_bottom, pad_left);
+    set_auto_layout(counter, client_id, direction, spacing, pad_top, pad_right, pad_bottom, pad_left, align, justify, wrap) {
+        const ret = wasm.canvasengine_set_auto_layout(this.__wbg_ptr, counter, client_id, direction, spacing, pad_top, pad_right, pad_bottom, pad_left, align, justify, wrap);
         return ret !== 0;
     }
     /**
@@ -1599,6 +1602,16 @@ export class CanvasEngine {
         return ret !== 0;
     }
     /**
+     * @param {number} counter
+     * @param {number} client_id
+     * @param {boolean} clip
+     * @returns {boolean}
+     */
+    set_node_clip_content(counter, client_id, clip) {
+        const ret = wasm.canvasengine_set_node_clip_content(this.__wbg_ptr, counter, client_id, clip);
+        return ret !== 0;
+    }
+    /**
      * Set constraints on a node. h: 0=left, 1=right, 2=leftRight, 3=center, 4=scale
      * v: 0=top, 1=bottom, 2=topBottom, 3=center, 4=scale
      * @param {number} counter
@@ -1691,6 +1704,18 @@ export class CanvasEngine {
         return ret !== 0;
     }
     /**
+     * Mark a node as absolutely positioned within Taffy layout.
+     * @param {number} counter
+     * @param {number} client_id
+     * @param {number} x
+     * @param {number} y
+     * @returns {boolean}
+     */
+    set_node_layout_position(counter, client_id, x, y) {
+        const ret = wasm.canvasengine_set_node_layout_position(this.__wbg_ptr, counter, client_id, x, y);
+        return ret !== 0;
+    }
+    /**
      * Set linear gradient fill on any node. Replaces existing fills.
      * start/end are in 0..1 normalized coordinates (relative to node bounds).
      * @param {number} counter
@@ -1709,6 +1734,24 @@ export class CanvasEngine {
         const ptr1 = passArrayF32ToWasm0(stop_colors, wasm.__wbindgen_malloc);
         const len1 = WASM_VECTOR_LEN;
         const ret = wasm.canvasengine_set_node_linear_gradient(this.__wbg_ptr, counter, client_id, start_x, start_y, end_x, end_y, ptr0, len0, ptr1, len1);
+        return ret !== 0;
+    }
+    /**
+     * Set per-edge layout margin for a node.
+     * @param {number} counter
+     * @param {number} client_id
+     * @param {number} top
+     * @param {number} right
+     * @param {number} bottom
+     * @param {number} left
+     * @param {boolean} auto_top
+     * @param {boolean} auto_right
+     * @param {boolean} auto_bottom
+     * @param {boolean} auto_left
+     * @returns {boolean}
+     */
+    set_node_margin(counter, client_id, top, right, bottom, left, auto_top, auto_right, auto_bottom, auto_left) {
+        const ret = wasm.canvasengine_set_node_margin(this.__wbg_ptr, counter, client_id, top, right, bottom, left, auto_top, auto_right, auto_bottom, auto_left);
         return ret !== 0;
     }
     /**
@@ -1800,6 +1843,41 @@ export class CanvasEngine {
      */
     set_node_size(counter, client_id, w, h) {
         const ret = wasm.canvasengine_set_node_size(this.__wbg_ptr, counter, client_id, w, h);
+        return ret !== 0;
+    }
+    /**
+     * @param {number} counter
+     * @param {number} client_id
+     * @param {number} min_w
+     * @param {number} min_h
+     * @param {number} max_w
+     * @param {number} max_h
+     * @returns {boolean}
+     */
+    set_node_size_constraints(counter, client_id, min_w, min_h, max_w, max_h) {
+        const ret = wasm.canvasengine_set_node_size_constraints(this.__wbg_ptr, counter, client_id, min_w, min_h, max_w, max_h);
+        return ret !== 0;
+    }
+    /**
+     * @param {number} counter
+     * @param {number} client_id
+     * @param {number} width_percent
+     * @param {number} height_percent
+     * @returns {boolean}
+     */
+    set_node_size_percent(counter, client_id, width_percent, height_percent) {
+        const ret = wasm.canvasengine_set_node_size_percent(this.__wbg_ptr, counter, client_id, width_percent, height_percent);
+        return ret !== 0;
+    }
+    /**
+     * @param {number} counter
+     * @param {number} client_id
+     * @param {number} horizontal
+     * @param {number} vertical
+     * @returns {boolean}
+     */
+    set_node_sizing(counter, client_id, horizontal, vertical) {
+        const ret = wasm.canvasengine_set_node_sizing(this.__wbg_ptr, counter, client_id, horizontal, vertical);
         return ret !== 0;
     }
     /**
@@ -2191,6 +2269,17 @@ function __wbg_get_imports() {
         __wbg_error_8d9a8e04cd1d3588: function(arg0) {
             console.error(arg0);
         },
+        __wbg_error_a6fa202b58aa1cd3: function(arg0, arg1) {
+            let deferred0_0;
+            let deferred0_1;
+            try {
+                deferred0_0 = arg0;
+                deferred0_1 = arg1;
+                console.error(getStringFromWasm0(arg0, arg1));
+            } finally {
+                wasm.__wbindgen_free(deferred0_0, deferred0_1, 1);
+            }
+        },
         __wbg_fillRect_4e5596ca954226e7: function(arg0, arg1, arg2, arg3, arg4) {
             arg0.fillRect(arg1, arg2, arg3, arg4);
         },
@@ -2279,6 +2368,10 @@ function __wbg_get_imports() {
         }, arguments); },
         __wbg_moveTo_6d04ca2f71946754: function(arg0, arg1, arg2) {
             arg0.moveTo(arg1, arg2);
+        },
+        __wbg_new_227d7c05414eb861: function() {
+            const ret = new Error();
+            return ret;
         },
         __wbg_new_a70fbab9066b301f: function() {
             const ret = new Array();
@@ -2390,6 +2483,13 @@ function __wbg_get_imports() {
         },
         __wbg_shaderSource_2bca0edc97475e95: function(arg0, arg1, arg2, arg3) {
             arg0.shaderSource(arg1, getStringFromWasm0(arg2, arg3));
+        },
+        __wbg_stack_3b0d974bbf31e44f: function(arg0, arg1) {
+            const ret = arg1.stack;
+            const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+            const len1 = WASM_VECTOR_LEN;
+            getDataViewMemory0().setInt32(arg0 + 4 * 1, len1, true);
+            getDataViewMemory0().setInt32(arg0 + 4 * 0, ptr1, true);
         },
         __wbg_static_accessor_GLOBAL_8adb955bd33fac2f: function() {
             const ret = typeof global === 'undefined' ? null : global;

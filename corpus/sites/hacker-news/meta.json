@@ -1,0 +1,52 @@
+{
+  "name": "hacker-news",
+  "url": "https://news.ycombinator.com",
+  "capturedAt": "2026-03-30T22:54:47Z",
+  "viewports": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "label": "desktop"
+      },
+      "elementCount": 808,
+      "scrollHeight": 1217,
+      "scrollContainers": 0,
+      "fixedSticky": 0,
+      "images": 2,
+      "interactive": 291,
+      "textBlocks": 0,
+      "stackingContexts": 0
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024,
+        "label": "tablet"
+      },
+      "elementCount": 808,
+      "scrollHeight": 1217,
+      "scrollContainers": 0,
+      "fixedSticky": 0,
+      "images": 2,
+      "interactive": 291,
+      "textBlocks": 0,
+      "stackingContexts": 0
+    },
+    {
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "label": "mobile"
+      },
+      "elementCount": 808,
+      "scrollHeight": 2204,
+      "scrollContainers": 0,
+      "fixedSticky": 0,
+      "images": 2,
+      "interactive": 291,
+      "textBlocks": 18,
+      "stackingContexts": 0
+    }
+  ]
+}

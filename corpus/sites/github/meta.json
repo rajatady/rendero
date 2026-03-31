@@ -1,0 +1,52 @@
+{
+  "name": "github",
+  "url": "https://github.com/nicedayfor",
+  "capturedAt": "2026-03-30T22:57:07Z",
+  "viewports": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "label": "desktop"
+      },
+      "elementCount": 879,
+      "scrollHeight": 1187,
+      "scrollContainers": 1,
+      "fixedSticky": 5,
+      "images": 8,
+      "interactive": 490,
+      "textBlocks": 18,
+      "stackingContexts": 27
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024,
+        "label": "tablet"
+      },
+      "elementCount": 879,
+      "scrollHeight": 1425,
+      "scrollContainers": 2,
+      "fixedSticky": 11,
+      "images": 8,
+      "interactive": 490,
+      "textBlocks": 18,
+      "stackingContexts": 27
+    },
+    {
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "label": "mobile"
+      },
+      "elementCount": 879,
+      "scrollHeight": 1960,
+      "scrollContainers": 2,
+      "fixedSticky": 11,
+      "images": 8,
+      "interactive": 490,
+      "textBlocks": 18,
+      "stackingContexts": 27
+    }
+  ]
+}

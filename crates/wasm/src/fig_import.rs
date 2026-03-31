@@ -8,7 +8,8 @@ use rendero_core::node::*;
 use rendero_core::properties::*;
 use rendero_core::id::NodeId;
 use rendero_core::document::Document;
-use rendero_core::layout::compute_layout;
+use rendero_core::layout::compute_layout_with_text_measurer;
+use crate::browser_text::BrowserTextMeasurer;
 use glam::Vec2;
 use serde_json::Value;
 
@@ -69,7 +70,7 @@ pub fn import_fig_json(doc: &mut Document, json_str: &str, image_base: &str) -> 
         // Apply auto-layout computation to position children correctly
         let page = doc.page_mut(page_idx).unwrap();
         let root = page.tree.root_id();
-        compute_layout(&mut page.tree, &root);
+        compute_layout_with_text_measurer(&mut page.tree, &root, BrowserTextMeasurer::unwrap_or_fallback());
     }
 
     result
@@ -114,7 +115,7 @@ pub fn import_fig_value(doc: &mut Document, document: &Value, image_base: &str) 
         // Apply auto-layout computation to position children correctly
         let page = doc.page_mut(page_idx).unwrap();
         let root = page.tree.root_id();
-        compute_layout(&mut page.tree, &root);
+        compute_layout_with_text_measurer(&mut page.tree, &root, BrowserTextMeasurer::unwrap_or_fallback());
     }
 
     result
@@ -158,7 +159,7 @@ pub fn import_fig_page_json(doc: &mut Document, page_json: &str, image_base: &st
     // Apply auto-layout computation to position children correctly
     let page = doc.page_mut(page_idx).unwrap();
     let root = page.tree.root_id();
-    compute_layout(&mut page.tree, &root);
+    compute_layout_with_text_measurer(&mut page.tree, &root, BrowserTextMeasurer::unwrap_or_fallback());
 
     result
 }
@@ -421,6 +422,8 @@ fn get_auto_layout(val: &Value) -> Option<AutoLayout> {
         primary_sizing: SizingMode::Fixed,
         counter_sizing: SizingMode::Fixed,
         align: LayoutAlign::Start,
+        justify: LayoutJustify::Start,
+        wrap: LayoutWrap::NoWrap,
     })
 }
 

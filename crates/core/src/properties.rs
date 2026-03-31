@@ -324,11 +324,40 @@ pub enum LayoutAlign {
     Stretch,
 }
 
+impl Default for LayoutAlign {
+    fn default() -> Self { Self::Start }
+}
+
+/// Main-axis distribution for auto-layout children.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum LayoutJustify {
+    Start,
+    Center,
+    End,
+    SpaceBetween,
+    SpaceAround,
+    SpaceEvenly,
+}
+
+impl Default for LayoutJustify {
+    fn default() -> Self { Self::Start }
+}
+
 /// Auto-layout direction.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum LayoutDirection {
     Horizontal,
     Vertical,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum LayoutWrap {
+    NoWrap,
+    Wrap,
+}
+
+impl Default for LayoutWrap {
+    fn default() -> Self { Self::NoWrap }
 }
 
 /// Constraint type for how a child reacts when its parent is resized.
@@ -358,6 +387,39 @@ pub enum SizingMode {
     Fill,
 }
 
+/// Per-edge spacing around a node when participating in parent layout.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, Default)]
+pub struct LayoutMargin {
+    pub top: f32,
+    pub right: f32,
+    pub bottom: f32,
+    pub left: f32,
+    #[serde(default)]
+    pub auto_top: bool,
+    #[serde(default)]
+    pub auto_right: bool,
+    #[serde(default)]
+    pub auto_bottom: bool,
+    #[serde(default)]
+    pub auto_left: bool,
+}
+
+/// Absolute positioning data for nodes taken out of normal layout flow.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, Default)]
+pub struct LayoutPosition {
+    pub x: f32,
+    pub y: f32,
+}
+
+/// Optional min/max layout constraints resolved from CSS-style sizing.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize, Default)]
+pub struct LayoutSizeConstraints {
+    pub min_width: f32,
+    pub min_height: f32,
+    pub max_width: f32,
+    pub max_height: f32,
+}
+
 /// Auto-layout configuration for a frame.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AutoLayout {
@@ -369,5 +431,10 @@ pub struct AutoLayout {
     pub padding_left: f32,
     pub primary_sizing: SizingMode,
     pub counter_sizing: SizingMode,
+    #[serde(default)]
     pub align: LayoutAlign,
+    #[serde(default)]
+    pub justify: LayoutJustify,
+    #[serde(default)]
+    pub wrap: LayoutWrap,
 }

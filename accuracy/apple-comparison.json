@@ -1,0 +1,3345 @@
+{
+  "totalProperties": 428,
+  "matchCount": 192,
+  "mismatchCount": 236,
+  "accuracy": 44.86,
+  "elementsPaired": 107,
+  "elementsWithMismatches": 101,
+  "mismatches": [
+    {
+      "index": 0,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 2966.8
+      },
+      "engine_bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 3477
+      },
+      "mismatches": [
+        {
+          "property": "height",
+          "browser": 2966.8,
+          "engine": 3477,
+          "diff": 510.2
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 2966.8
+      },
+      "engine_bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 2953
+      },
+      "mismatches": [
+        {
+          "property": "height",
+          "browser": 2966.8,
+          "engine": 2953,
+          "diff": 13.8
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "tag": "span",
+      "text": "Store",
+      "browser_bounds": {
+        "x": 298.2,
+        "y": -29,
+        "width": 25.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 299,
+        "y": -29,
+        "width": 26,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "tag": "span",
+      "text": "Mac",
+      "browser_bounds": {
+        "x": 355.6,
+        "y": -29,
+        "width": 21.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 357,
+        "y": -29,
+        "width": 22,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 355.6,
+          "engine": 357,
+          "diff": 1.4
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "tag": "span",
+      "text": "iPad",
+      "browser_bounds": {
+        "x": 408.9,
+        "y": -29,
+        "width": 21.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 411,
+        "y": -29,
+        "width": 22,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 408.9,
+          "engine": 411,
+          "diff": 2.1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "tag": "span",
+      "text": "iPhone",
+      "browser_bounds": {
+        "x": 462.3,
+        "y": -29,
+        "width": 33.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 465,
+        "y": -29,
+        "width": 34,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 462.3,
+          "engine": 465,
+          "diff": 2.7
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "tag": "span",
+      "text": "Watch",
+      "browser_bounds": {
+        "x": 527.6,
+        "y": -29,
+        "width": 30.4,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 531,
+        "y": -29,
+        "width": 31,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 527.6,
+          "engine": 531,
+          "diff": 3.4
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "tag": "span",
+      "text": "Vision",
+      "browser_bounds": {
+        "x": 590,
+        "y": -29,
+        "width": 31.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 594,
+        "y": -29,
+        "width": 32,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 590,
+          "engine": 594,
+          "diff": 4
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "tag": "span",
+      "text": "AirPods",
+      "browser_bounds": {
+        "x": 653.3,
+        "y": -29,
+        "width": 39.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 658,
+        "y": -29,
+        "width": 40,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 653.3,
+          "engine": 658,
+          "diff": 4.7
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "tag": "span",
+      "text": "TV & Home",
+      "browser_bounds": {
+        "x": 724.6,
+        "y": -29,
+        "width": 60.5,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 730,
+        "y": -29,
+        "width": 61,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 724.6,
+          "engine": 730,
+          "diff": 5.4
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "tag": "span",
+      "text": "Entertainment",
+      "browser_bounds": {
+        "x": 817,
+        "y": -29,
+        "width": 68,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 823,
+        "y": -29,
+        "width": 68,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 817,
+          "engine": 823,
+          "diff": 6
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "tag": "span",
+      "text": "Accessories",
+      "browser_bounds": {
+        "x": 917,
+        "y": -29,
+        "width": 57.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 923,
+        "y": -29,
+        "width": 58,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 917,
+          "engine": 923,
+          "diff": 6
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "tag": "span",
+      "text": "Support",
+      "browser_bounds": {
+        "x": 1006.3,
+        "y": -29,
+        "width": 38,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 1013,
+        "y": -29,
+        "width": 39,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 1006.3,
+          "engine": 1013,
+          "diff": 6.7
+        },
+        {
+          "property": "width",
+          "browser": 38,
+          "engine": 39,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "tag": "section",
+      "text": "",
+      "browser_bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 833.8
+      },
+      "engine_bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 838
+      },
+      "mismatches": [
+        {
+          "property": "height",
+          "browser": 833.8,
+          "engine": 838,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 594.7,
+        "y": 160,
+        "width": 250.5,
+        "height": 33
+      },
+      "engine_bounds": {
+        "x": 594,
+        "y": 160,
+        "width": 252,
+        "height": 33
+      },
+      "mismatches": [
+        {
+          "property": "width",
+          "browser": 250.5,
+          "engine": 252,
+          "diff": 1.5
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "tag": "p",
+      "text": "Hello, Apple Intelligence.",
+      "browser_bounds": {
+        "x": 575.4,
+        "y": 257.8,
+        "width": 289.3,
+        "height": 32
+      },
+      "engine_bounds": {
+        "x": 575,
+        "y": 258,
+        "width": 291,
+        "height": 34
+      },
+      "mismatches": [
+        {
+          "property": "width",
+          "browser": 289.3,
+          "engine": 291,
+          "diff": 1.7
+        },
+        {
+          "property": "height",
+          "browser": 32,
+          "engine": 34,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 624.7,
+        "y": 309.8,
+        "width": 190.6,
+        "height": 24
+      },
+      "engine_bounds": {
+        "x": 624,
+        "y": 312,
+        "width": 192,
+        "height": 26
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 309.8,
+          "engine": 312,
+          "diff": 2.2
+        },
+        {
+          "property": "width",
+          "browser": 190.6,
+          "engine": 192,
+          "diff": 1.4
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "tag": "span",
+      "text": "Learn more >",
+      "browser_bounds": {
+        "x": 624.7,
+        "y": 309.8,
+        "width": 114.5,
+        "height": 24
+      },
+      "engine_bounds": {
+        "x": 624,
+        "y": 312,
+        "width": 115,
+        "height": 26
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 309.8,
+          "engine": 312,
+          "diff": 2.2
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "tag": "span",
+      "text": "Buy >",
+      "browser_bounds": {
+        "x": 763.2,
+        "y": 309.8,
+        "width": 52.1,
+        "height": 24
+      },
+      "engine_bounds": {
+        "x": 763,
+        "y": 312,
+        "width": 53,
+        "height": 26
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 309.8,
+          "engine": 312,
+          "diff": 2.2
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 25,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 370,
+        "y": 373.8,
+        "width": 700,
+        "height": 400
+      },
+      "engine_bounds": {
+        "x": 370,
+        "y": 378,
+        "width": 700,
+        "height": 400
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 373.8,
+          "engine": 378,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 120,
+        "y": 833.8,
+        "width": 1200,
+        "height": 1036
+      },
+      "engine_bounds": {
+        "x": 120,
+        "y": 838,
+        "width": 1200,
+        "height": 1036
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 833.8,
+          "engine": 838,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 27,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 132,
+        "y": 845.8,
+        "width": 582,
+        "height": 500
+      },
+      "engine_bounds": {
+        "x": 132,
+        "y": 850,
+        "width": 582,
+        "height": 500
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 845.8,
+          "engine": 850,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 28,
+      "tag": "h2",
+      "text": "MacBook Pro",
+      "browser_bounds": {
+        "x": 305,
+        "y": 893.8,
+        "width": 235.9,
+        "height": 44
+      },
+      "engine_bounds": {
+        "x": 305,
+        "y": 898,
+        "width": 236,
+        "height": 44
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 893.8,
+          "engine": 898,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 29,
+      "tag": "p",
+      "text": "Mind-blowing. Head-turning.",
+      "browser_bounds": {
+        "x": 298.5,
+        "y": 943.8,
+        "width": 249,
+        "height": 24
+      },
+      "engine_bounds": {
+        "x": 298,
+        "y": 948,
+        "width": 250,
+        "height": 26
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 943.8,
+          "engine": 948,
+          "diff": 4.2
+        },
+        {
+          "property": "width",
+          "browser": 249,
+          "engine": 250,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 30,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 345.6,
+        "y": 981.8,
+        "width": 154.8,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 345,
+        "y": 988,
+        "width": 156,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 981.8,
+          "engine": 988,
+          "diff": 6.2
+        },
+        {
+          "property": "width",
+          "browser": 154.8,
+          "engine": 156,
+          "diff": 1.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 31,
+      "tag": "span",
+      "text": "Learn more >",
+      "browser_bounds": {
+        "x": 345.6,
+        "y": 981.8,
+        "width": 92.7,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 345,
+        "y": 988,
+        "width": 93,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 981.8,
+          "engine": 988,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 32,
+      "tag": "span",
+      "text": "Buy >",
+      "browser_bounds": {
+        "x": 458.2,
+        "y": 981.8,
+        "width": 42.2,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 458,
+        "y": 988,
+        "width": 43,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 981.8,
+          "engine": 988,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 33,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 172,
+        "y": 1031.8,
+        "width": 502,
+        "height": 266
+      },
+      "engine_bounds": {
+        "x": 172,
+        "y": 1039,
+        "width": 502,
+        "height": 263
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1031.8,
+          "engine": 1039,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 266,
+          "engine": 263,
+          "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 34,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 726,
+        "y": 845.8,
+        "width": 582,
+        "height": 500
+      },
+      "engine_bounds": {
+        "x": 726,
+        "y": 850,
+        "width": 582,
+        "height": 500
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 845.8,
+          "engine": 850,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 35,
+      "tag": "h2",
+      "text": "MacBook Air",
+      "browser_bounds": {
+        "x": 902,
+        "y": 893.8,
+        "width": 230,
+        "height": 44
+      },
+      "engine_bounds": {
+        "x": 901,
+        "y": 898,
+        "width": 233,
+        "height": 44
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 902,
+          "engine": 901,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 893.8,
+          "engine": 898,
+          "diff": 4.2
+        },
+        {
+          "property": "width",
+          "browser": 230,
+          "engine": 233,
+          "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 36,
+      "tag": "p",
+      "text": "Lean. Mean. M3 machine.",
+      "browser_bounds": {
+        "x": 906.2,
+        "y": 943.8,
+        "width": 221.6,
+        "height": 24
+      },
+      "engine_bounds": {
+        "x": 906,
+        "y": 948,
+        "width": 222,
+        "height": 26
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 943.8,
+          "engine": 948,
+          "diff": 4.2
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 37,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 939.6,
+        "y": 981.8,
+        "width": 154.8,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 939,
+        "y": 988,
+        "width": 156,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 981.8,
+          "engine": 988,
+          "diff": 6.2
+        },
+        {
+          "property": "width",
+          "browser": 154.8,
+          "engine": 156,
+          "diff": 1.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 38,
+      "tag": "span",
+      "text": "Learn more >",
+      "browser_bounds": {
+        "x": 939.6,
+        "y": 981.8,
+        "width": 92.7,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 939,
+        "y": 988,
+        "width": 93,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 981.8,
+          "engine": 988,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 39,
+      "tag": "span",
+      "text": "Buy >",
+      "browser_bounds": {
+        "x": 1052.2,
+        "y": 981.8,
+        "width": 42.2,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 1052,
+        "y": 988,
+        "width": 43,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 981.8,
+          "engine": 988,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 40,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 766,
+        "y": 1031.8,
+        "width": 502,
+        "height": 266
+      },
+      "engine_bounds": {
+        "x": 766,
+        "y": 1039,
+        "width": 502,
+        "height": 263
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1031.8,
+          "engine": 1039,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 266,
+          "engine": 263,
+          "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 41,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 132,
+        "y": 1357.8,
+        "width": 582,
+        "height": 500
+      },
+      "engine_bounds": {
+        "x": 132,
+        "y": 1362,
+        "width": 582,
+        "height": 500
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1357.8,
+          "engine": 1362,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 42,
+      "tag": "h2",
+      "text": "iPad Pro",
+      "browser_bounds": {
+        "x": 348.4,
+        "y": 1405.8,
+        "width": 149.3,
+        "height": 44
+      },
+      "engine_bounds": {
+        "x": 348,
+        "y": 1410,
+        "width": 150,
+        "height": 44
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1405.8,
+          "engine": 1410,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 43,
+      "tag": "p",
+      "text": "Thinpossible.",
+      "browser_bounds": {
+        "x": 366.1,
+        "y": 1455.8,
+        "width": 113.8,
+        "height": 24
+      },
+      "engine_bounds": {
+        "x": 366,
+        "y": 1460,
+        "width": 114,
+        "height": 26
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1455.8,
+          "engine": 1460,
+          "diff": 4.2
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 44,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 345.6,
+        "y": 1493.8,
+        "width": 154.8,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 345,
+        "y": 1500,
+        "width": 156,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1493.8,
+          "engine": 1500,
+          "diff": 6.2
+        },
+        {
+          "property": "width",
+          "browser": 154.8,
+          "engine": 156,
+          "diff": 1.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 45,
+      "tag": "span",
+      "text": "Learn more >",
+      "browser_bounds": {
+        "x": 345.6,
+        "y": 1493.8,
+        "width": 92.7,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 345,
+        "y": 1500,
+        "width": 93,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1493.8,
+          "engine": 1500,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 46,
+      "tag": "span",
+      "text": "Buy >",
+      "browser_bounds": {
+        "x": 458.2,
+        "y": 1493.8,
+        "width": 42.2,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 458,
+        "y": 1500,
+        "width": 43,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1493.8,
+          "engine": 1500,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 47,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 172,
+        "y": 1543.8,
+        "width": 502,
+        "height": 266
+      },
+      "engine_bounds": {
+        "x": 172,
+        "y": 1551,
+        "width": 502,
+        "height": 263
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1543.8,
+          "engine": 1551,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 266,
+          "engine": 263,
+          "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 48,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 726,
+        "y": 1357.8,
+        "width": 582,
+        "height": 500
+      },
+      "engine_bounds": {
+        "x": 726,
+        "y": 1362,
+        "width": 582,
+        "height": 500
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1357.8,
+          "engine": 1362,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 49,
+      "tag": "h2",
+      "text": "iPad Air",
+      "browser_bounds": {
+        "x": 945.3,
+        "y": 1405.8,
+        "width": 143.4,
+        "height": 44
+      },
+      "engine_bounds": {
+        "x": 944,
+        "y": 1410,
+        "width": 146,
+        "height": 44
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 945.3,
+          "engine": 944,
+          "diff": 1.3
+        },
+        {
+          "property": "y",
+          "browser": 1405.8,
+          "engine": 1410,
+          "diff": 4.2
+        },
+        {
+          "property": "width",
+          "browser": 143.4,
+          "engine": 146,
+          "diff": 2.6
+        }
+      ]
+    },
+    {
+      "index": 50,
+      "tag": "p",
+      "text": "Fresh Air.",
+      "browser_bounds": {
+        "x": 975.6,
+        "y": 1455.8,
+        "width": 82.9,
+        "height": 24
+      },
+      "engine_bounds": {
+        "x": 975,
+        "y": 1460,
+        "width": 85,
+        "height": 26
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1455.8,
+          "engine": 1460,
+          "diff": 4.2
+        },
+        {
+          "property": "width",
+          "browser": 82.9,
+          "engine": 85,
+          "diff": 2.1
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 51,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 939.6,
+        "y": 1493.8,
+        "width": 154.8,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 939,
+        "y": 1500,
+        "width": 156,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1493.8,
+          "engine": 1500,
+          "diff": 6.2
+        },
+        {
+          "property": "width",
+          "browser": 154.8,
+          "engine": 156,
+          "diff": 1.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 52,
+      "tag": "span",
+      "text": "Learn more >",
+      "browser_bounds": {
+        "x": 939.6,
+        "y": 1493.8,
+        "width": 92.7,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 939,
+        "y": 1500,
+        "width": 93,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1493.8,
+          "engine": 1500,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 53,
+      "tag": "span",
+      "text": "Buy >",
+      "browser_bounds": {
+        "x": 1052.2,
+        "y": 1493.8,
+        "width": 42.2,
+        "height": 20
+      },
+      "engine_bounds": {
+        "x": 1052,
+        "y": 1500,
+        "width": 43,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1493.8,
+          "engine": 1500,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 54,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 766,
+        "y": 1543.8,
+        "width": 502,
+        "height": 266
+      },
+      "engine_bounds": {
+        "x": 766,
+        "y": 1551,
+        "width": 502,
+        "height": 263
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1543.8,
+          "engine": 1551,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 266,
+          "engine": 263,
+          "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 55,
+      "tag": "section",
+      "text": "",
+      "browser_bounds": {
+        "x": 0,
+        "y": 1869.8,
+        "width": 1440,
+        "height": 483
+      },
+      "engine_bounds": {
+        "x": 0,
+        "y": 1874,
+        "width": 1440,
+        "height": 447
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1869.8,
+          "engine": 1874,
+          "diff": 4.2
+        },
+        {
+          "property": "height",
+          "browser": 483,
+          "engine": 447,
+          "diff": 36
+        }
+      ]
+    },
+    {
+      "index": 56,
+      "tag": "h2",
+      "text": "Why Apple.",
+      "browser_bounds": {
+        "x": 598.6,
+        "y": 1949.8,
+        "width": 242.8,
+        "height": 55
+      },
+      "engine_bounds": {
+        "x": 597,
+        "y": 1954,
+        "width": 246,
+        "height": 58
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 598.6,
+          "engine": 597,
+          "diff": 1.6
+        },
+        {
+          "property": "y",
+          "browser": 1949.8,
+          "engine": 1954,
+          "diff": 4.2
+        },
+        {
+          "property": "width",
+          "browser": 242.8,
+          "engine": 246,
+          "diff": 3.2
+        },
+        {
+          "property": "height",
+          "browser": 55,
+          "engine": 58,
+          "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 57,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 230,
+        "y": 2054.8,
+        "width": 980,
+        "height": 218
+      },
+      "engine_bounds": {
+        "x": 230,
+        "y": 2062,
+        "width": 980,
+        "height": 179
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2054.8,
+          "engine": 2062,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 218,
+          "engine": 179,
+          "diff": 39
+        }
+      ]
+    },
+    {
+      "index": 58,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 252,
+        "y": 2054.8,
+        "width": 292,
+        "height": 218
+      },
+      "engine_bounds": {
+        "x": 252,
+        "y": 2062,
+        "width": 292,
+        "height": 179
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2054.8,
+          "engine": 2062,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 218,
+          "engine": 179,
+          "diff": 39
+        }
+      ]
+    },
+    {
+      "index": 59,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 370,
+        "y": 2084.8,
+        "width": 56,
+        "height": 56
+      },
+      "engine_bounds": {
+        "x": 370,
+        "y": 2092,
+        "width": 56,
+        "height": 34
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2084.8,
+          "engine": 2092,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 56,
+          "engine": 34,
+          "diff": 22
+        }
+      ]
+    },
+    {
+      "index": 60,
+      "tag": "span",
+      "text": "\ud83e\udde0",
+      "browser_bounds": {
+        "x": 384,
+        "y": 2094.3,
+        "width": 28,
+        "height": 37
+      },
+      "engine_bounds": {
+        "x": 384,
+        "y": 2092,
+        "width": 28,
+        "height": 34
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2094.3,
+          "engine": 2092,
+          "diff": 2.3
+        },
+        {
+          "property": "height",
+          "browser": 37,
+          "engine": 34,
+          "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 61,
+      "tag": "h3",
+      "text": "Apple Intelligence",
+      "browser_bounds": {
+        "x": 305,
+        "y": 2156.8,
+        "width": 186,
+        "height": 28
+      },
+      "engine_bounds": {
+        "x": 305,
+        "y": 2142,
+        "width": 186,
+        "height": 29
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2156.8,
+          "engine": 2142,
+          "diff": 14.8
+        },
+        {
+          "property": "height",
+          "browser": 28,
+          "engine": 29,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 62,
+      "tag": "p",
+      "text": "Personal, private, powerful AI that unde",
+      "browser_bounds": {
+        "x": 282,
+        "y": 2200.8,
+        "width": 232,
+        "height": 42
+      },
+      "engine_bounds": {
+        "x": 299,
+        "y": 2187,
+        "width": 198,
+        "height": 42
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 282,
+          "engine": 299,
+          "diff": 17
+        },
+        {
+          "property": "y",
+          "browser": 2200.8,
+          "engine": 2187,
+          "diff": 13.8
+        },
+        {
+          "property": "width",
+          "browser": 232,
+          "engine": 198,
+          "diff": 34
+        }
+      ]
+    },
+    {
+      "index": 63,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 574,
+        "y": 2054.8,
+        "width": 292,
+        "height": 218
+      },
+      "engine_bounds": {
+        "x": 574,
+        "y": 2062,
+        "width": 292,
+        "height": 179
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2054.8,
+          "engine": 2062,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 218,
+          "engine": 179,
+          "diff": 39
+        }
+      ]
+    },
+    {
+      "index": 64,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 692,
+        "y": 2084.8,
+        "width": 56,
+        "height": 56
+      },
+      "engine_bounds": {
+        "x": 692,
+        "y": 2092,
+        "width": 56,
+        "height": 34
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2084.8,
+          "engine": 2092,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 56,
+          "engine": 34,
+          "diff": 22
+        }
+      ]
+    },
+    {
+      "index": 65,
+      "tag": "span",
+      "text": "\ud83d\udd12",
+      "browser_bounds": {
+        "x": 706,
+        "y": 2094.3,
+        "width": 28,
+        "height": 37
+      },
+      "engine_bounds": {
+        "x": 706,
+        "y": 2092,
+        "width": 28,
+        "height": 34
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2094.3,
+          "engine": 2092,
+          "diff": 2.3
+        },
+        {
+          "property": "height",
+          "browser": 37,
+          "engine": 34,
+          "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 66,
+      "tag": "h3",
+      "text": "Privacy",
+      "browser_bounds": {
+        "x": 680.7,
+        "y": 2156.8,
+        "width": 78.6,
+        "height": 28
+      },
+      "engine_bounds": {
+        "x": 681,
+        "y": 2142,
+        "width": 79,
+        "height": 29
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2156.8,
+          "engine": 2142,
+          "diff": 14.8
+        },
+        {
+          "property": "height",
+          "browser": 28,
+          "engine": 29,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 67,
+      "tag": "p",
+      "text": "Your data stays on your device. Period.",
+      "browser_bounds": {
+        "x": 610.3,
+        "y": 2200.8,
+        "width": 219.5,
+        "height": 21
+      },
+      "engine_bounds": {
+        "x": 610,
+        "y": 2187,
+        "width": 220,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2200.8,
+          "engine": 2187,
+          "diff": 13.8
+        }
+      ]
+    },
+    {
+      "index": 68,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 896,
+        "y": 2054.8,
+        "width": 292,
+        "height": 218
+      },
+      "engine_bounds": {
+        "x": 896,
+        "y": 2062,
+        "width": 292,
+        "height": 179
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2054.8,
+          "engine": 2062,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 218,
+          "engine": 179,
+          "diff": 39
+        }
+      ]
+    },
+    {
+      "index": 69,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 1014,
+        "y": 2084.8,
+        "width": 56,
+        "height": 56
+      },
+      "engine_bounds": {
+        "x": 1014,
+        "y": 2092,
+        "width": 56,
+        "height": 37
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2084.8,
+          "engine": 2092,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 56,
+          "engine": 37,
+          "diff": 19
+        }
+      ]
+    },
+    {
+      "index": 70,
+      "tag": "span",
+      "text": "\u267b\ufe0f",
+      "browser_bounds": {
+        "x": 1028,
+        "y": 2094.3,
+        "width": 28,
+        "height": 37
+      },
+      "engine_bounds": {
+        "x": 1028,
+        "y": 2094,
+        "width": 28,
+        "height": 34
+      },
+      "mismatches": [
+        {
+          "property": "height",
+          "browser": 37,
+          "engine": 34,
+          "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 71,
+      "tag": "h3",
+      "text": "Environment",
+      "browser_bounds": {
+        "x": 974.2,
+        "y": 2156.8,
+        "width": 135.6,
+        "height": 28
+      },
+      "engine_bounds": {
+        "x": 974,
+        "y": 2145,
+        "width": 136,
+        "height": 29
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2156.8,
+          "engine": 2145,
+          "diff": 11.8
+        },
+        {
+          "property": "height",
+          "browser": 28,
+          "engine": 29,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 72,
+      "tag": "p",
+      "text": "Carbon neutral by 2030. We mean it.",
+      "browser_bounds": {
+        "x": 938.9,
+        "y": 2200.8,
+        "width": 206.3,
+        "height": 21
+      },
+      "engine_bounds": {
+        "x": 939,
+        "y": 2190,
+        "width": 207,
+        "height": 21
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2200.8,
+          "engine": 2190,
+          "diff": 10.8
+        }
+      ]
+    },
+    {
+      "index": 73,
+      "tag": "section",
+      "text": "",
+      "browser_bounds": {
+        "x": 0,
+        "y": 2352.8,
+        "width": 1440,
+        "height": 373
+      },
+      "engine_bounds": {
+        "x": 0,
+        "y": 2321,
+        "width": 1440,
+        "height": 379
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2352.8,
+          "engine": 2321,
+          "diff": 31.8
+        },
+        {
+          "property": "height",
+          "browser": 373,
+          "engine": 379,
+          "diff": 6
+        }
+      ]
+    },
+    {
+      "index": 74,
+      "tag": "h2",
+      "text": "Get the new iPhone.",
+      "browser_bounds": {
+        "x": 514.7,
+        "y": 2452.8,
+        "width": 410.6,
+        "height": 55
+      },
+      "engine_bounds": {
+        "x": 515,
+        "y": 2421,
+        "width": 411,
+        "height": 58
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2452.8,
+          "engine": 2421,
+          "diff": 31.8
+        },
+        {
+          "property": "height",
+          "browser": 55,
+          "engine": 58,
+          "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 75,
+      "tag": "p",
+      "text": "From $999 or $41.62/mo. for 24 mo. befor",
+      "browser_bounds": {
+        "x": 497.8,
+        "y": 2527.8,
+        "width": 444.4,
+        "height": 24
+      },
+      "engine_bounds": {
+        "x": 498,
+        "y": 2499,
+        "width": 445,
+        "height": 26
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2527.8,
+          "engine": 2499,
+          "diff": 28.8
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 76,
+      "tag": "div",
+      "text": "Buy now",
+      "browser_bounds": {
+        "x": 660.1,
+        "y": 2581.8,
+        "width": 119.8,
+        "height": 44
+      },
+      "engine_bounds": {
+        "x": 660,
+        "y": 2555,
+        "width": 120,
+        "height": 45
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2581.8,
+          "engine": 2555,
+          "diff": 26.8
+        },
+        {
+          "property": "height",
+          "browser": 44,
+          "engine": 45,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 77,
+      "tag": "footer",
+      "text": "",
+      "browser_bounds": {
+        "x": 0,
+        "y": 2725.8,
+        "width": 1440,
+        "height": 241
+      },
+      "engine_bounds": {
+        "x": 0,
+        "y": 2700,
+        "width": 1440,
+        "height": 253
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2725.8,
+          "engine": 2700,
+          "diff": 25.8
+        },
+        {
+          "property": "height",
+          "browser": 241,
+          "engine": 253,
+          "diff": 12
+        }
+      ]
+    },
+    {
+      "index": 78,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 230,
+        "y": 2745.8,
+        "width": 980,
+        "height": 201
+      },
+      "engine_bounds": {
+        "x": 230,
+        "y": 2720,
+        "width": 980,
+        "height": 213
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2745.8,
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "height",
+          "browser": 201,
+          "engine": 213,
+          "diff": 12
+        }
+      ]
+    },
+    {
+      "index": 79,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 252,
+        "y": 2745.8,
+        "width": 936,
+        "height": 146
+      },
+      "engine_bounds": {
+        "x": 252,
+        "y": 2720,
+        "width": 936,
+        "height": 153
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2745.8,
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "height",
+          "browser": 146,
+          "engine": 153,
+          "diff": 7
+        }
+      ]
+    },
+    {
+      "index": 80,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 473,
+        "y": 2745.8,
+        "width": 82.7,
+        "height": 146
+      },
+      "engine_bounds": {
+        "x": 471,
+        "y": 2720,
+        "width": 83,
+        "height": 153
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 473,
+          "engine": 471,
+          "diff": 2
+        },
+        {
+          "property": "y",
+          "browser": 2745.8,
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "height",
+          "browser": 146,
+          "engine": 153,
+          "diff": 7
+        }
+      ]
+    },
+    {
+      "index": 81,
+      "tag": "span",
+      "text": "Shop and Learn",
+      "browser_bounds": {
+        "x": 473,
+        "y": 2745.8,
+        "width": 82.7,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 471,
+        "y": 2720,
+        "width": 83,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 473,
+          "engine": 471,
+          "diff": 2
+        },
+        {
+          "property": "y",
+          "browser": 2745.8,
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 82,
+      "tag": "span",
+      "text": "Store",
+      "browser_bounds": {
+        "x": 473,
+        "y": 2767.8,
+        "width": 82.7,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 471,
+        "y": 2743,
+        "width": 83,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 473,
+          "engine": 471,
+          "diff": 2
+        },
+        {
+          "property": "y",
+          "browser": 2767.8,
+          "engine": 2743,
+          "diff": 24.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 83,
+      "tag": "span",
+      "text": "Mac",
+      "browser_bounds": {
+        "x": 473,
+        "y": 2789.8,
+        "width": 82.7,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 471,
+        "y": 2766,
+        "width": 83,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 473,
+          "engine": 471,
+          "diff": 2
+        },
+        {
+          "property": "y",
+          "browser": 2789.8,
+          "engine": 2766,
+          "diff": 23.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 84,
+      "tag": "span",
+      "text": "iPad",
+      "browser_bounds": {
+        "x": 473,
+        "y": 2811.8,
+        "width": 82.7,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 471,
+        "y": 2789,
+        "width": 83,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 473,
+          "engine": 471,
+          "diff": 2
+        },
+        {
+          "property": "y",
+          "browser": 2811.8,
+          "engine": 2789,
+          "diff": 22.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 85,
+      "tag": "span",
+      "text": "iPhone",
+      "browser_bounds": {
+        "x": 473,
+        "y": 2833.8,
+        "width": 82.7,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 471,
+        "y": 2812,
+        "width": 83,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 473,
+          "engine": 471,
+          "diff": 2
+        },
+        {
+          "property": "y",
+          "browser": 2833.8,
+          "engine": 2812,
+          "diff": 21.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 86,
+      "tag": "span",
+      "text": "Watch",
+      "browser_bounds": {
+        "x": 473,
+        "y": 2855.8,
+        "width": 82.7,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 471,
+        "y": 2835,
+        "width": 83,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 473,
+          "engine": 471,
+          "diff": 2
+        },
+        {
+          "property": "y",
+          "browser": 2855.8,
+          "engine": 2835,
+          "diff": 20.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 87,
+      "tag": "span",
+      "text": "AirPods",
+      "browser_bounds": {
+        "x": 473,
+        "y": 2877.8,
+        "width": 82.7,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 471,
+        "y": 2858,
+        "width": 83,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 473,
+          "engine": 471,
+          "diff": 2
+        },
+        {
+          "property": "y",
+          "browser": 2877.8,
+          "engine": 2858,
+          "diff": 19.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 88,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 595.7,
+        "y": 2745.8,
+        "width": 66.3,
+        "height": 146
+      },
+      "engine_bounds": {
+        "x": 594,
+        "y": 2720,
+        "width": 67,
+        "height": 153
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 595.7,
+          "engine": 594,
+          "diff": 1.7
+        },
+        {
+          "property": "y",
+          "browser": 2745.8,
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "height",
+          "browser": 146,
+          "engine": 153,
+          "diff": 7
+        }
+      ]
+    },
+    {
+      "index": 89,
+      "tag": "span",
+      "text": "Services",
+      "browser_bounds": {
+        "x": 595.7,
+        "y": 2745.8,
+        "width": 66.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 594,
+        "y": 2720,
+        "width": 67,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 595.7,
+          "engine": 594,
+          "diff": 1.7
+        },
+        {
+          "property": "y",
+          "browser": 2745.8,
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 90,
+      "tag": "span",
+      "text": "Apple Music",
+      "browser_bounds": {
+        "x": 595.7,
+        "y": 2767.8,
+        "width": 66.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 594,
+        "y": 2743,
+        "width": 67,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 595.7,
+          "engine": 594,
+          "diff": 1.7
+        },
+        {
+          "property": "y",
+          "browser": 2767.8,
+          "engine": 2743,
+          "diff": 24.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 91,
+      "tag": "span",
+      "text": "Apple TV+",
+      "browser_bounds": {
+        "x": 595.7,
+        "y": 2789.8,
+        "width": 66.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 594,
+        "y": 2766,
+        "width": 67,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 595.7,
+          "engine": 594,
+          "diff": 1.7
+        },
+        {
+          "property": "y",
+          "browser": 2789.8,
+          "engine": 2766,
+          "diff": 23.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 92,
+      "tag": "span",
+      "text": "Apple Arcade",
+      "browser_bounds": {
+        "x": 595.7,
+        "y": 2811.8,
+        "width": 66.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 594,
+        "y": 2789,
+        "width": 67,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 595.7,
+          "engine": 594,
+          "diff": 1.7
+        },
+        {
+          "property": "y",
+          "browser": 2811.8,
+          "engine": 2789,
+          "diff": 22.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 93,
+      "tag": "span",
+      "text": "iCloud",
+      "browser_bounds": {
+        "x": 595.7,
+        "y": 2833.8,
+        "width": 66.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 594,
+        "y": 2812,
+        "width": 67,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 595.7,
+          "engine": 594,
+          "diff": 1.7
+        },
+        {
+          "property": "y",
+          "browser": 2833.8,
+          "engine": 2812,
+          "diff": 21.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 94,
+      "tag": "span",
+      "text": "Apple One",
+      "browser_bounds": {
+        "x": 595.7,
+        "y": 2855.8,
+        "width": 66.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 594,
+        "y": 2835,
+        "width": 67,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 595.7,
+          "engine": 594,
+          "diff": 1.7
+        },
+        {
+          "property": "y",
+          "browser": 2855.8,
+          "engine": 2835,
+          "diff": 20.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 95,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 702,
+        "y": 2745.8,
+        "width": 112,
+        "height": 146
+      },
+      "engine_bounds": {
+        "x": 701,
+        "y": 2720,
+        "width": 114,
+        "height": 153
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 702,
+          "engine": 701,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2745.8,
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "width",
+          "browser": 112,
+          "engine": 114,
+          "diff": 2
+        },
+        {
+          "property": "height",
+          "browser": 146,
+          "engine": 153,
+          "diff": 7
+        }
+      ]
+    },
+    {
+      "index": 96,
+      "tag": "span",
+      "text": "Account",
+      "browser_bounds": {
+        "x": 702,
+        "y": 2745.8,
+        "width": 112,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 701,
+        "y": 2720,
+        "width": 114,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 702,
+          "engine": 701,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2745.8,
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "width",
+          "browser": 112,
+          "engine": 114,
+          "diff": 2
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 97,
+      "tag": "span",
+      "text": "Manage Your Apple ID",
+      "browser_bounds": {
+        "x": 702,
+        "y": 2767.8,
+        "width": 112,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 701,
+        "y": 2743,
+        "width": 114,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 702,
+          "engine": 701,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2767.8,
+          "engine": 2743,
+          "diff": 24.8
+        },
+        {
+          "property": "width",
+          "browser": 112,
+          "engine": 114,
+          "diff": 2
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 98,
+      "tag": "span",
+      "text": "Apple Store Account",
+      "browser_bounds": {
+        "x": 702,
+        "y": 2789.8,
+        "width": 112,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 701,
+        "y": 2766,
+        "width": 114,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 702,
+          "engine": 701,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2789.8,
+          "engine": 2766,
+          "diff": 23.8
+        },
+        {
+          "property": "width",
+          "browser": 112,
+          "engine": 114,
+          "diff": 2
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 99,
+      "tag": "span",
+      "text": "iCloud.com",
+      "browser_bounds": {
+        "x": 702,
+        "y": 2811.8,
+        "width": 112,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 701,
+        "y": 2789,
+        "width": 114,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 702,
+          "engine": 701,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2811.8,
+          "engine": 2789,
+          "diff": 22.8
+        },
+        {
+          "property": "width",
+          "browser": 112,
+          "engine": 114,
+          "diff": 2
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 100,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 854,
+        "y": 2745.8,
+        "width": 113,
+        "height": 146
+      },
+      "engine_bounds": {
+        "x": 855,
+        "y": 2720,
+        "width": 114,
+        "height": 153
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 854,
+          "engine": 855,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2745.8,
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "width",
+          "browser": 113,
+          "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 146,
+          "engine": 153,
+          "diff": 7
+        }
+      ]
+    },
+    {
+      "index": 101,
+      "tag": "span",
+      "text": "Apple Values",
+      "browser_bounds": {
+        "x": 854,
+        "y": 2745.8,
+        "width": 113,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 855,
+        "y": 2720,
+        "width": 114,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 854,
+          "engine": 855,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2745.8,
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "width",
+          "browser": 113,
+          "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 102,
+      "tag": "span",
+      "text": "Accessibility",
+      "browser_bounds": {
+        "x": 854,
+        "y": 2767.8,
+        "width": 113,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 855,
+        "y": 2743,
+        "width": 114,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 854,
+          "engine": 855,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2767.8,
+          "engine": 2743,
+          "diff": 24.8
+        },
+        {
+          "property": "width",
+          "browser": 113,
+          "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 103,
+      "tag": "span",
+      "text": "Environment",
+      "browser_bounds": {
+        "x": 854,
+        "y": 2789.8,
+        "width": 113,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 855,
+        "y": 2766,
+        "width": 114,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 854,
+          "engine": 855,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2789.8,
+          "engine": 2766,
+          "diff": 23.8
+        },
+        {
+          "property": "width",
+          "browser": 113,
+          "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 104,
+      "tag": "span",
+      "text": "Privacy",
+      "browser_bounds": {
+        "x": 854,
+        "y": 2811.8,
+        "width": 113,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 855,
+        "y": 2789,
+        "width": 114,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 854,
+          "engine": 855,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2811.8,
+          "engine": 2789,
+          "diff": 22.8
+        },
+        {
+          "property": "width",
+          "browser": 113,
+          "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 105,
+      "tag": "span",
+      "text": "Supplier Responsibility",
+      "browser_bounds": {
+        "x": 854,
+        "y": 2833.8,
+        "width": 113,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 855,
+        "y": 2812,
+        "width": 114,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 854,
+          "engine": 855,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 2833.8,
+          "engine": 2812,
+          "diff": 21.8
+        },
+        {
+          "property": "width",
+          "browser": 113,
+          "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 106,
+      "tag": "p",
+      "text": "Copyright 2024 Apple Inc. All rights res",
+      "browser_bounds": {
+        "x": 252,
+        "y": 2911.8,
+        "width": 936,
+        "height": 35
+      },
+      "engine_bounds": {
+        "x": 252,
+        "y": 2893,
+        "width": 936,
+        "height": 40
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 2911.8,
+          "engine": 2893,
+          "diff": 18.8
+        },
+        {
+          "property": "height",
+          "browser": 35,
+          "engine": 40,
+          "diff": 5
+        }
+      ]
+    }
+  ]
+}

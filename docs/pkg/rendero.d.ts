@@ -519,7 +519,7 @@ export class CanvasEngine {
      * direction: 0=Horizontal, 1=Vertical
      * After setting, compute_layout is called to position children.
      */
-    set_auto_layout(counter: number, client_id: number, direction: number, spacing: number, pad_top: number, pad_right: number, pad_bottom: number, pad_left: number): boolean;
+    set_auto_layout(counter: number, client_id: number, direction: number, spacing: number, pad_top: number, pad_right: number, pad_bottom: number, pad_left: number, align: number, justify: number, wrap: number): boolean;
     /**
      * Set camera position and zoom directly.
      */
@@ -554,6 +554,7 @@ export class CanvasEngine {
      * 10=Difference, 11=Exclusion, 12=Hue, 13=Saturation, 14=Color, 15=Luminosity.
      */
     set_node_blend_mode(counter: number, client_id: number, mode: number): boolean;
+    set_node_clip_content(counter: number, client_id: number, clip: boolean): boolean;
     /**
      * Set constraints on a node. h: 0=left, 1=right, 2=leftRight, 3=center, 4=scale
      * v: 0=top, 1=bottom, 2=topBottom, 3=center, 4=scale
@@ -587,10 +588,18 @@ export class CanvasEngine {
      */
     set_node_font_weight(counter: number, client_id: number, weight: number): boolean;
     /**
+     * Mark a node as absolutely positioned within Taffy layout.
+     */
+    set_node_layout_position(counter: number, client_id: number, x: number, y: number): boolean;
+    /**
      * Set linear gradient fill on any node. Replaces existing fills.
      * start/end are in 0..1 normalized coordinates (relative to node bounds).
      */
     set_node_linear_gradient(counter: number, client_id: number, start_x: number, start_y: number, end_x: number, end_y: number, stop_positions: Float32Array, stop_colors: Float32Array): boolean;
+    /**
+     * Set per-edge layout margin for a node.
+     */
+    set_node_margin(counter: number, client_id: number, top: number, right: number, bottom: number, left: number, auto_top: boolean, auto_right: boolean, auto_bottom: boolean, auto_left: boolean): boolean;
     /**
      * Set or unset the mask flag on a node.
      * When true, the node's shape clips all subsequent siblings until the parent ends.
@@ -621,6 +630,9 @@ export class CanvasEngine {
      * Set node size from the properties panel.
      */
     set_node_size(counter: number, client_id: number, w: number, h: number): boolean;
+    set_node_size_constraints(counter: number, client_id: number, min_w: number, min_h: number, max_w: number, max_h: number): boolean;
+    set_node_size_percent(counter: number, client_id: number, width_percent: number, height_percent: number): boolean;
+    set_node_sizing(counter: number, client_id: number, horizontal: number, vertical: number): boolean;
     /**
      * Set stroke on a node (color + weight). Replaces all existing strokes.
      */
@@ -837,7 +849,7 @@ export interface InitOutput {
     readonly canvasengine_select_node: (a: number, b: number, c: number) => void;
     readonly canvasengine_send_backward: (a: number) => number;
     readonly canvasengine_send_to_back: (a: number) => number;
-    readonly canvasengine_set_auto_layout: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => number;
+    readonly canvasengine_set_auto_layout: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number, l: number) => number;
     readonly canvasengine_set_camera: (a: number, b: number, c: number, d: number) => void;
     readonly canvasengine_set_dash_pattern: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_image_fill: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => number;
@@ -846,6 +858,7 @@ export interface InitOutput {
     readonly canvasengine_set_line_height: (a: number, b: number, c: number, d: number) => number;
     readonly canvasengine_set_node_angular_gradient: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number) => number;
     readonly canvasengine_set_node_blend_mode: (a: number, b: number, c: number, d: number) => number;
+    readonly canvasengine_set_node_clip_content: (a: number, b: number, c: number, d: number) => number;
     readonly canvasengine_set_node_constraints: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_node_corner_radius: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
     readonly canvasengine_set_node_fill: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
@@ -853,7 +866,9 @@ export interface InitOutput {
     readonly canvasengine_set_node_font_family: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_node_font_size: (a: number, b: number, c: number, d: number) => number;
     readonly canvasengine_set_node_font_weight: (a: number, b: number, c: number, d: number) => number;
+    readonly canvasengine_set_node_layout_position: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_node_linear_gradient: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => number;
+    readonly canvasengine_set_node_margin: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => number;
     readonly canvasengine_set_node_mask: (a: number, b: number, c: number, d: number) => number;
     readonly canvasengine_set_node_name: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_node_opacity: (a: number, b: number, c: number, d: number) => number;
@@ -861,6 +876,9 @@ export interface InitOutput {
     readonly canvasengine_set_node_radial_gradient: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number) => number;
     readonly canvasengine_set_node_rotation: (a: number, b: number, c: number, d: number) => number;
     readonly canvasengine_set_node_size: (a: number, b: number, c: number, d: number, e: number) => number;
+    readonly canvasengine_set_node_size_constraints: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
+    readonly canvasengine_set_node_size_percent: (a: number, b: number, c: number, d: number, e: number) => number;
+    readonly canvasengine_set_node_sizing: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_node_stroke: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => number;
     readonly canvasengine_set_node_text: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_snap_grid: (a: number, b: number) => void;
@@ -888,9 +906,9 @@ export interface InitOutput {
     readonly __wbindgen_exn_store: (a: number) => void;
     readonly __externref_table_alloc: () => number;
     readonly __wbindgen_externrefs: WebAssembly.Table;
+    readonly __wbindgen_free: (a: number, b: number, c: number) => void;
     readonly __wbindgen_malloc: (a: number, b: number) => number;
     readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
-    readonly __wbindgen_free: (a: number, b: number, c: number) => void;
     readonly __wbindgen_start: () => void;
 }
 

@@ -1,0 +1,52 @@
+{
+  "name": "fin",
+  "url": "https://fin.ai",
+  "capturedAt": "2026-03-30T22:41:42Z",
+  "viewports": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "label": "desktop"
+      },
+      "elementCount": 1945,
+      "scrollHeight": 10443,
+      "scrollContainers": 0,
+      "fixedSticky": 6,
+      "images": 32,
+      "interactive": 480,
+      "textBlocks": 53,
+      "stackingContexts": 140
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024,
+        "label": "tablet"
+      },
+      "elementCount": 2037,
+      "scrollHeight": 10852,
+      "scrollContainers": 0,
+      "fixedSticky": 9,
+      "images": 34,
+      "interactive": 513,
+      "textBlocks": 47,
+      "stackingContexts": 147
+    },
+    {
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "label": "mobile"
+      },
+      "elementCount": 2023,
+      "scrollHeight": 10486,
+      "scrollContainers": 1,
+      "fixedSticky": 10,
+      "images": 34,
+      "interactive": 512,
+      "textBlocks": 42,
+      "stackingContexts": 148
+    }
+  ]
+}

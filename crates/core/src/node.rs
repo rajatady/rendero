@@ -220,6 +220,10 @@ pub struct Node {
     pub transform: Transform,
     pub width: f32,
     pub height: f32,
+    #[serde(default)]
+    pub width_percent: Option<f32>,
+    #[serde(default)]
+    pub height_percent: Option<f32>,
 
     // Visual
     pub style: Style,
@@ -230,6 +234,23 @@ pub struct Node {
     // Constraints for resizing within parent
     pub horizontal_sizing: SizingMode,
     pub vertical_sizing: SizingMode,
+
+    /// Spacing this node contributes around itself in parent auto-layout.
+    #[serde(default)]
+    pub margin: LayoutMargin,
+
+    /// When set, this node is taken out of flow and pinned at the given inset.
+    #[serde(default)]
+    pub layout_position: Option<LayoutPosition>,
+
+    /// Optional min/max width and height constraints used by layout engines.
+    #[serde(default)]
+    pub size_constraints: LayoutSizeConstraints,
+
+    /// Text nodes only: when true, width/height are authored inputs and must
+    /// bypass text measurement. Measured layout results must not flip this on.
+    #[serde(default)]
+    pub text_size_locked: bool,
 
     // Figma-style constraints: how child responds to parent resize
     pub constraint_horizontal: ConstraintType,
@@ -250,6 +271,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Frame {
                 clip_content: true,
@@ -258,6 +281,10 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -274,12 +301,18 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Rectangle {
                 corner_radii: CornerRadii::default(),
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -295,6 +328,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Ellipse {
                 arc_start: 0.0,
@@ -303,6 +338,10 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -316,13 +355,15 @@ impl Node {
             visible: true,
             locked: false,
             transform: Transform::IDENTITY,
-            width: content.len() as f32 * font_size * 0.65,
-            height: font_size * 1.5,
+            width: 0.0,  // measured by layout engine or JS browser measurement
+            height: 0.0,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Text {
                 runs: vec![TextRun {
                     text: content.to_string(),
-                    font_family: "Inter".to_string(),
+                    font_family: "Times".to_string(),
                     font_size,
                     font_weight: 400,
                     italic: false,
@@ -338,6 +379,10 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -353,10 +398,16 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Component,
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -372,6 +423,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Instance {
                 component_id,
@@ -379,6 +432,10 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -394,6 +451,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Image {
                 data,
@@ -402,6 +461,10 @@ impl Node {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,

@@ -1,0 +1,52 @@
+{
+  "name": "apple-macbook-pro",
+  "url": "https://www.apple.com/macbook-pro/",
+  "capturedAt": "2026-03-30T22:43:47Z",
+  "viewports": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "label": "desktop"
+      },
+      "elementCount": 5584,
+      "scrollHeight": 41479,
+      "scrollContainers": 3,
+      "fixedSticky": 36,
+      "images": 139,
+      "interactive": 1535,
+      "textBlocks": 174,
+      "stackingContexts": 611
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024,
+        "label": "tablet"
+      },
+      "elementCount": 5564,
+      "scrollHeight": 35929,
+      "scrollContainers": 6,
+      "fixedSticky": 33,
+      "images": 139,
+      "interactive": 1608,
+      "textBlocks": 195,
+      "stackingContexts": 642
+    },
+    {
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "label": "mobile"
+      },
+      "elementCount": 5556,
+      "scrollHeight": 39230,
+      "scrollContainers": 6,
+      "fixedSticky": 35,
+      "images": 139,
+      "interactive": 1602,
+      "textBlocks": 221,
+      "stackingContexts": 642
+    }
+  ]
+}

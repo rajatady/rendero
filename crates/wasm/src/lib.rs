@@ -2,11 +2,13 @@
 //! Thin wrapper. All logic in engine/renderer/crdt crates.
 
 mod bench;
+mod browser_text;
 mod canvas2d;
 mod fig_import;
 mod webgl;
 
 use wasm_bindgen::prelude::*;
+use std::sync::Once;
 
 use rendero_core::document::Document;
 use rendero_core::hit_test;
@@ -17,8 +19,12 @@ use rendero_crdt::apply;
 use rendero_crdt::operation::{FractionalIndex, OpKind, Operation};
 use rendero_renderer::pipeline;
 use rendero_renderer::scene::{AABB, RenderItem};
+// BrowserTextMeasurer is used for text measurement on WASM — see browser_text.rs
+// for documentation on why this is a deliberate exception to our single-rendering goal.
 use glam::Vec2;
 use web_sys::CanvasRenderingContext2d;
+
+static PANIC_HOOK: Once = Once::new();
 
 /// Which part of a vector anchor is being edited.
 #[derive(Clone, Copy, PartialEq)]
@@ -348,6 +354,9 @@ pub struct CanvasEngine {
 impl CanvasEngine {
     #[wasm_bindgen(constructor)]
     pub fn new(name: &str, client_id: u32) -> Self {
+        PANIC_HOOK.call_once(|| {
+            console_error_panic_hook::set_once();
+        });
         Self {
             document: Document::new(name, client_id),
             selected: Vec::new(),
@@ -1935,6 +1944,8 @@ impl CanvasEngine {
             transform: Transform::translate(min_x, min_y),
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: rendero_core::properties::Style::default(),
             kind: NodeKind::Vector {
                 paths: vec![VectorPath {
@@ -1944,6 +1955,10 @@ impl CanvasEngine {
             },
             horizontal_sizing: SizingMode::Fixed,
             vertical_sizing: SizingMode::Fixed,
+            margin: LayoutMargin::default(),
+            layout_position: None,
+            size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -3772,6 +3787,18 @@ impl CanvasEngine {
     /// GPU-accelerated, no pixel buffer transfer.
     /// `dpr` is the device pixel ratio for crisp Retina rendering.
     pub fn render_canvas2d(&mut self, ctx: &CanvasRenderingContext2d, width: u32, height: u32, dpr: f32) {
+        // Run layout before scene building (Taffy flexbox)
+        if self.scene_cache.is_none() {
+            if let Some(page) = self.document.page_mut(self.current_page) {
+                let root = page.tree.root_id();
+                rendero_core::layout::compute_layout_with_text_measurer(
+                    &mut page.tree,
+                    &root,
+                    browser_text::BrowserTextMeasurer::unwrap_or_fallback(),
+                );
+            }
+        }
+
         let page = self.document.page(self.current_page).unwrap();
         let root_id = page.tree.root_id();
 
@@ -4944,10 +4971,153 @@ impl CanvasEngine {
         self.redo_stack.clear();
         node.width = w;
         node.height = h;
+        if matches!(node.kind, NodeKind::Text { .. }) {
+            node.text_size_locked = true;
+        }
+        if w > 0.0 {
+            node.width_percent = None;
+        }
+        if h > 0.0 {
+            node.height_percent = None;
+        }
         let tx = node.transform.tx;
         let ty = node.transform.ty;
         self.patch_scene_transform(node_id, tx, ty, Some(w), Some(h));
         self.needs_render = true;
+        true
+    }
+
+    /// Mark a node as absolutely positioned within Taffy layout.
+    pub fn set_node_layout_position(&mut self, counter: u32, client_id: u32, x: f32, y: f32) -> bool {
+        let node_id = NodeId(rendero_core::id::LogicalClock { counter: counter as u64, client_id });
+        let page = match self.document.page_mut(self.current_page) {
+            Some(p) => p,
+            None => return false,
+        };
+        let node = match page.tree.get_mut(&node_id) {
+            Some(n) => n,
+            None => return false,
+        };
+        node.layout_position = Some(LayoutPosition { x, y });
+        let root_id = page.tree.root_id();
+        rendero_core::layout::compute_layout_with_text_measurer(
+            &mut page.tree,
+            &root_id,
+            browser_text::BrowserTextMeasurer::unwrap_or_fallback(),
+        );
+        self.mark_dirty();
+        true
+    }
+
+    pub fn set_node_size_constraints(
+        &mut self,
+        counter: u32,
+        client_id: u32,
+        min_w: f32,
+        min_h: f32,
+        max_w: f32,
+        max_h: f32,
+    ) -> bool {
+        let node_id = NodeId(rendero_core::id::LogicalClock { counter: counter as u64, client_id });
+        let page = match self.document.page_mut(self.current_page) {
+            Some(p) => p,
+            None => return false,
+        };
+        let node = match page.tree.get_mut(&node_id) {
+            Some(n) => n,
+            None => return false,
+        };
+        node.size_constraints.min_width = min_w.max(0.0);
+        node.size_constraints.min_height = min_h.max(0.0);
+        node.size_constraints.max_width = max_w.max(0.0);
+        node.size_constraints.max_height = max_h.max(0.0);
+        self.mark_dirty();
+        true
+    }
+
+    pub fn set_node_sizing(&mut self, counter: u32, client_id: u32, horizontal: u32, vertical: u32) -> bool {
+        let node_id = NodeId(rendero_core::id::LogicalClock { counter: counter as u64, client_id });
+        let page = match self.document.page_mut(self.current_page) {
+            Some(p) => p,
+            None => return false,
+        };
+        let node = match page.tree.get_mut(&node_id) {
+            Some(n) => n,
+            None => return false,
+        };
+        let decode = |value: u32| match value {
+            1 => SizingMode::Hug,
+            2 => SizingMode::Fill,
+            _ => SizingMode::Fixed,
+        };
+        node.horizontal_sizing = decode(horizontal);
+        node.vertical_sizing = decode(vertical);
+        self.mark_dirty();
+        true
+    }
+
+    pub fn set_node_clip_content(&mut self, counter: u32, client_id: u32, clip: bool) -> bool {
+        let node_id = NodeId(rendero_core::id::LogicalClock { counter: counter as u64, client_id });
+        let page = match self.document.page_mut(self.current_page) {
+            Some(p) => p,
+            None => return false,
+        };
+        let node = match page.tree.get_mut(&node_id) {
+            Some(n) => n,
+            None => return false,
+        };
+        match &mut node.kind {
+            NodeKind::Frame { clip_content, .. } => {
+                *clip_content = clip;
+                self.mark_dirty();
+                true
+            }
+            _ => false,
+        }
+    }
+
+    /// Set per-edge layout margin for a node.
+    pub fn set_node_margin(
+        &mut self, counter: u32, client_id: u32,
+        top: f32, right: f32, bottom: f32, left: f32,
+        auto_top: bool, auto_right: bool, auto_bottom: bool, auto_left: bool,
+    ) -> bool {
+        let node_id = NodeId(rendero_core::id::LogicalClock { counter: counter as u64, client_id });
+        let page = match self.document.page_mut(self.current_page) {
+            Some(p) => p,
+            None => return false,
+        };
+        let node = match page.tree.get_mut(&node_id) {
+            Some(n) => n,
+            None => return false,
+        };
+        node.margin = LayoutMargin { top, right, bottom, left, auto_top, auto_right, auto_bottom, auto_left };
+        let root_id = page.tree.root_id();
+        rendero_core::layout::compute_layout_with_text_measurer(
+            &mut page.tree,
+            &root_id,
+            browser_text::BrowserTextMeasurer::unwrap_or_fallback(),
+        );
+        self.mark_dirty();
+        true
+    }
+
+    pub fn set_node_size_percent(
+        &mut self, counter: u32, client_id: u32,
+        width_percent: f32, height_percent: f32,
+    ) -> bool {
+        let node_id = NodeId(rendero_core::id::LogicalClock { counter: counter as u64, client_id });
+        let page = match self.document.page_mut(self.current_page) {
+            Some(p) => p,
+            None => return false,
+        };
+        let node = match page.tree.get_mut(&node_id) {
+            Some(n) => n,
+            None => return false,
+        };
+        node.width_percent = if width_percent > 0.0 { Some(width_percent) } else { None };
+        node.height_percent = if height_percent > 0.0 { Some(height_percent) } else { None };
+        self.mark_dirty();
         true
     }
 
@@ -5381,13 +5551,12 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: old_width, height: old_height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             // Update text in first run, preserve styling
             if let Some(run) = runs.first_mut() {
                 let font_size = run.font_size;
                 run.text = text.to_string();
-                // Recalculate size
-                node.width = text.len() as f32 * font_size * 0.65;
-                node.height = font_size * 1.5;
+                // Don't recalculate here — let layout engine or JS browser measurement set size.
             }
             let tx = node.transform.tx;
             let ty = node.transform.ty;
@@ -5420,14 +5589,11 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: old_width, height: old_height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             for run in runs.iter_mut() {
                 run.font_size = size;
             }
-            // Recalculate size based on first run
-            if let Some(run) = runs.first() {
-                node.width = run.text.len() as f32 * size * 0.65;
-                node.height = size * 1.5;
-            }
+            // Don't recalculate here — let layout engine or JS browser measurement set size.
             let tx = node.transform.tx;
             let ty = node.transform.ty;
             let w = node.width;
@@ -5457,6 +5623,7 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: node.width, height: node.height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             for run in runs.iter_mut() {
                 run.font_family = family.to_string();
             }
@@ -5485,6 +5652,7 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: node.width, height: node.height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             for run in runs.iter_mut() {
                 run.font_weight = weight;
             }
@@ -5513,6 +5681,7 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: node.width, height: node.height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             for run in runs.iter_mut() {
                 run.letter_spacing = spacing;
             }
@@ -5541,6 +5710,7 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: node.width, height: node.height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             for run in runs.iter_mut() {
                 run.line_height = if height > 0.0 { Some(height) } else { None };
             }
@@ -5989,8 +6159,9 @@ impl CanvasEngine {
         &mut self, counter: u32, client_id: u32,
         direction: u32, spacing: f32,
         pad_top: f32, pad_right: f32, pad_bottom: f32, pad_left: f32,
+        align: u32, justify: u32, wrap: u32,
     ) -> bool {
-        use rendero_core::properties::{AutoLayout, LayoutDirection, SizingMode, LayoutAlign};
+        use rendero_core::properties::{AutoLayout, LayoutAlign, LayoutDirection, LayoutJustify, LayoutWrap, SizingMode};
         let node_id = NodeId(rendero_core::id::LogicalClock { counter: counter as u64, client_id });
         let page = match self.document.page_mut(self.current_page) {
             Some(p) => p,
@@ -6001,6 +6172,36 @@ impl CanvasEngine {
             None => return false,
         };
         let dir = if direction == 0 { LayoutDirection::Horizontal } else { LayoutDirection::Vertical };
+        let align = match align {
+            1 => LayoutAlign::Center,
+            2 => LayoutAlign::End,
+            3 => LayoutAlign::Stretch,
+            _ => LayoutAlign::Start,
+        };
+        let justify = match justify {
+            1 => LayoutJustify::Center,
+            2 => LayoutJustify::End,
+            3 => LayoutJustify::SpaceBetween,
+            4 => LayoutJustify::SpaceAround,
+            5 => LayoutJustify::SpaceEvenly,
+            _ => LayoutJustify::Start,
+        };
+        let wrap = match wrap {
+            1 => LayoutWrap::Wrap,
+            _ => LayoutWrap::NoWrap,
+        };
+        let resolve_sizing = |mode: SizingMode, extent: f32| match mode {
+            SizingMode::Fixed if extent <= 0.0 => SizingMode::Hug,
+            _ => mode,
+        };
+        let primary_sizing = match dir {
+            LayoutDirection::Horizontal => resolve_sizing(node.horizontal_sizing, node.width),
+            LayoutDirection::Vertical => resolve_sizing(node.vertical_sizing, node.height),
+        };
+        let counter_sizing = match dir {
+            LayoutDirection::Horizontal => resolve_sizing(node.vertical_sizing, node.height),
+            LayoutDirection::Vertical => resolve_sizing(node.horizontal_sizing, node.width),
+        };
         let al = AutoLayout {
             direction: dir,
             spacing,
@@ -6008,9 +6209,11 @@ impl CanvasEngine {
             padding_right: pad_right,
             padding_bottom: pad_bottom,
             padding_left: pad_left,
-            primary_sizing: SizingMode::Fixed,
-            counter_sizing: SizingMode::Fixed,
-            align: LayoutAlign::Start,
+            primary_sizing,
+            counter_sizing,
+            align,
+            justify,
+            wrap,
         };
         match &mut node.kind {
             NodeKind::Frame { auto_layout, .. } => {
@@ -6020,7 +6223,11 @@ impl CanvasEngine {
         }
         // Run layout computation
         let root_id = page.tree.root_id();
-        rendero_core::layout::compute_layout(&mut page.tree, &root_id);
+        rendero_core::layout::compute_layout_with_text_measurer(
+            &mut page.tree,
+            &root_id,
+            browser_text::BrowserTextMeasurer::unwrap_or_fallback(),
+        );
         // Structural: auto-layout repositions/resizes multiple children recursively.
         // TODO(perf): compute_layout could return a list of moved nodes for incremental patching.
         self.mark_dirty();

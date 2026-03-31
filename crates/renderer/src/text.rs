@@ -1,7 +1,7 @@
 //! Text layout and rasterization.
 //!
-//! Uses fontdue for glyph rasterization from an embedded TTF font.
-//! Handles multi-run styled text with word wrapping and alignment.
+//! Uses fontdue for glyph rasterization. Resolves font families via fontdb
+//! (system fonts), falls back to embedded RobotoMono.
 
 use rendero_core::node::{TextAlign, TextRun, TextVerticalAlign};
 use rendero_core::properties::{PremultColor, Transform};
@@ -10,18 +10,113 @@ use crate::tile::{TileBuffer, TileCoord, TILE_SIZE};
 
 use fontdue::Font;
 use glam::Vec2;
-use std::sync::OnceLock;
+use std::collections::HashMap;
+use std::sync::{Mutex, OnceLock};
 
-/// Embedded font — Roboto Mono, compiled into the binary.
-static DEFAULT_FONT: &[u8] = include_bytes!("../assets/RobotoMono.ttf");
+/// Embedded fallback font — Roboto Mono.
+static DEFAULT_FONT_BYTES: &[u8] = include_bytes!("../assets/RobotoMono.ttf");
 
-static PARSED_FONT: OnceLock<Font> = OnceLock::new();
+static PARSED_DEFAULT_FONT: OnceLock<Font> = OnceLock::new();
 
-fn font() -> &'static Font {
-    PARSED_FONT.get_or_init(|| {
-        Font::from_bytes(DEFAULT_FONT, fontdue::FontSettings::default())
+fn default_font() -> &'static Font {
+    PARSED_DEFAULT_FONT.get_or_init(|| {
+        Font::from_bytes(DEFAULT_FONT_BYTES, fontdue::FontSettings::default())
             .expect("embedded font is valid TTF")
     })
+}
+
+/// System font database — loaded once, queries system fonts.
+static FONT_DB: OnceLock<fontdb::Database> = OnceLock::new();
+
+fn font_db() -> &'static fontdb::Database {
+    FONT_DB.get_or_init(|| {
+        let mut db = fontdb::Database::new();
+        db.load_system_fonts();
+        db
+    })
+}
+
+/// Cache of parsed fontdue Font objects keyed by fontdb face ID.
+static FONT_CACHE: OnceLock<Mutex<HashMap<fontdb::ID, Font>>> = OnceLock::new();
+
+fn font_cache() -> &'static Mutex<HashMap<fontdb::ID, Font>> {
+    FONT_CACHE.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+/// Resolve a font family name + weight + italic to a fontdue Font.
+/// Falls back to the embedded RobotoMono if no system font matches.
+fn resolve_font(family: &str, weight: u16, italic: bool) -> &'static Font {
+    let db = font_db();
+    let style = if italic { fontdb::Style::Italic } else { fontdb::Style::Normal };
+    let query = match family {
+        "" | "Times" | "Times New Roman" | "serif" => fontdb::Query {
+            families: &[fontdb::Family::Serif],
+            weight: fontdb::Weight(weight),
+            style,
+            ..Default::default()
+        },
+        "sans-serif" | "system-ui" | "-apple-system" | "Inter" => fontdb::Query {
+            families: &[fontdb::Family::SansSerif],
+            weight: fontdb::Weight(weight),
+            style,
+            ..Default::default()
+        },
+        "monospace" => fontdb::Query {
+            families: &[fontdb::Family::Monospace],
+            weight: fontdb::Weight(weight),
+            style,
+            ..Default::default()
+        },
+        _ => fontdb::Query {
+            families: &[fontdb::Family::Name(family)],
+            weight: fontdb::Weight(weight),
+            style,
+            ..Default::default()
+        },
+    };
+
+    let face_id = match db.query(&query) {
+        Some(id) => id,
+        None => {
+            // Try sans-serif fallback
+            let fallback = fontdb::Query {
+                families: &[fontdb::Family::SansSerif],
+                weight: fontdb::Weight(weight),
+                style,
+                ..Default::default()
+            };
+            match db.query(&fallback) {
+                Some(id) => id,
+                None => return default_font(),
+            }
+        }
+    };
+
+    // Check cache
+    let cache = font_cache();
+    let mut map = cache.lock().unwrap();
+    if map.contains_key(&face_id) {
+        // Safety: the font is stored in the static cache and lives for 'static.
+        // We return a reference that outlives the lock because the Font won't be removed.
+        let ptr = map.get(&face_id).unwrap() as *const Font;
+        return unsafe { &*ptr };
+    }
+
+    // Load font data from fontdb and parse with fontdue
+    let mut font_data = None;
+    db.with_face_data(face_id, |data, _face_index| {
+        font_data = Some(data.to_vec());
+    });
+
+    if let Some(data) = font_data {
+        if let Ok(font) = Font::from_bytes(data, fontdue::FontSettings::default()) {
+            map.insert(face_id, font);
+            let ptr = map.get(&face_id).unwrap() as *const Font;
+            return unsafe { &*ptr };
+        }
+    }
+
+    default_font()
 }
 
 /// A positioned glyph ready for rasterization.
@@ -57,8 +152,6 @@ pub fn rasterize_text(
         return;
     }
 
-    let font = font();
-
     // Phase 1: rasterize all glyphs and compute positions
     let mut glyphs: Vec<PlacedGlyph> = Vec::new();
     let mut lines: Vec<Line> = Vec::new();
@@ -67,6 +160,7 @@ pub fn rasterize_text(
     let mut current_line_height: f32 = 0.0;
 
     for run in runs {
+        let font = resolve_font(&run.font_family, run.font_weight, run.italic);
         let size = run.font_size;
         let color = run.color.premultiplied();
         let line_metrics = font.horizontal_line_metrics(size);

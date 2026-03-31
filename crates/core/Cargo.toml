@@ -6,3 +6,4 @@ edition.workspace = true
 [dependencies]
 glam = { workspace = true }
 serde = { workspace = true }
+taffy = { workspace = true }
