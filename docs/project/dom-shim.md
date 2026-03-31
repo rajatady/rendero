@@ -393,6 +393,12 @@ In WASM mode, `_wireCanvasEvents(canvas, shimDoc)` translates real browser event
 | `touchstart` / `touchmove` / `touchend` | Detect taps (not scrolls), dispatch `click` on touch end |
 | `wheel` on canvas | Prevents default, routes through the shared `window.scrollBy` path, then syncs the engine camera |
 
+For browser Rendero, fixed-position elements are translated relative to the
+viewport, not the internal Rendero surface. The shim now subtracts the render
+surface offset before emitting fixed-position layout data, and the layered
+capture pipeline records engine bounds in that same surface coordinate space.
+This removed the earlier `44px` browser-vs-engine origin mismatch.
+
 ---
 
 ## 9. Entry Points

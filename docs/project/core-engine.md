@@ -54,7 +54,7 @@ The crate has zero rendering logic. It is consumed by renderers (WebGPU, Canvas2
 | `BooleanResult` | `boolean.rs` | Result of a boolean path operation: commands + fill rule |
 | `LegacyLayout` | `layout.rs` | Original single-pass layout engine (fallback provider) |
 | `TaffyLayout<M>` | `taffy_layout.rs` | CSS flexbox layout engine powered by Taffy |
-| `HeuristicTextMeasurer` | `providers.rs` | Simple text measurer using character-count heuristic |
+| `HeuristicTextMeasurer` | `providers.rs` | Simple fallback text measurer using character-count heuristics |
 
 ### Enums
 
@@ -99,7 +99,7 @@ The layout system uses a **provider-based architecture**. The engine never depen
 ### Entry Points
 
 ```rust
-// Default: Taffy flexbox with heuristic text measurement
+// Default convenience path: Taffy flexbox with heuristic text measurement
 pub fn compute_layout(tree: &mut DocumentTree, root: &NodeId);
 
 // Custom engine: swap in any LayoutEngine implementation
@@ -175,7 +175,15 @@ width  = sum(run.text.len() * run.font_size * 0.65)
 height = max(run.font_size * 1.5)
 ```
 
-Fast but inaccurate. A future `ParleyTextMeasurer` using real text shaping is planned.
+Fast but inaccurate. It remains useful as the always-available fallback and as
+the default convenience path inside `rendero-core`, but the higher-fidelity
+platform paths now override it:
+
+- native shells wire `ParleyTextMeasurer`
+- WASM uses a browser-backed `BrowserTextMeasurer` adapter in `rendero-wasm`
+
+The important architectural point is that `rendero-core` only depends on the
+`TextMeasurer` trait, not on any concrete shaping library.
 
 ---
 

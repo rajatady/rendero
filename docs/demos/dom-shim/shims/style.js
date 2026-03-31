@@ -112,10 +112,22 @@ function syncToEngine(element) {
         engineSetProp(id, 'sizing', { horizontal: 2, vertical: 1 });
     }
 
+    const getRenderSurfaceOffset = () => {
+        if (globalThis.__RENDERO_NATIVE__) return { x: 0, y: 0 };
+        const surface =
+            document.querySelector('canvas')
+            || document.getElementById('rendero-canvas')
+            || document.querySelector('[data-rendero-surface]');
+        if (!surface) return { x: 0, y: 0 };
+        const rect = surface.getBoundingClientRect();
+        return { x: rect.left || 0, y: rect.top || 0 };
+    };
+
     // Position (only absolute/fixed positioned)
     if (v.position === 'absolute' || v.position === 'fixed') {
-        const x = parseLength(v.left) || 0;
-        const y = parseLength(v.top) || 0;
+        const surfaceOffset = v.position === 'fixed' ? getRenderSurfaceOffset() : { x: 0, y: 0 };
+        const x = (parseLength(v.left) || 0) - surfaceOffset.x;
+        const y = (parseLength(v.top) || 0) - surfaceOffset.y;
         engineSetProp(id, 'layoutPosition', { x, y });
         engineSetProp(id, 'position', { x, y });
     }
@@ -176,8 +188,8 @@ function syncToEngine(element) {
         margins,
         autoLayout,
         position: (v.position === 'absolute' || v.position === 'fixed') ? {
-            x: parseLength(v.left) || 0,
-            y: parseLength(v.top) || 0,
+            x: (parseLength(v.left) || 0) - (v.position === 'fixed' ? getRenderSurfaceOffset().x : 0),
+            y: (parseLength(v.top) || 0) - (v.position === 'fixed' ? getRenderSurfaceOffset().y : 0),
             mode: v.position,
         } : null,
         text: isText ? {

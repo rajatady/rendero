@@ -90,12 +90,12 @@ impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
         let root_node = tree.get(root);
         let vp_w = if viewport.0 > 0.0 { viewport.0 }
             else { root_node.map(|n| n.width).filter(|w| *w > 0.0).unwrap_or(1280.0) };
-        let vp_h = if viewport.1 > 0.0 { viewport.1 }
+        let _vp_h = if viewport.1 > 0.0 { viewport.1 }
             else { root_node.map(|n| n.height).filter(|h| *h > 0.0).unwrap_or(800.0) };
 
         if taffy.compute_layout_with_measure(
             taffy_root,
-            Size { width: AvailableSpace::Definite(vp_w), height: AvailableSpace::Definite(vp_h) },
+            Size { width: AvailableSpace::Definite(vp_w), height: AvailableSpace::MaxContent },
             |known_dimensions, available_space, _node_id, node_context, _style| {
                 let Some(context) = node_context.and_then(|ctx| ctx.as_ref()) else {
                     return Size::ZERO;
@@ -122,16 +122,16 @@ impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
             return;
         }
 
-        // Apply results back to DocumentTree (skip root — it keeps its position)
+        // Apply results back to DocumentTree.
         for node_id in &traversal {
-            if node_id == root { continue; }
-
             let Some(&taffy_node) = id_map.get(node_id) else { continue };
             let Ok(layout) = taffy.layout(taffy_node) else { continue };
 
             if let Some(node) = tree.get_mut(node_id) {
-                node.transform.tx = layout.location.x;
-                node.transform.ty = layout.location.y;
+                if node_id != root {
+                    node.transform.tx = layout.location.x;
+                    node.transform.ty = layout.location.y;
+                }
                 let lw = layout.size.width;
                 let lh = layout.size.height;
                 // Apply finite sizes. If Taffy returns inf, the node has no
@@ -139,6 +139,34 @@ impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
                 // The renderer handles 0-height containers by not clipping children.
                 if lw > 0.0 && lw.is_finite() { node.width = lw; }
                 if lh > 0.0 && lh.is_finite() { node.height = lh; }
+            }
+        }
+
+        // Taffy can leave some auto-sized wrapper frames shorter than the
+        // positioned children they contain in this DOM-shim pipeline. Ensure a
+        // container is never shorter than the deepest child it actually lays out.
+        for node_id in traversal.iter().rev() {
+            let child_ids = match tree.children_of(node_id) {
+                Some(ids) if !ids.is_empty() => ids,
+                _ => continue,
+            };
+
+            let mut max_bottom = 0.0f32;
+            for child_id in child_ids.iter() {
+                let Some(child) = tree.get(child_id) else { continue };
+                max_bottom = max_bottom.max(child.transform.ty + child.height);
+            }
+
+            if max_bottom <= 0.0 {
+                continue;
+            }
+
+            if let Some(node) = tree.get_mut(node_id) {
+                if let NodeKind::Frame { .. } = node.kind {
+                    if node.height < max_bottom {
+                        node.height = max_bottom;
+                    }
+                }
             }
         }
     }
@@ -212,8 +240,10 @@ fn node_to_taffy_style(node: &crate::node::Node, parent: Option<&crate::node::No
         // backwards compat with legacy layout and CRDT ops, but the Taffy path
         // no longer reads them. Container size is node.width/height, item size is
         // node.horizontal_sizing/vertical_sizing. No conflation.
-        if node.width > 0.0 { style.size.width = Dimension::length(node.width); }
-        if node.height > 0.0 { style.size.height = Dimension::length(node.height); }
+        // Do not copy node.width/node.height into the authored container size here.
+        // Those fields are also overwritten with computed layout results after each
+        // pass, and treating them as authored inputs makes hug/auto containers stick
+        // to their previous computed size on the next layout.
     } else {
         // No explicit auto-layout. Frames default to vertical column (CSS block flow).
         // Leaf nodes (rect, text, ellipse) just get explicit dimensions.
@@ -225,8 +255,7 @@ fn node_to_taffy_style(node: &crate::node::Node, parent: Option<&crate::node::No
             }
             _ => {}
         }
-        if node.width > 0.0 { style.size.width = Dimension::length(node.width); }
-        if node.height > 0.0 { style.size.height = Dimension::length(node.height); }
+        // Fixed-size behavior is handled below from sizing mode / percentages.
     }
 
     let parent_direction = match parent.and_then(|p| match &p.kind {

@@ -26,7 +26,7 @@
 //! browser integration surface, this adapter lives here alongside it.
 
 use rendero_core::node::TextRun;
-use rendero_core::providers::{TextMeasurer, heuristic_measure};
+use rendero_core::providers::{HeuristicTextMeasurer, TextMeasurer};
 use wasm_bindgen::JsCast;
 
 /// Text measurer that delegates to the browser's canvas.measureText().
@@ -70,7 +70,7 @@ impl TextMeasurer for WasmTextMeasurer {
     fn measure(&self, runs: &[TextRun], max_width: f32) -> (f32, f32) {
         match self {
             WasmTextMeasurer::Browser(m) => m.measure(runs, max_width),
-            WasmTextMeasurer::Heuristic => heuristic_measure(runs, max_width),
+            WasmTextMeasurer::Heuristic => HeuristicTextMeasurer.measure(runs, max_width),
         }
     }
 }

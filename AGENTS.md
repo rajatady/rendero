@@ -80,11 +80,11 @@ Platform Backend (swappable)
 
 ### Current accuracy
 
-**57.01%** — 244/428 properties match (Apple demo page, 107 elements, WASM web path).
+**60.98%** — 261/428 properties match (Apple demo page, 107 elements, WASM web path).
 
-Synthetic layout corpus: **83.85%** — 379/452 properties.
+Synthetic layout corpus: **83.19%** — 376/452 properties.
 
-Progress: 1.6% → 12.4% (element alignment fix) → 12.9% (viewport-aware layout) → 19.2% (browser text measurement) → 49.3% (layered capture + translation fixes) → 57.01% (`margin:auto` + parent-relative `%` sizing).
+Progress: 1.6% → 12.4% (element alignment fix) → 12.9% (viewport-aware layout) → 19.2% (browser text measurement) → 49.3% (layered capture + translation fixes) → 57.01% (`margin:auto` + parent-relative `%` sizing) → 60.98% (surface-coordinate normalization, fixed-position translation, root/container height propagation fixes).
 
 Run the full accuracy loop:
 ```sh
@@ -113,7 +113,7 @@ Every item is a DOM/CSS behavior the shim must handle correctly. Fix in priority
 1. `margin: auto` — centering. Basic auto-margin support is now wired through the shared layout contract. Keep validating against more pages and edge cases.
 2. `flex` shorthand — `flex: '1'` → `flex-grow: 1; flex-shrink: 1; flex-basis: 0%`. `flex: 'none'` → `0 0 auto`. `flex: '0 0 auto'` → three values. Getting this wrong breaks most layouts.
 3. `padding`/`margin` shorthand — 1-value, 2-value, 3-value, 4-value expansion. Already partially handled in `css-values.js expandShorthand()` but verify all cases.
-4. `position: fixed` — navbar. Taffy doesn't have fixed. Must attach to root Taffy node regardless of DOM position. Currently shimmed as absolute.
+4. `position: fixed` — navbar. Taffy doesn't have fixed. Must attach to root Taffy node regardless of DOM position and be translated relative to the viewport, not the Rendero surface. Browser capture normalization for fixed nodes is now in place; remaining work is broader stacking/root-flow correctness.
 5. Percentage `width`/`height` — basic parent-relative `%` sizing is now carried into the node model. Extend this to more cases (`height`, min/max, flex-basis, positioned elements) without collapsing back to viewport pixels.
 6. `getComputedStyle()` / `offsetWidth` / `offsetHeight` — libraries read computed values. Must return values from Taffy's computed layout, not the raw set values. `width: '100%'` read back should return `'1280px'`.
 7. `line-height` parsing — `lineHeight: '1.5'` (unitless multiplier) vs `lineHeight: '24px'` (pixels). Affects text spacing.
@@ -143,12 +143,12 @@ Every item is a DOM/CSS behavior the shim must handle correctly. Fix in priority
 - **No hardcoding for specific pages.** A fix that works for apple.com but breaks news.ycombinator.com is not a fix. Run accuracy checks against multiple pages.
 - **Trait-based, swappable.** Every subsystem is behind a trait: LayoutEngine, TextMeasurer, CssParser, FontResolver, GlyphRasterizer. Swap implementations without touching callers.
 - **The shim IS the browser.** It doesn't care if it's React, Vue, Svelte, Angular, or vanilla JS. They all call the same DOM APIs. Fix the DOM, all frameworks work.
-- **Accuracy is a number.** Currently 57.01% on the Apple page and 83.85% on the synthetic corpus. Track it. Every commit either improves it or doesn't. No subjective "looks better."
+- **Accuracy is a number.** Currently 60.98% on the Apple page and 83.19% on the synthetic corpus. Track it. Every commit either improves it or doesn't. No subjective "looks better."
 
 ### Key quirks to know
 
 - **Inline layout doesn't exist.** Taffy does block/flex/grid, not inline text flow. `<p>Hello <strong>world</strong></p>` can't flow as one paragraph with mixed styles. Each element is a separate block. React Native has the same limitation. Acceptable for v1.
-- **Text measurement has two paths.** On WASM/web: `canvas.measureText()` uses the browser's own fonts (oracle approach). On native: `HeuristicTextMeasurer` (`len * fontSize * 0.65`) — inaccurate. Parley is built (`rendero-text`) but not wired into the renderer yet. Text nodes start at 0x0 and get sized by the layout engine or JS browser measurement.
+- **Text measurement has two high-accuracy paths plus a fallback.** On WASM/web: `BrowserTextMeasurer` uses the browser canvas as a deliberate temporary oracle during layout because browser sandboxes do not expose real font files to Fontique/Parley. On native: `ParleyTextMeasurer` is the intended path. `HeuristicTextMeasurer` still exists as a fallback/default core helper and for environments where the higher-fidelity measurers are unavailable. Browser Rendero also still carries a temporary JS-side eager text-size sync for some constrained text cases; that shortcut is tracked in `docs/project/parity-shortcuts.md`.
 - **System font resolution is wired in.** The renderer resolves font families via fontdb (system fonts), falls back to embedded RobotoMono. But most elements don't have explicit `fontFamily` in inline style — CSS inheritance is not implemented in the shim, so fonts default to the constructor value "Inter" which falls back to RobotoMono.
 - **`inf` from Taffy.** Unconstrained auto-sized containers return `f32::INFINITY`. If Taffy returns inf, the node size is left unchanged (not clamped to viewport). `compute_layout()` reads viewport from root node dimensions.
 - **Frames without autoLayout default to `FlexDirection::Column`** in `node_to_taffy_style()`. This mimics CSS block flow (vertical stacking). Correct for 90% of cases. The 10% that break: inline elements, floats.

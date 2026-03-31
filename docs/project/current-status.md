@@ -6,10 +6,10 @@ Last updated: 2026-03-31
 
 ## Layout Accuracy
 
-**57.01%** — 244/428 properties match on the Apple demo page (107 elements,
+**60.98%** — 261/428 properties match on the Apple demo page (107 elements,
 browser oracle vs Rendero WASM path).
 
-Synthetic layout corpus: **83.85%** — 379/452 properties.
+Synthetic layout corpus: **83.19%** — 376/452 properties.
 
 Progress on the Apple page so far:
 
@@ -18,13 +18,14 @@ Progress on the Apple page so far:
 - 19.2% — browser text measurement
 - 49.3% — layered capture pipeline made the real gaps explicit
 - 57.01% — `margin:auto` + parent-relative `%` sizing through the shared layout contract
+- 60.98% — surface-coordinate normalization, fixed-position translation, and root/container height propagation fixes
 
 Current high-signal mismatches:
 
-- root/page height collapse: browser `2966.8` vs engine `1617`
-- fixed navbar offset: browser `y=-44` vs engine `y=0`
-- feature-card text still measured too wide/short in constrained layouts
-- lower-section heights still drift from text/layout cascades
+- one top-level page wrapper is still short: browser `2966.8` vs engine `2931`
+- feature-card text is still measured too wide/short in constrained layouts
+- first feature card remains inflated: browser `292x218` vs engine `352x197`
+- many remaining nav/product-grid diffs are now small `1–6px` errors rather than structural offsets
 
 ### Comparison Baseline
 
@@ -65,12 +66,12 @@ What is still off:
   shared contracts as WASM
 - feature-card paragraphs do not yet wrap like the browser oracle, which
   inflates some card widths/heights
-- root/document height is still too short
+- one top-level page wrapper is still too short
 - text metrics and line wrapping are still weaker than browser truth
 
 ### TestApp / Synthetic Corpus
 
-**Status: Core layout behavior is stable enough to hit 83.85% across the
+**Status: Core layout behavior is stable enough to hit 83.19% across the
 synthetic corpus.**
 
 This is the main proof that Taffy itself is not the primary blocker anymore;
@@ -139,6 +140,23 @@ Files:
 - `docs/demos/dom-shim/shims/rendero-api.js`
 - `docs/demos/dom-shim/shims/engine-runtime.js`
 
+### Recent layout parity fixes
+
+- browser-engine capture is normalized into the same surface coordinate space
+  as the browser oracle, eliminating the old `44px` origin mismatch
+- `position: fixed` translation now subtracts the render-surface offset so
+  fixed nodes are positioned relative to the viewport
+- Taffy layout no longer reuses prior computed container sizes as new authored
+  layout inputs
+- root layout size is written back, and frame heights now get a bottom-up
+  safeguard so containers cannot end above their deepest child
+
+Files:
+
+- `scripts/capture-engine-truth.py`
+- `docs/demos/dom-shim/shims/style.js`
+- `crates/core/src/taffy_layout.rs`
+
 ### Native parity baseline
 
 - native window defaults to the same desktop baseline used by the oracle
@@ -156,19 +174,16 @@ Files:
 
 ## Main Remaining Gaps
 
-1. **Root/document height propagation**
-   Browser page height is still far larger than engine page height.
-
-2. **Fixed/root offset behavior**
-   The navbar is structurally correct, but the page/root offset is still off by
-   `44px`.
-
-3. **Constrained text measurement**
+1. **Constrained text measurement**
    Feature-card paragraphs are still measured as if they are unconstrained
    single-line text too early in the browser path. That is the next
    translation-layer target.
 
-4. **Live native screenshot capture**
+2. **Residual top-level wrapper height drift**
+   Most of the page-height collapse is fixed, but one wrapper is still about
+   `35.8px` short.
+
+3. **Live native screenshot capture**
    Still blocked by Codex runtime macOS permissions, so true live-window
    screenshots remain separate from deterministic headless captures.
 

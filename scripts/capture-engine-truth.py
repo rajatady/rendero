@@ -179,16 +179,16 @@ ENGINE_EXTRACTOR_JS = """
                     y: entry.node?.transform?.ty || 0,
                 },
                 world: {
-                    x: world.x,
-                    y: world.y,
+                    x: world.x + renderSurfaceRect.left,
+                    y: world.y + renderSurfaceRect.top,
                 },
                 size: {
                     width: entry.node?.width || 0,
                     height: entry.node?.height || 0,
                 },
                 bounds: {
-                    x: world.x,
-                    y: world.y,
+                    x: world.x + renderSurfaceRect.left,
+                    y: world.y + renderSurfaceRect.top,
                     width: entry.node?.width || 0,
                     height: entry.node?.height || 0,
                 },
@@ -243,6 +243,16 @@ ENGINE_EXTRACTOR_JS = """
         }
     }
 
+    const renderSurfaceRect = (() => {
+        const surface =
+            document.querySelector('canvas')
+            || document.getElementById('rendero-canvas')
+            || document.querySelector('[data-rendero-surface]');
+        if (!surface) return { left: 0, top: 0 };
+        const rect = surface.getBoundingClientRect();
+        return { left: rect.left || 0, top: rect.top || 0 };
+    })();
+
     function walkShimNode(node, depth, parentId) {
         const id = nextId++;
 
@@ -254,8 +264,8 @@ ENGINE_EXTRACTOR_JS = """
                 const b = window.Rendero?.engine?.getNodeBounds?.(node._engineId);
                 if (b) {
                     bounds = {
-                        x: Math.round((b.x || 0) * 10) / 10,
-                        y: Math.round((b.y || 0) * 10) / 10,
+                        x: Math.round(((b.x || 0) + renderSurfaceRect.left) * 10) / 10,
+                        y: Math.round(((b.y || 0) + renderSurfaceRect.top) * 10) / 10,
                         width: Math.round((b.width || 0) * 10) / 10,
                         height: Math.round((b.height || 0) * 10) / 10,
                     };

@@ -239,8 +239,9 @@ Current implementations:
 |------------------|---------------------------|--------------------------------------|
 | `LayoutEngine`   | `TaffyLayout`             | Full CSS flexbox via Taffy           |
 | `LayoutEngine`   | `LegacyLayout`            | Original basic auto-layout           |
-| `TextMeasurer`   | `HeuristicTextMeasurer`   | Current native fallback, still approximate |
-| `TextMeasurer`   | `ParleyTextMeasurer`      | Integrated in `rendero-text`, not yet the default render/layout path |
+| `TextMeasurer`   | `HeuristicTextMeasurer`   | Core fallback/default helper for environments without a higher-fidelity measurer |
+| `TextMeasurer`   | `ParleyTextMeasurer`      | Native high-fidelity path via `rendero-text` |
+| `TextMeasurer`   | `BrowserTextMeasurer`     | WASM-only deliberate oracle path using browser canvas until shared font loading lands |
 | `JSRuntime`      | `QuickJSRuntime`          | Via `rquickjs` crate                 |
 | `JSRuntime`      | (planned) `HermesRuntime` | Meta's Hermes engine                 |
 
@@ -287,7 +288,7 @@ what Rendero does, and how it compares to alternatives.
 | **DOM Shim**       | ~0.1 ms per frame (tree diffing)  | N/A                  | N/A (native bridge)   | N/A (native DOM)      |
 | **CSS Parsing**    | Subset parser in style.js         | N/A (Dart widgets)   | N/A (StyleSheet)      | Full CSS engine       |
 | **Layout**         | Taffy (Rust, fast flexbox)        | Dart layout          | Yoga (C++)            | Blink layout          |
-| **Text Shaping**   | Heuristic (fast, approximate)     | libTxt/Skia          | Platform text         | HarfBuzz (accurate)   |
+| **Text Shaping**   | Parley on native, browser-canvas oracle on WASM, heuristic fallback | libTxt/Skia | Platform text | HarfBuzz (accurate) |
 | **Rasterization**  | CPU tiles (fontdue)               | Skia/Impeller (GPU)  | Platform views        | GPU compositing       |
 | **Compositing**    | Single buffer blit                | GPU compositor       | Platform compositor   | GPU compositor        |
 
@@ -301,8 +302,12 @@ what Rendero does, and how it compares to alternatives.
    scale to complex scenes with many elements, gradients, or blur effects.
    The path to fixing this is wgpu (GPU-accelerated rendering).
 
-3. **Heuristic text measurement** is fast but inaccurate. Text wrapping and
-   multi-line layout will require real shaping (Parley/rustybuzz).
+3. **Text measurement still has one deliberate platform split.** Native uses
+   Parley for real shaping. WASM temporarily uses the browser canvas as the
+   layout oracle because browser sandboxes do not expose font bytes to
+   Fontique/Parley. This is the only intentional measurement divergence in the
+   current architecture and should disappear once browser font loading is wired
+   into the shared Rust text path.
 
 **Where there is zero overhead:**
 

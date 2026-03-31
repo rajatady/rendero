@@ -28,11 +28,21 @@ forward without losing sight of the proper long-term translation model.
 - Browser text nodes are still eagerly measured in the shim with no true
   containing-block width for wrapped copy.
   Reason:
-  browser/WASM still lacks a shared width-aware text measurer wired through the
-  layout trait path.
+  even with `BrowserTextMeasurer` in the WASM trait path, browser Rendero still
+  needs a temporary JS-side eager size sync for some text nodes until
+  constrained wrapping is fully handled through the shared layout pipeline.
   Consequence:
   constrained paragraphs in feature cards stay single-line too long and inflate
   card widths/heights.
+
+- Frame heights currently get a bottom-up safeguard after Taffy layout.
+  Reason:
+  prevent containers from ending above their deepest child while page-height
+  propagation is still being tightened.
+  Consequence:
+  page-height parity is much closer, but one top-level wrapper still remains
+  slightly short and this safeguard should not become a permanent substitute for
+  correct authored/layout inputs.
 
 ## Still Missing Properly
 

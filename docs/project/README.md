@@ -28,9 +28,9 @@ On native: a DOM shim routes framework calls to a Rust rendering engine.
 
 ### Accuracy
 
-**57.01%** layout accuracy on the Apple demo (browser oracle vs Rendero WASM path, 107 elements).
+**60.98%** layout accuracy on the Apple demo (browser oracle vs Rendero WASM path, 107 elements).
 
-Synthetic layout corpus: **83.85%**.
+Synthetic layout corpus: **83.19%**.
 
 7-site corpus with ground truth at 3 viewports: apple-macbook-pro, fin, github, gumroad, hacker-news, linear, tailadmin.
 
@@ -40,7 +40,7 @@ Synthetic layout corpus: **83.85%**.
 |---------|--------|-------|
 | React on browser DOM | Working | Full Apple website, perfect rendering |
 | Vue on browser DOM | Working | Same Apple website |
-| React on WASM canvas | Working | Full Apple page with gradients, layered benchmark pipeline, 57.01% Apple accuracy |
+| React on WASM canvas | Working | Full Apple page with gradients, layered benchmark pipeline, 60.98% Apple accuracy |
 | React on native macOS | Working | Full Apple page renders through the pure Rust shell, headless mode, system fonts wired |
 | Taffy layout engine | Working | 12 tests, flexbox + justify/wrap/margin/position/min-max |
 | Provider architecture | Working | LayoutEngine, TextMeasurer, CssParser, FontResolver, GlyphRasterizer |
@@ -56,10 +56,10 @@ Synthetic layout corpus: **83.85%**.
 
 | Feature | Status | What's Missing |
 |---------|--------|----------------|
-| Layout accuracy | 57.01% Apple / 83.85% synthetic | Remaining gaps are root height, fixed offset, constrained text measurement, and native/browser visual parity |
+| Layout accuracy | 60.98% Apple / 83.19% synthetic | Remaining gaps are constrained feature-card text measurement, one residual top-level wrapper height drift, and native/browser visual parity |
 | CSS font inheritance | Not started | Shim doesn't inherit fontFamily from parent |
-| Text measurement (web) | Partial | canvas.measureText working but font string needs work |
-| Text measurement (native) | Heuristic | Uses `len * fontSize * 0.65`, Parley ready but not wired in |
+| Text measurement (web) | Partial | `BrowserTextMeasurer` is the deliberate WASM oracle path; browser Rendero still carries a temporary JS-side eager text-size sync for some constrained text |
+| Text measurement (native) | Partial | `ParleyTextMeasurer` is the intended path; remaining parity issues are now more about constrained wrapping than total collapse |
 | Percentage resolution | Partial | Basic parent-relative width `%` support is wired; extend to height/min-max/flex-basis/positioned cases |
 | Scroll on native | Partial | Shared scroll contract is wired, but live native parity still needs more validation and window capture |
 | GPU rendering | Not started | CPU tiles work, wgpu backend planned |
@@ -147,7 +147,7 @@ cargo test -p rendero-core
 | Provider traits for everything | Swap implementations without touching API. Mock for testing. Fall back on edge cases. |
 | Taffy for layout (not custom) | Full CSS flexbox + grid. Battle-tested. 0.6ms for 1000 nodes. |
 | softbuffer for now (not wgpu) | Simpler. CPU pixel blit. Swap to wgpu later for GPU rendering. |
-| DOM shim (not custom renderer) | react-dom/Vue work unmodified. Same shim surface is now benchmarked across browser Rendero and native. |
+| DOM shim (not custom renderer) | react-dom/Vue work unmodified. Same shim surface is now benchmarked across browser Rendero and native, with layered artifacts for shim input, engine model, and engine layout. |
 | IIFE bundles for native | QuickJS doesn't support ES modules. IIFE wraps everything in one function. |
 
 ---
