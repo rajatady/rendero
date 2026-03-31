@@ -2,6 +2,7 @@
 //! Thin wrapper. All logic in engine/renderer/crdt crates.
 
 mod bench;
+mod browser_text;
 mod canvas2d;
 mod fig_import;
 mod webgl;
@@ -18,6 +19,8 @@ use rendero_crdt::apply;
 use rendero_crdt::operation::{FractionalIndex, OpKind, Operation};
 use rendero_renderer::pipeline;
 use rendero_renderer::scene::{AABB, RenderItem};
+// BrowserTextMeasurer is used for text measurement on WASM — see browser_text.rs
+// for documentation on why this is a deliberate exception to our single-rendering goal.
 use glam::Vec2;
 use web_sys::CanvasRenderingContext2d;
 
@@ -3787,7 +3790,11 @@ impl CanvasEngine {
         if self.scene_cache.is_none() {
             if let Some(page) = self.document.page_mut(self.current_page) {
                 let root = page.tree.root_id();
-                rendero_core::layout::compute_layout(&mut page.tree, &root);
+                rendero_core::layout::compute_layout_with_text_measurer(
+                    &mut page.tree,
+                    &root,
+                    browser_text::BrowserTextMeasurer::unwrap_or_fallback(),
+                );
             }
         }
 
@@ -4989,7 +4996,11 @@ impl CanvasEngine {
         };
         node.layout_position = Some(LayoutPosition { x, y });
         let root_id = page.tree.root_id();
-        rendero_core::layout::compute_layout(&mut page.tree, &root_id);
+        rendero_core::layout::compute_layout_with_text_measurer(
+            &mut page.tree,
+            &root_id,
+            browser_text::BrowserTextMeasurer::unwrap_or_fallback(),
+        );
         self.mark_dirty();
         true
     }
@@ -5078,7 +5089,11 @@ impl CanvasEngine {
         };
         node.margin = LayoutMargin { top, right, bottom, left, auto_top, auto_right, auto_bottom, auto_left };
         let root_id = page.tree.root_id();
-        rendero_core::layout::compute_layout(&mut page.tree, &root_id);
+        rendero_core::layout::compute_layout_with_text_measurer(
+            &mut page.tree,
+            &root_id,
+            browser_text::BrowserTextMeasurer::unwrap_or_fallback(),
+        );
         self.mark_dirty();
         true
     }
@@ -6198,7 +6213,11 @@ impl CanvasEngine {
         }
         // Run layout computation
         let root_id = page.tree.root_id();
-        rendero_core::layout::compute_layout(&mut page.tree, &root_id);
+        rendero_core::layout::compute_layout_with_text_measurer(
+            &mut page.tree,
+            &root_id,
+            browser_text::BrowserTextMeasurer::unwrap_or_fallback(),
+        );
         // Structural: auto-layout repositions/resizes multiple children recursively.
         // TODO(perf): compute_layout could return a list of moved nodes for incremental patching.
         self.mark_dirty();
