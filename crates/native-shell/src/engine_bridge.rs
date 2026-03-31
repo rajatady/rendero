@@ -377,6 +377,9 @@ impl Engine {
                     if let Some(node) = page.tree.get_mut(&node_id) {
                         node.width = args[2] as f32;
                         node.height = args[3] as f32;
+                        if matches!(node.kind, NodeKind::Text { .. }) {
+                            node.text_size_locked = true;
+                        }
                         if node.width > 0.0 {
                             node.width_percent = None;
                         }
@@ -488,6 +491,7 @@ impl Engine {
                     if let Some(node) = page.tree.get_mut(&node_id) {
                         if let NodeKind::Text { ref mut runs, .. } = node.kind {
                             let sz = args[2] as f32;
+                            node.text_size_locked = false;
                             for run in runs.iter_mut() { run.font_size = sz; }
                             // Don't set width/height here — let Taffy's text measurer
                             // or JS browser measurement handle sizing.
@@ -501,6 +505,7 @@ impl Engine {
                 if let Some(page) = self.document.page_mut(self.current_page) {
                     if let Some(node) = page.tree.get_mut(&node_id) {
                         if let NodeKind::Text { ref mut runs, .. } = node.kind {
+                            node.text_size_locked = false;
                             for run in runs.iter_mut() { run.font_weight = args[2] as u16; }
                         }
                     }
@@ -701,6 +706,7 @@ impl Engine {
                     if let Some(node) = page.tree.get_mut(&node_id) {
                         if let NodeKind::Text { ref mut runs, .. } = node.kind {
                             if let Some(run) = runs.first_mut() {
+                                node.text_size_locked = false;
                                 run.text = text.to_string();
                                 // Don't set width/height — let layout engine measure.
                             }
@@ -714,6 +720,7 @@ impl Engine {
                 if let Some(page) = self.document.page_mut(self.current_page) {
                     if let Some(node) = page.tree.get_mut(&node_id) {
                         if let NodeKind::Text { ref mut runs, .. } = node.kind {
+                            node.text_size_locked = false;
                             for run in runs.iter_mut() {
                                 run.font_family = text.to_string();
                             }
@@ -727,6 +734,7 @@ impl Engine {
                 if let Some(page) = self.document.page_mut(self.current_page) {
                     if let Some(node) = page.tree.get_mut(&node_id) {
                         if let NodeKind::Text { ref mut runs, .. } = node.kind {
+                            node.text_size_locked = false;
                             for run in runs.iter_mut() {
                                 run.letter_spacing = args[2] as f32;
                             }
@@ -741,6 +749,7 @@ impl Engine {
                     if let Some(node) = page.tree.get_mut(&node_id) {
                         if let NodeKind::Text { ref mut runs, .. } = node.kind {
                             let height = args[2] as f32;
+                            node.text_size_locked = false;
                             for run in runs.iter_mut() {
                                 run.line_height = if height > 0.0 { Some(height) } else { None };
                             }

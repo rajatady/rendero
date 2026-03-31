@@ -46,18 +46,33 @@ fn font_cache() -> &'static Mutex<HashMap<fontdb::ID, Font>> {
 /// Resolve a font family name + weight + italic to a fontdue Font.
 /// Falls back to the embedded RobotoMono if no system font matches.
 fn resolve_font(family: &str, weight: u16, italic: bool) -> &'static Font {
-    if family.is_empty() || family == "Inter" || family == "monospace" {
-        return default_font();
-    }
-
     let db = font_db();
-
-    // Try the requested family
-    let query = fontdb::Query {
-        families: &[fontdb::Family::Name(family)],
-        weight: fontdb::Weight(weight),
-        style: if italic { fontdb::Style::Italic } else { fontdb::Style::Normal },
-        ..Default::default()
+    let style = if italic { fontdb::Style::Italic } else { fontdb::Style::Normal };
+    let query = match family {
+        "" | "Times" | "Times New Roman" | "serif" => fontdb::Query {
+            families: &[fontdb::Family::Serif],
+            weight: fontdb::Weight(weight),
+            style,
+            ..Default::default()
+        },
+        "sans-serif" | "system-ui" | "-apple-system" | "Inter" => fontdb::Query {
+            families: &[fontdb::Family::SansSerif],
+            weight: fontdb::Weight(weight),
+            style,
+            ..Default::default()
+        },
+        "monospace" => fontdb::Query {
+            families: &[fontdb::Family::Monospace],
+            weight: fontdb::Weight(weight),
+            style,
+            ..Default::default()
+        },
+        _ => fontdb::Query {
+            families: &[fontdb::Family::Name(family)],
+            weight: fontdb::Weight(weight),
+            style,
+            ..Default::default()
+        },
     };
 
     let face_id = match db.query(&query) {
@@ -67,7 +82,7 @@ fn resolve_font(family: &str, weight: u16, italic: bool) -> &'static Font {
             let fallback = fontdb::Query {
                 families: &[fontdb::Family::SansSerif],
                 weight: fontdb::Weight(weight),
-                style: if italic { fontdb::Style::Italic } else { fontdb::Style::Normal },
+                style,
                 ..Default::default()
             };
             match db.query(&fallback) {

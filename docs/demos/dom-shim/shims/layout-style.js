@@ -64,6 +64,8 @@ export function buildAutoLayout(values, { isText, hasChildren }) {
     const dir = values.flexDirection === 'row' || values.flexDirection === 'row-reverse' ? 0 : 1;
     const gap = parseLength(values.gap) || parseLength(values.rowGap) || parseLength(values.columnGap) || 0;
 
+    const align = values.alignItems ? parseAlignMode(values.alignItems) : 3;
+
     return {
         direction: dir,
         spacing: gap,
@@ -71,7 +73,7 @@ export function buildAutoLayout(values, { isText, hasChildren }) {
         padRight: parseLength(values.paddingRight) || parseLength(values.padding) || 0,
         padBottom: parseLength(values.paddingBottom) || parseLength(values.padding) || 0,
         padLeft: parseLength(values.paddingLeft) || parseLength(values.padding) || 0,
-        align: parseAlignMode(values.alignItems),
+        align,
         justify: parseJustifyMode(values.justifyContent),
         wrap: values.flexWrap === 'wrap' ? 1 : 0,
     };

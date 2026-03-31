@@ -41,6 +41,32 @@ impl TextMeasurer for ParleyTextMeasurer {
             return (0.0, 0.0);
         }
 
+        if max_width == 0.0 {
+            let mut max_word_width = 0.0f32;
+            let mut max_line_height = 0.0f32;
+
+            for run in runs {
+                let line_height = run.line_height.unwrap_or(run.font_size * 1.2).max(run.font_size);
+                max_line_height = max_line_height.max(line_height);
+
+                let mut saw_word = false;
+                for word in run.text.split_whitespace() {
+                    saw_word = true;
+                    let mut single = run.clone();
+                    single.text = word.to_string();
+                    let (w, _) = self.measure(&[single], f32::INFINITY);
+                    max_word_width = max_word_width.max(w);
+                }
+
+                if !saw_word && !run.text.is_empty() {
+                    let (w, _) = self.measure(&[run.clone()], f32::INFINITY);
+                    max_word_width = max_word_width.max(w);
+                }
+            }
+
+            return (max_word_width.ceil(), max_line_height.ceil());
+        }
+
         // Parley needs &mut — use interior mutability pattern
         // Since TextMeasurer::measure takes &self, we need unsafe or RefCell.
         // For now, rebuild contexts per call. This is slightly wasteful but correct.
@@ -57,7 +83,6 @@ impl TextMeasurer for ParleyTextMeasurer {
         let scale = 1.0;
         let mut builder = layout_cx.ranged_builder(&mut font_cx, &full_text, scale);
         builder.push_default(StyleProperty::FontSize(16.0));
-        builder.push_default(StyleProperty::LineHeight(1.2));
 
         // Apply styles per run
         let mut offset = 0;

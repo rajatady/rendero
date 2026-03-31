@@ -247,6 +247,11 @@ pub struct Node {
     #[serde(default)]
     pub size_constraints: LayoutSizeConstraints,
 
+    /// Text nodes only: when true, width/height are authored inputs and must
+    /// bypass text measurement. Measured layout results must not flip this on.
+    #[serde(default)]
+    pub text_size_locked: bool,
+
     // Figma-style constraints: how child responds to parent resize
     pub constraint_horizontal: ConstraintType,
     pub constraint_vertical: ConstraintType,
@@ -279,6 +284,7 @@ impl Node {
             margin: LayoutMargin::default(),
             layout_position: None,
             size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -306,6 +312,7 @@ impl Node {
             margin: LayoutMargin::default(),
             layout_position: None,
             size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -334,6 +341,7 @@ impl Node {
             margin: LayoutMargin::default(),
             layout_position: None,
             size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -355,7 +363,7 @@ impl Node {
             kind: NodeKind::Text {
                 runs: vec![TextRun {
                     text: content.to_string(),
-                    font_family: "Inter".to_string(),
+                    font_family: "Times".to_string(),
                     font_size,
                     font_weight: 400,
                     italic: false,
@@ -374,6 +382,7 @@ impl Node {
             margin: LayoutMargin::default(),
             layout_position: None,
             size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -398,6 +407,7 @@ impl Node {
             margin: LayoutMargin::default(),
             layout_position: None,
             size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -425,6 +435,7 @@ impl Node {
             margin: LayoutMargin::default(),
             layout_position: None,
             size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -453,6 +464,7 @@ impl Node {
             margin: LayoutMargin::default(),
             layout_position: None,
             size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,

@@ -1,10 +1,10 @@
 {
   "totalProperties": 428,
-  "matchCount": 261,
-  "mismatchCount": 167,
-  "accuracy": 60.98,
+  "matchCount": 192,
+  "mismatchCount": 236,
+  "accuracy": 44.86,
   "elementsPaired": 107,
-  "elementsWithMismatches": 89,
+  "elementsWithMismatches": 101,
   "mismatches": [
     {
       "index": 0,
@@ -20,14 +20,14 @@
         "x": 0,
         "y": 0,
         "width": 1440,
-        "height": 2973
+        "height": 3477
       },
       "mismatches": [
         {
           "property": "height",
           "browser": 2966.8,
-          "engine": 2973,
-          "diff": 6.2
+          "engine": 3477,
+          "diff": 510.2
         }
       ]
     },
@@ -45,14 +45,39 @@
         "x": 0,
         "y": 0,
         "width": 1440,
-        "height": 2931
+        "height": 2953
       },
       "mismatches": [
         {
           "property": "height",
           "browser": 2966.8,
-          "engine": 2931,
-          "diff": 35.8
+          "engine": 2953,
+          "diff": 13.8
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "tag": "span",
+      "text": "Store",
+      "browser_bounds": {
+        "x": 298.2,
+        "y": -29,
+        "width": 25.3,
+        "height": 14
+      },
+      "engine_bounds": {
+        "x": 299,
+        "y": -29,
+        "width": 26,
+        "height": 15
+      },
+      "mismatches": [
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -70,7 +95,7 @@
         "x": 357,
         "y": -29,
         "width": 22,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
@@ -78,6 +103,12 @@
           "browser": 355.6,
           "engine": 357,
           "diff": 1.4
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -95,7 +126,7 @@
         "x": 411,
         "y": -29,
         "width": 22,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
@@ -103,6 +134,12 @@
           "browser": 408.9,
           "engine": 411,
           "diff": 2.1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -120,7 +157,7 @@
         "x": 465,
         "y": -29,
         "width": 34,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
@@ -128,6 +165,12 @@
           "browser": 462.3,
           "engine": 465,
           "diff": 2.7
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -145,7 +188,7 @@
         "x": 531,
         "y": -29,
         "width": 31,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
@@ -153,6 +196,12 @@
           "browser": 527.6,
           "engine": 531,
           "diff": 3.4
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -170,7 +219,7 @@
         "x": 594,
         "y": -29,
         "width": 32,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
@@ -178,6 +227,12 @@
           "browser": 590,
           "engine": 594,
           "diff": 4
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -195,7 +250,7 @@
         "x": 658,
         "y": -29,
         "width": 40,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
@@ -203,6 +258,12 @@
           "browser": 653.3,
           "engine": 658,
           "diff": 4.7
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -220,7 +281,7 @@
         "x": 730,
         "y": -29,
         "width": 61,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
@@ -228,6 +289,12 @@
           "browser": 724.6,
           "engine": 730,
           "diff": 5.4
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -245,7 +312,7 @@
         "x": 823,
         "y": -29,
         "width": 68,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
@@ -253,6 +320,12 @@
           "browser": 817,
           "engine": 823,
           "diff": 6
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -270,7 +343,7 @@
         "x": 923,
         "y": -29,
         "width": 58,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
@@ -278,6 +351,12 @@
           "browser": 917,
           "engine": 923,
           "diff": 6
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -295,7 +374,7 @@
         "x": 1013,
         "y": -29,
         "width": 39,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
@@ -309,6 +388,37 @@
           "browser": 38,
           "engine": 39,
           "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "tag": "section",
+      "text": "",
+      "browser_bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 833.8
+      },
+      "engine_bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 838
+      },
+      "mismatches": [
+        {
+          "property": "height",
+          "browser": 833.8,
+          "engine": 838,
+          "diff": 4.2
         }
       ]
     },
@@ -338,6 +448,37 @@
       ]
     },
     {
+      "index": 21,
+      "tag": "p",
+      "text": "Hello, Apple Intelligence.",
+      "browser_bounds": {
+        "x": 575.4,
+        "y": 257.8,
+        "width": 289.3,
+        "height": 32
+      },
+      "engine_bounds": {
+        "x": 575,
+        "y": 258,
+        "width": 291,
+        "height": 34
+      },
+      "mismatches": [
+        {
+          "property": "width",
+          "browser": 289.3,
+          "engine": 291,
+          "diff": 1.7
+        },
+        {
+          "property": "height",
+          "browser": 32,
+          "engine": 34,
+          "diff": 2
+        }
+      ]
+    },
+    {
       "index": 22,
       "tag": "div",
       "text": "",
@@ -349,16 +490,165 @@
       },
       "engine_bounds": {
         "x": 624,
-        "y": 310,
+        "y": 312,
         "width": 192,
-        "height": 24
+        "height": 26
       },
       "mismatches": [
+        {
+          "property": "y",
+          "browser": 309.8,
+          "engine": 312,
+          "diff": 2.2
+        },
         {
           "property": "width",
           "browser": 190.6,
           "engine": 192,
           "diff": 1.4
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "tag": "span",
+      "text": "Learn more >",
+      "browser_bounds": {
+        "x": 624.7,
+        "y": 309.8,
+        "width": 114.5,
+        "height": 24
+      },
+      "engine_bounds": {
+        "x": 624,
+        "y": 312,
+        "width": 115,
+        "height": 26
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 309.8,
+          "engine": 312,
+          "diff": 2.2
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "tag": "span",
+      "text": "Buy >",
+      "browser_bounds": {
+        "x": 763.2,
+        "y": 309.8,
+        "width": 52.1,
+        "height": 24
+      },
+      "engine_bounds": {
+        "x": 763,
+        "y": 312,
+        "width": 53,
+        "height": 26
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 309.8,
+          "engine": 312,
+          "diff": 2.2
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
+        }
+      ]
+    },
+    {
+      "index": 25,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 370,
+        "y": 373.8,
+        "width": 700,
+        "height": 400
+      },
+      "engine_bounds": {
+        "x": 370,
+        "y": 378,
+        "width": 700,
+        "height": 400
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 373.8,
+          "engine": 378,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 120,
+        "y": 833.8,
+        "width": 1200,
+        "height": 1036
+      },
+      "engine_bounds": {
+        "x": 120,
+        "y": 838,
+        "width": 1200,
+        "height": 1036
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 833.8,
+          "engine": 838,
+          "diff": 4.2
+        }
+      ]
+    },
+    {
+      "index": 27,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 132,
+        "y": 845.8,
+        "width": 582,
+        "height": 500
+      },
+      "engine_bounds": {
+        "x": 132,
+        "y": 850,
+        "width": 582,
+        "height": 500
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 845.8,
+          "engine": 850,
+          "diff": 4.2
         }
       ]
     },
@@ -374,16 +664,16 @@
       },
       "engine_bounds": {
         "x": 305,
-        "y": 894,
+        "y": 898,
         "width": 236,
-        "height": 42
+        "height": 44
       },
       "mismatches": [
         {
-          "property": "height",
-          "browser": 44,
-          "engine": 42,
-          "diff": 2
+          "property": "y",
+          "browser": 893.8,
+          "engine": 898,
+          "diff": 4.2
         }
       ]
     },
@@ -399,16 +689,16 @@
       },
       "engine_bounds": {
         "x": 298,
-        "y": 942,
+        "y": 948,
         "width": 250,
-        "height": 23
+        "height": 26
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 943.8,
-          "engine": 942,
-          "diff": 1.8
+          "engine": 948,
+          "diff": 4.2
         },
         {
           "property": "width",
@@ -419,8 +709,8 @@
         {
           "property": "height",
           "browser": 24,
-          "engine": 23,
-          "diff": 1
+          "engine": 26,
+          "diff": 2
         }
       ]
     },
@@ -436,22 +726,28 @@
       },
       "engine_bounds": {
         "x": 345,
-        "y": 979,
+        "y": 988,
         "width": 156,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 981.8,
-          "engine": 979,
-          "diff": 2.8
+          "engine": 988,
+          "diff": 6.2
         },
         {
           "property": "width",
           "browser": 154.8,
           "engine": 156,
           "diff": 1.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -467,16 +763,22 @@
       },
       "engine_bounds": {
         "x": 345,
-        "y": 979,
+        "y": 988,
         "width": 93,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 981.8,
-          "engine": 979,
-          "diff": 2.8
+          "engine": 988,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -492,16 +794,22 @@
       },
       "engine_bounds": {
         "x": 458,
-        "y": 979,
+        "y": 988,
         "width": 43,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 981.8,
-          "engine": 979,
-          "diff": 2.8
+          "engine": 988,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -517,22 +825,47 @@
       },
       "engine_bounds": {
         "x": 172,
-        "y": 1029,
+        "y": 1039,
         "width": 502,
-        "height": 269
+        "height": 263
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1031.8,
-          "engine": 1029,
-          "diff": 2.8
+          "engine": 1039,
+          "diff": 7.2
         },
         {
           "property": "height",
           "browser": 266,
-          "engine": 269,
+          "engine": 263,
           "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 34,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 726,
+        "y": 845.8,
+        "width": 582,
+        "height": 500
+      },
+      "engine_bounds": {
+        "x": 726,
+        "y": 850,
+        "width": 582,
+        "height": 500
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 845.8,
+          "engine": 850,
+          "diff": 4.2
         }
       ]
     },
@@ -547,17 +880,29 @@
         "height": 44
       },
       "engine_bounds": {
-        "x": 902,
-        "y": 894,
-        "width": 230,
-        "height": 42
+        "x": 901,
+        "y": 898,
+        "width": 233,
+        "height": 44
       },
       "mismatches": [
         {
-          "property": "height",
-          "browser": 44,
-          "engine": 42,
-          "diff": 2
+          "property": "x",
+          "browser": 902,
+          "engine": 901,
+          "diff": 1
+        },
+        {
+          "property": "y",
+          "browser": 893.8,
+          "engine": 898,
+          "diff": 4.2
+        },
+        {
+          "property": "width",
+          "browser": 230,
+          "engine": 233,
+          "diff": 3
         }
       ]
     },
@@ -573,22 +918,22 @@
       },
       "engine_bounds": {
         "x": 906,
-        "y": 942,
+        "y": 948,
         "width": 222,
-        "height": 23
+        "height": 26
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 943.8,
-          "engine": 942,
-          "diff": 1.8
+          "engine": 948,
+          "diff": 4.2
         },
         {
           "property": "height",
           "browser": 24,
-          "engine": 23,
-          "diff": 1
+          "engine": 26,
+          "diff": 2
         }
       ]
     },
@@ -604,22 +949,28 @@
       },
       "engine_bounds": {
         "x": 939,
-        "y": 979,
+        "y": 988,
         "width": 156,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 981.8,
-          "engine": 979,
-          "diff": 2.8
+          "engine": 988,
+          "diff": 6.2
         },
         {
           "property": "width",
           "browser": 154.8,
           "engine": 156,
           "diff": 1.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -635,16 +986,22 @@
       },
       "engine_bounds": {
         "x": 939,
-        "y": 979,
+        "y": 988,
         "width": 93,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 981.8,
-          "engine": 979,
-          "diff": 2.8
+          "engine": 988,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -660,16 +1017,22 @@
       },
       "engine_bounds": {
         "x": 1052,
-        "y": 979,
+        "y": 988,
         "width": 43,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 981.8,
-          "engine": 979,
-          "diff": 2.8
+          "engine": 988,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -685,22 +1048,47 @@
       },
       "engine_bounds": {
         "x": 766,
-        "y": 1029,
+        "y": 1039,
         "width": 502,
-        "height": 269
+        "height": 263
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1031.8,
-          "engine": 1029,
-          "diff": 2.8
+          "engine": 1039,
+          "diff": 7.2
         },
         {
           "property": "height",
           "browser": 266,
-          "engine": 269,
+          "engine": 263,
           "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 41,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 132,
+        "y": 1357.8,
+        "width": 582,
+        "height": 500
+      },
+      "engine_bounds": {
+        "x": 132,
+        "y": 1362,
+        "width": 582,
+        "height": 500
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1357.8,
+          "engine": 1362,
+          "diff": 4.2
         }
       ]
     },
@@ -716,16 +1104,16 @@
       },
       "engine_bounds": {
         "x": 348,
-        "y": 1406,
+        "y": 1410,
         "width": 150,
-        "height": 42
+        "height": 44
       },
       "mismatches": [
         {
-          "property": "height",
-          "browser": 44,
-          "engine": 42,
-          "diff": 2
+          "property": "y",
+          "browser": 1405.8,
+          "engine": 1410,
+          "diff": 4.2
         }
       ]
     },
@@ -741,22 +1129,22 @@
       },
       "engine_bounds": {
         "x": 366,
-        "y": 1454,
+        "y": 1460,
         "width": 114,
-        "height": 23
+        "height": 26
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1455.8,
-          "engine": 1454,
-          "diff": 1.8
+          "engine": 1460,
+          "diff": 4.2
         },
         {
           "property": "height",
           "browser": 24,
-          "engine": 23,
-          "diff": 1
+          "engine": 26,
+          "diff": 2
         }
       ]
     },
@@ -772,22 +1160,28 @@
       },
       "engine_bounds": {
         "x": 345,
-        "y": 1491,
+        "y": 1500,
         "width": 156,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1493.8,
-          "engine": 1491,
-          "diff": 2.8
+          "engine": 1500,
+          "diff": 6.2
         },
         {
           "property": "width",
           "browser": 154.8,
           "engine": 156,
           "diff": 1.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -803,16 +1197,22 @@
       },
       "engine_bounds": {
         "x": 345,
-        "y": 1491,
+        "y": 1500,
         "width": 93,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1493.8,
-          "engine": 1491,
-          "diff": 2.8
+          "engine": 1500,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -828,16 +1228,22 @@
       },
       "engine_bounds": {
         "x": 458,
-        "y": 1491,
+        "y": 1500,
         "width": 43,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1493.8,
-          "engine": 1491,
-          "diff": 2.8
+          "engine": 1500,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -853,22 +1259,47 @@
       },
       "engine_bounds": {
         "x": 172,
-        "y": 1541,
+        "y": 1551,
         "width": 502,
-        "height": 269
+        "height": 263
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1543.8,
-          "engine": 1541,
-          "diff": 2.8
+          "engine": 1551,
+          "diff": 7.2
         },
         {
           "property": "height",
           "browser": 266,
-          "engine": 269,
+          "engine": 263,
           "diff": 3
+        }
+      ]
+    },
+    {
+      "index": 48,
+      "tag": "div",
+      "text": "",
+      "browser_bounds": {
+        "x": 726,
+        "y": 1357.8,
+        "width": 582,
+        "height": 500
+      },
+      "engine_bounds": {
+        "x": 726,
+        "y": 1362,
+        "width": 582,
+        "height": 500
+      },
+      "mismatches": [
+        {
+          "property": "y",
+          "browser": 1357.8,
+          "engine": 1362,
+          "diff": 4.2
         }
       ]
     },
@@ -883,17 +1314,29 @@
         "height": 44
       },
       "engine_bounds": {
-        "x": 945,
-        "y": 1406,
-        "width": 144,
-        "height": 42
+        "x": 944,
+        "y": 1410,
+        "width": 146,
+        "height": 44
       },
       "mismatches": [
         {
-          "property": "height",
-          "browser": 44,
-          "engine": 42,
-          "diff": 2
+          "property": "x",
+          "browser": 945.3,
+          "engine": 944,
+          "diff": 1.3
+        },
+        {
+          "property": "y",
+          "browser": 1405.8,
+          "engine": 1410,
+          "diff": 4.2
+        },
+        {
+          "property": "width",
+          "browser": 143.4,
+          "engine": 146,
+          "diff": 2.6
         }
       ]
     },
@@ -908,23 +1351,29 @@
         "height": 24
       },
       "engine_bounds": {
-        "x": 976,
-        "y": 1454,
-        "width": 83,
-        "height": 23
+        "x": 975,
+        "y": 1460,
+        "width": 85,
+        "height": 26
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1455.8,
-          "engine": 1454,
-          "diff": 1.8
+          "engine": 1460,
+          "diff": 4.2
+        },
+        {
+          "property": "width",
+          "browser": 82.9,
+          "engine": 85,
+          "diff": 2.1
         },
         {
           "property": "height",
           "browser": 24,
-          "engine": 23,
-          "diff": 1
+          "engine": 26,
+          "diff": 2
         }
       ]
     },
@@ -940,22 +1389,28 @@
       },
       "engine_bounds": {
         "x": 939,
-        "y": 1491,
+        "y": 1500,
         "width": 156,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1493.8,
-          "engine": 1491,
-          "diff": 2.8
+          "engine": 1500,
+          "diff": 6.2
         },
         {
           "property": "width",
           "browser": 154.8,
           "engine": 156,
           "diff": 1.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -971,16 +1426,22 @@
       },
       "engine_bounds": {
         "x": 939,
-        "y": 1491,
+        "y": 1500,
         "width": 93,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1493.8,
-          "engine": 1491,
-          "diff": 2.8
+          "engine": 1500,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -996,16 +1457,22 @@
       },
       "engine_bounds": {
         "x": 1052,
-        "y": 1491,
+        "y": 1500,
         "width": 43,
-        "height": 20
+        "height": 21
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1493.8,
-          "engine": 1491,
-          "diff": 2.8
+          "engine": 1500,
+          "diff": 6.2
+        },
+        {
+          "property": "height",
+          "browser": 20,
+          "engine": 21,
+          "diff": 1
         }
       ]
     },
@@ -1021,21 +1488,21 @@
       },
       "engine_bounds": {
         "x": 766,
-        "y": 1541,
+        "y": 1551,
         "width": 502,
-        "height": 269
+        "height": 263
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 1543.8,
-          "engine": 1541,
-          "diff": 2.8
+          "engine": 1551,
+          "diff": 7.2
         },
         {
           "property": "height",
           "browser": 266,
-          "engine": 269,
+          "engine": 263,
           "diff": 3
         }
       ]
@@ -1052,16 +1519,65 @@
       },
       "engine_bounds": {
         "x": 0,
-        "y": 1870,
+        "y": 1874,
         "width": 1440,
-        "height": 462
+        "height": 447
       },
       "mismatches": [
         {
+          "property": "y",
+          "browser": 1869.8,
+          "engine": 1874,
+          "diff": 4.2
+        },
+        {
           "property": "height",
           "browser": 483,
-          "engine": 462,
-          "diff": 21
+          "engine": 447,
+          "diff": 36
+        }
+      ]
+    },
+    {
+      "index": 56,
+      "tag": "h2",
+      "text": "Why Apple.",
+      "browser_bounds": {
+        "x": 598.6,
+        "y": 1949.8,
+        "width": 242.8,
+        "height": 55
+      },
+      "engine_bounds": {
+        "x": 597,
+        "y": 1954,
+        "width": 246,
+        "height": 58
+      },
+      "mismatches": [
+        {
+          "property": "x",
+          "browser": 598.6,
+          "engine": 597,
+          "diff": 1.6
+        },
+        {
+          "property": "y",
+          "browser": 1949.8,
+          "engine": 1954,
+          "diff": 4.2
+        },
+        {
+          "property": "width",
+          "browser": 242.8,
+          "engine": 246,
+          "diff": 3.2
+        },
+        {
+          "property": "height",
+          "browser": 55,
+          "engine": 58,
+          "diff": 3
         }
       ]
     },
@@ -1077,16 +1593,22 @@
       },
       "engine_bounds": {
         "x": 230,
-        "y": 2055,
+        "y": 2062,
         "width": 980,
-        "height": 197
+        "height": 179
       },
       "mismatches": [
         {
+          "property": "y",
+          "browser": 2054.8,
+          "engine": 2062,
+          "diff": 7.2
+        },
+        {
           "property": "height",
           "browser": 218,
-          "engine": 197,
-          "diff": 21
+          "engine": 179,
+          "diff": 39
         }
       ]
     },
@@ -1102,22 +1624,22 @@
       },
       "engine_bounds": {
         "x": 252,
-        "y": 2055,
-        "width": 352,
-        "height": 197
+        "y": 2062,
+        "width": 292,
+        "height": 179
       },
       "mismatches": [
         {
-          "property": "width",
-          "browser": 292,
-          "engine": 352,
-          "diff": 60
+          "property": "y",
+          "browser": 2054.8,
+          "engine": 2062,
+          "diff": 7.2
         },
         {
           "property": "height",
           "browser": 218,
-          "engine": 197,
-          "diff": 21
+          "engine": 179,
+          "diff": 39
         }
       ]
     },
@@ -1132,17 +1654,23 @@
         "height": 56
       },
       "engine_bounds": {
-        "x": 400,
-        "y": 2085,
+        "x": 370,
+        "y": 2092,
         "width": 56,
-        "height": 56
+        "height": 34
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 370,
-          "engine": 400,
-          "diff": 30
+          "property": "y",
+          "browser": 2084.8,
+          "engine": 2092,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 56,
+          "engine": 34,
+          "diff": 22
         }
       ]
     },
@@ -1157,17 +1685,23 @@
         "height": 37
       },
       "engine_bounds": {
-        "x": 414,
-        "y": 2095,
+        "x": 384,
+        "y": 2092,
         "width": 28,
-        "height": 37
+        "height": 34
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 384,
-          "engine": 414,
-          "diff": 30
+          "property": "y",
+          "browser": 2094.3,
+          "engine": 2092,
+          "diff": 2.3
+        },
+        {
+          "property": "height",
+          "browser": 37,
+          "engine": 34,
+          "diff": 3
         }
       ]
     },
@@ -1182,17 +1716,23 @@
         "height": 28
       },
       "engine_bounds": {
-        "x": 335,
-        "y": 2157,
+        "x": 305,
+        "y": 2142,
         "width": 186,
-        "height": 28
+        "height": 29
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 305,
-          "engine": 335,
-          "diff": 30
+          "property": "y",
+          "browser": 2156.8,
+          "engine": 2142,
+          "diff": 14.8
+        },
+        {
+          "property": "height",
+          "browser": 28,
+          "engine": 29,
+          "diff": 1
         }
       ]
     },
@@ -1207,23 +1747,29 @@
         "height": 42
       },
       "engine_bounds": {
-        "x": 282,
-        "y": 2201,
-        "width": 292,
-        "height": 21
+        "x": 299,
+        "y": 2187,
+        "width": 198,
+        "height": 42
       },
       "mismatches": [
         {
-          "property": "width",
-          "browser": 232,
-          "engine": 292,
-          "diff": 60
+          "property": "x",
+          "browser": 282,
+          "engine": 299,
+          "diff": 17
         },
         {
-          "property": "height",
-          "browser": 42,
-          "engine": 21,
-          "diff": 21
+          "property": "y",
+          "browser": 2200.8,
+          "engine": 2187,
+          "diff": 13.8
+        },
+        {
+          "property": "width",
+          "browser": 232,
+          "engine": 198,
+          "diff": 34
         }
       ]
     },
@@ -1238,29 +1784,23 @@
         "height": 218
       },
       "engine_bounds": {
-        "x": 634,
-        "y": 2055,
-        "width": 280,
-        "height": 197
+        "x": 574,
+        "y": 2062,
+        "width": 292,
+        "height": 179
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 574,
-          "engine": 634,
-          "diff": 60
-        },
-        {
-          "property": "width",
-          "browser": 292,
-          "engine": 280,
-          "diff": 12
+          "property": "y",
+          "browser": 2054.8,
+          "engine": 2062,
+          "diff": 7.2
         },
         {
           "property": "height",
           "browser": 218,
-          "engine": 197,
-          "diff": 21
+          "engine": 179,
+          "diff": 39
         }
       ]
     },
@@ -1275,17 +1815,23 @@
         "height": 56
       },
       "engine_bounds": {
-        "x": 746,
-        "y": 2085,
+        "x": 692,
+        "y": 2092,
         "width": 56,
-        "height": 56
+        "height": 34
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 692,
-          "engine": 746,
-          "diff": 54
+          "property": "y",
+          "browser": 2084.8,
+          "engine": 2092,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 56,
+          "engine": 34,
+          "diff": 22
         }
       ]
     },
@@ -1300,17 +1846,23 @@
         "height": 37
       },
       "engine_bounds": {
-        "x": 760,
-        "y": 2095,
+        "x": 706,
+        "y": 2092,
         "width": 28,
-        "height": 37
+        "height": 34
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 706,
-          "engine": 760,
-          "diff": 54
+          "property": "y",
+          "browser": 2094.3,
+          "engine": 2092,
+          "diff": 2.3
+        },
+        {
+          "property": "height",
+          "browser": 37,
+          "engine": 34,
+          "diff": 3
         }
       ]
     },
@@ -1325,17 +1877,23 @@
         "height": 28
       },
       "engine_bounds": {
-        "x": 735,
-        "y": 2157,
+        "x": 681,
+        "y": 2142,
         "width": 79,
-        "height": 28
+        "height": 29
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 680.7,
-          "engine": 735,
-          "diff": 54.3
+          "property": "y",
+          "browser": 2156.8,
+          "engine": 2142,
+          "diff": 14.8
+        },
+        {
+          "property": "height",
+          "browser": 28,
+          "engine": 29,
+          "diff": 1
         }
       ]
     },
@@ -1350,17 +1908,17 @@
         "height": 21
       },
       "engine_bounds": {
-        "x": 664,
-        "y": 2201,
+        "x": 610,
+        "y": 2187,
         "width": 220,
         "height": 21
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 610.3,
-          "engine": 664,
-          "diff": 53.7
+          "property": "y",
+          "browser": 2200.8,
+          "engine": 2187,
+          "diff": 13.8
         }
       ]
     },
@@ -1375,29 +1933,23 @@
         "height": 218
       },
       "engine_bounds": {
-        "x": 944,
-        "y": 2055,
-        "width": 267,
-        "height": 197
+        "x": 896,
+        "y": 2062,
+        "width": 292,
+        "height": 179
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 896,
-          "engine": 944,
-          "diff": 48
-        },
-        {
-          "property": "width",
-          "browser": 292,
-          "engine": 267,
-          "diff": 25
+          "property": "y",
+          "browser": 2054.8,
+          "engine": 2062,
+          "diff": 7.2
         },
         {
           "property": "height",
           "browser": 218,
-          "engine": 197,
-          "diff": 21
+          "engine": 179,
+          "diff": 39
         }
       ]
     },
@@ -1412,17 +1964,23 @@
         "height": 56
       },
       "engine_bounds": {
-        "x": 1050,
-        "y": 2085,
+        "x": 1014,
+        "y": 2092,
         "width": 56,
-        "height": 56
+        "height": 37
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 1014,
-          "engine": 1050,
-          "diff": 36
+          "property": "y",
+          "browser": 2084.8,
+          "engine": 2092,
+          "diff": 7.2
+        },
+        {
+          "property": "height",
+          "browser": 56,
+          "engine": 37,
+          "diff": 19
         }
       ]
     },
@@ -1437,17 +1995,17 @@
         "height": 37
       },
       "engine_bounds": {
-        "x": 1064,
-        "y": 2095,
+        "x": 1028,
+        "y": 2094,
         "width": 28,
-        "height": 37
+        "height": 34
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 1028,
-          "engine": 1064,
-          "diff": 36
+          "property": "height",
+          "browser": 37,
+          "engine": 34,
+          "diff": 3
         }
       ]
     },
@@ -1462,17 +2020,23 @@
         "height": 28
       },
       "engine_bounds": {
-        "x": 1010,
-        "y": 2157,
+        "x": 974,
+        "y": 2145,
         "width": 136,
-        "height": 28
+        "height": 29
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 974.2,
-          "engine": 1010,
-          "diff": 35.8
+          "property": "y",
+          "browser": 2156.8,
+          "engine": 2145,
+          "diff": 11.8
+        },
+        {
+          "property": "height",
+          "browser": 28,
+          "engine": 29,
+          "diff": 1
         }
       ]
     },
@@ -1487,17 +2051,17 @@
         "height": 21
       },
       "engine_bounds": {
-        "x": 974,
-        "y": 2201,
+        "x": 939,
+        "y": 2190,
         "width": 207,
         "height": 21
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 938.9,
-          "engine": 974,
-          "diff": 35.1
+          "property": "y",
+          "browser": 2200.8,
+          "engine": 2190,
+          "diff": 10.8
         }
       ]
     },
@@ -1513,16 +2077,22 @@
       },
       "engine_bounds": {
         "x": 0,
-        "y": 2332,
+        "y": 2321,
         "width": 1440,
-        "height": 373
+        "height": 379
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 2352.8,
-          "engine": 2332,
-          "diff": 20.8
+          "engine": 2321,
+          "diff": 31.8
+        },
+        {
+          "property": "height",
+          "browser": 373,
+          "engine": 379,
+          "diff": 6
         }
       ]
     },
@@ -1538,16 +2108,22 @@
       },
       "engine_bounds": {
         "x": 515,
-        "y": 2432,
+        "y": 2421,
         "width": 411,
-        "height": 55
+        "height": 58
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 2452.8,
-          "engine": 2432,
-          "diff": 20.8
+          "engine": 2421,
+          "diff": 31.8
+        },
+        {
+          "property": "height",
+          "browser": 55,
+          "engine": 58,
+          "diff": 3
         }
       ]
     },
@@ -1563,16 +2139,22 @@
       },
       "engine_bounds": {
         "x": 498,
-        "y": 2507,
+        "y": 2499,
         "width": 445,
-        "height": 24
+        "height": 26
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 2527.8,
-          "engine": 2507,
-          "diff": 20.8
+          "engine": 2499,
+          "diff": 28.8
+        },
+        {
+          "property": "height",
+          "browser": 24,
+          "engine": 26,
+          "diff": 2
         }
       ]
     },
@@ -1587,29 +2169,23 @@
         "height": 44
       },
       "engine_bounds": {
-        "x": -28,
-        "y": 2561,
-        "width": 1496,
-        "height": 44
+        "x": 660,
+        "y": 2555,
+        "width": 120,
+        "height": 45
       },
       "mismatches": [
         {
-          "property": "x",
-          "browser": 660.1,
-          "engine": -28,
-          "diff": 688.1
-        },
-        {
           "property": "y",
           "browser": 2581.8,
-          "engine": 2561,
-          "diff": 20.8
+          "engine": 2555,
+          "diff": 26.8
         },
         {
-          "property": "width",
-          "browser": 119.8,
-          "engine": 1496,
-          "diff": 1376.2
+          "property": "height",
+          "browser": 44,
+          "engine": 45,
+          "diff": 1
         }
       ]
     },
@@ -1625,22 +2201,22 @@
       },
       "engine_bounds": {
         "x": 0,
-        "y": 2705,
+        "y": 2700,
         "width": 1440,
-        "height": 226
+        "height": 253
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 2725.8,
-          "engine": 2705,
-          "diff": 20.8
+          "engine": 2700,
+          "diff": 25.8
         },
         {
           "property": "height",
           "browser": 241,
-          "engine": 226,
-          "diff": 15
+          "engine": 253,
+          "diff": 12
         }
       ]
     },
@@ -1656,22 +2232,22 @@
       },
       "engine_bounds": {
         "x": 230,
-        "y": 2725,
+        "y": 2720,
         "width": 980,
-        "height": 186
+        "height": 213
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 2745.8,
-          "engine": 2725,
-          "diff": 20.8
+          "engine": 2720,
+          "diff": 25.8
         },
         {
           "property": "height",
           "browser": 201,
-          "engine": 186,
-          "diff": 15
+          "engine": 213,
+          "diff": 12
         }
       ]
     },
@@ -1687,22 +2263,22 @@
       },
       "engine_bounds": {
         "x": 252,
-        "y": 2725,
-        "width": 1823,
-        "height": 146
+        "y": 2720,
+        "width": 936,
+        "height": 153
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 2745.8,
-          "engine": 2725,
-          "diff": 20.8
+          "engine": 2720,
+          "diff": 25.8
         },
         {
-          "property": "width",
-          "browser": 936,
-          "engine": 1823,
-          "diff": 887
+          "property": "height",
+          "browser": 146,
+          "engine": 153,
+          "diff": 7
         }
       ]
     },
@@ -1717,23 +2293,29 @@
         "height": 146
       },
       "engine_bounds": {
-        "x": 252,
-        "y": 2725,
+        "x": 471,
+        "y": 2720,
         "width": 83,
-        "height": 146
+        "height": 153
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 473,
-          "engine": 252,
-          "diff": 221
+          "engine": 471,
+          "diff": 2
         },
         {
           "property": "y",
           "browser": 2745.8,
-          "engine": 2725,
-          "diff": 20.8
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "height",
+          "browser": 146,
+          "engine": 153,
+          "diff": 7
         }
       ]
     },
@@ -1748,23 +2330,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 252,
-        "y": 2725,
+        "x": 471,
+        "y": 2720,
         "width": 83,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 473,
-          "engine": 252,
-          "diff": 221
+          "engine": 471,
+          "diff": 2
         },
         {
           "property": "y",
           "browser": 2745.8,
-          "engine": 2725,
-          "diff": 20.8
+          "engine": 2720,
+          "diff": 25.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -1779,29 +2367,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 252,
-        "y": 2747,
-        "width": 26,
-        "height": 14
+        "x": 471,
+        "y": 2743,
+        "width": 83,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 473,
-          "engine": 252,
-          "diff": 221
+          "engine": 471,
+          "diff": 2
         },
         {
           "property": "y",
           "browser": 2767.8,
-          "engine": 2747,
-          "diff": 20.8
+          "engine": 2743,
+          "diff": 24.8
         },
         {
-          "property": "width",
-          "browser": 82.7,
-          "engine": 26,
-          "diff": 56.7
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -1816,29 +2404,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 252,
-        "y": 2769,
-        "width": 22,
-        "height": 14
+        "x": 471,
+        "y": 2766,
+        "width": 83,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 473,
-          "engine": 252,
-          "diff": 221
+          "engine": 471,
+          "diff": 2
         },
         {
           "property": "y",
           "browser": 2789.8,
-          "engine": 2769,
-          "diff": 20.8
+          "engine": 2766,
+          "diff": 23.8
         },
         {
-          "property": "width",
-          "browser": 82.7,
-          "engine": 22,
-          "diff": 60.7
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -1853,29 +2441,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 252,
-        "y": 2791,
-        "width": 22,
-        "height": 14
+        "x": 471,
+        "y": 2789,
+        "width": 83,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 473,
-          "engine": 252,
-          "diff": 221
+          "engine": 471,
+          "diff": 2
         },
         {
           "property": "y",
           "browser": 2811.8,
-          "engine": 2791,
-          "diff": 20.8
+          "engine": 2789,
+          "diff": 22.8
         },
         {
-          "property": "width",
-          "browser": 82.7,
-          "engine": 22,
-          "diff": 60.7
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -1890,29 +2478,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 252,
-        "y": 2813,
-        "width": 34,
-        "height": 14
+        "x": 471,
+        "y": 2812,
+        "width": 83,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 473,
-          "engine": 252,
-          "diff": 221
+          "engine": 471,
+          "diff": 2
         },
         {
           "property": "y",
           "browser": 2833.8,
-          "engine": 2813,
-          "diff": 20.8
+          "engine": 2812,
+          "diff": 21.8
         },
         {
-          "property": "width",
-          "browser": 82.7,
-          "engine": 34,
-          "diff": 48.7
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -1927,17 +2515,17 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 252,
+        "x": 471,
         "y": 2835,
-        "width": 31,
-        "height": 14
+        "width": 83,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 473,
-          "engine": 252,
-          "diff": 221
+          "engine": 471,
+          "diff": 2
         },
         {
           "property": "y",
@@ -1946,10 +2534,10 @@
           "diff": 20.8
         },
         {
-          "property": "width",
-          "browser": 82.7,
-          "engine": 31,
-          "diff": 51.7
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -1964,29 +2552,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 252,
-        "y": 2857,
-        "width": 40,
-        "height": 14
+        "x": 471,
+        "y": 2858,
+        "width": 83,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 473,
-          "engine": 252,
-          "diff": 221
+          "engine": 471,
+          "diff": 2
         },
         {
           "property": "y",
           "browser": 2877.8,
-          "engine": 2857,
-          "diff": 20.8
+          "engine": 2858,
+          "diff": 19.8
         },
         {
-          "property": "width",
-          "browser": 82.7,
-          "engine": 40,
-          "diff": 42.7
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2001,29 +2589,29 @@
         "height": 146
       },
       "engine_bounds": {
-        "x": 375,
-        "y": 2725,
+        "x": 594,
+        "y": 2720,
         "width": 67,
-        "height": 124
+        "height": 153
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 595.7,
-          "engine": 375,
-          "diff": 220.7
+          "engine": 594,
+          "diff": 1.7
         },
         {
           "property": "y",
           "browser": 2745.8,
-          "engine": 2725,
-          "diff": 20.8
+          "engine": 2720,
+          "diff": 25.8
         },
         {
           "property": "height",
           "browser": 146,
-          "engine": 124,
-          "diff": 22
+          "engine": 153,
+          "diff": 7
         }
       ]
     },
@@ -2038,29 +2626,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 375,
-        "y": 2725,
-        "width": 42,
-        "height": 14
+        "x": 594,
+        "y": 2720,
+        "width": 67,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 595.7,
-          "engine": 375,
-          "diff": 220.7
+          "engine": 594,
+          "diff": 1.7
         },
         {
           "property": "y",
           "browser": 2745.8,
-          "engine": 2725,
-          "diff": 20.8
+          "engine": 2720,
+          "diff": 25.8
         },
         {
-          "property": "width",
-          "browser": 66.3,
-          "engine": 42,
-          "diff": 24.3
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2075,29 +2663,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 375,
-        "y": 2747,
-        "width": 63,
-        "height": 14
+        "x": 594,
+        "y": 2743,
+        "width": 67,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 595.7,
-          "engine": 375,
-          "diff": 220.7
+          "engine": 594,
+          "diff": 1.7
         },
         {
           "property": "y",
           "browser": 2767.8,
-          "engine": 2747,
-          "diff": 20.8
+          "engine": 2743,
+          "diff": 24.8
         },
         {
-          "property": "width",
-          "browser": 66.3,
-          "engine": 63,
-          "diff": 3.3
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2112,29 +2700,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 375,
-        "y": 2769,
-        "width": 55,
-        "height": 14
+        "x": 594,
+        "y": 2766,
+        "width": 67,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 595.7,
-          "engine": 375,
-          "diff": 220.7
+          "engine": 594,
+          "diff": 1.7
         },
         {
           "property": "y",
           "browser": 2789.8,
-          "engine": 2769,
-          "diff": 20.8
+          "engine": 2766,
+          "diff": 23.8
         },
         {
-          "property": "width",
-          "browser": 66.3,
-          "engine": 55,
-          "diff": 11.3
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2149,23 +2737,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 375,
-        "y": 2791,
+        "x": 594,
+        "y": 2789,
         "width": 67,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 595.7,
-          "engine": 375,
-          "diff": 220.7
+          "engine": 594,
+          "diff": 1.7
         },
         {
           "property": "y",
           "browser": 2811.8,
-          "engine": 2791,
-          "diff": 20.8
+          "engine": 2789,
+          "diff": 22.8
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2180,29 +2774,29 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 375,
-        "y": 2813,
-        "width": 33,
-        "height": 14
+        "x": 594,
+        "y": 2812,
+        "width": 67,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 595.7,
-          "engine": 375,
-          "diff": 220.7
+          "engine": 594,
+          "diff": 1.7
         },
         {
           "property": "y",
           "browser": 2833.8,
-          "engine": 2813,
-          "diff": 20.8
+          "engine": 2812,
+          "diff": 21.8
         },
         {
-          "property": "width",
-          "browser": 66.3,
-          "engine": 33,
-          "diff": 33.3
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2217,17 +2811,17 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 375,
+        "x": 594,
         "y": 2835,
-        "width": 53,
-        "height": 14
+        "width": 67,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 595.7,
-          "engine": 375,
-          "diff": 220.7
+          "engine": 594,
+          "diff": 1.7
         },
         {
           "property": "y",
@@ -2236,10 +2830,10 @@
           "diff": 20.8
         },
         {
-          "property": "width",
-          "browser": 66.3,
-          "engine": 53,
-          "diff": 13.3
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2254,35 +2848,35 @@
         "height": 146
       },
       "engine_bounds": {
-        "x": 482,
-        "y": 2725,
-        "width": 113,
-        "height": 80
+        "x": 701,
+        "y": 2720,
+        "width": 114,
+        "height": 153
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 702,
-          "engine": 482,
-          "diff": 220
+          "engine": 701,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2745.8,
-          "engine": 2725,
-          "diff": 20.8
+          "engine": 2720,
+          "diff": 25.8
         },
         {
           "property": "width",
           "browser": 112,
-          "engine": 113,
-          "diff": 1
+          "engine": 114,
+          "diff": 2
         },
         {
           "property": "height",
           "browser": 146,
-          "engine": 80,
-          "diff": 66
+          "engine": 153,
+          "diff": 7
         }
       ]
     },
@@ -2297,29 +2891,35 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 482,
-        "y": 2725,
-        "width": 43,
-        "height": 14
+        "x": 701,
+        "y": 2720,
+        "width": 114,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 702,
-          "engine": 482,
-          "diff": 220
+          "engine": 701,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2745.8,
-          "engine": 2725,
-          "diff": 20.8
+          "engine": 2720,
+          "diff": 25.8
         },
         {
           "property": "width",
           "browser": 112,
-          "engine": 43,
-          "diff": 69
+          "engine": 114,
+          "diff": 2
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2334,28 +2934,34 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 482,
-        "y": 2747,
-        "width": 113,
-        "height": 14
+        "x": 701,
+        "y": 2743,
+        "width": 114,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 702,
-          "engine": 482,
-          "diff": 220
+          "engine": 701,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2767.8,
-          "engine": 2747,
-          "diff": 20.8
+          "engine": 2743,
+          "diff": 24.8
         },
         {
           "property": "width",
           "browser": 112,
-          "engine": 113,
+          "engine": 114,
+          "diff": 2
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
           "diff": 1
         }
       ]
@@ -2371,29 +2977,35 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 482,
-        "y": 2769,
-        "width": 101,
-        "height": 14
+        "x": 701,
+        "y": 2766,
+        "width": 114,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 702,
-          "engine": 482,
-          "diff": 220
+          "engine": 701,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2789.8,
-          "engine": 2769,
-          "diff": 20.8
+          "engine": 2766,
+          "diff": 23.8
         },
         {
           "property": "width",
           "browser": 112,
-          "engine": 101,
-          "diff": 11
+          "engine": 114,
+          "diff": 2
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2408,29 +3020,35 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 482,
-        "y": 2791,
-        "width": 57,
-        "height": 14
+        "x": 701,
+        "y": 2789,
+        "width": 114,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 702,
-          "engine": 482,
-          "diff": 220
+          "engine": 701,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2811.8,
-          "engine": 2791,
-          "diff": 20.8
+          "engine": 2789,
+          "diff": 22.8
         },
         {
           "property": "width",
           "browser": 112,
-          "engine": 57,
-          "diff": 55
+          "engine": 114,
+          "diff": 2
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2445,35 +3063,35 @@
         "height": 146
       },
       "engine_bounds": {
-        "x": 635,
-        "y": 2725,
-        "width": 1440,
-        "height": 132
+        "x": 855,
+        "y": 2720,
+        "width": 114,
+        "height": 153
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 854,
-          "engine": 635,
-          "diff": 219
+          "engine": 855,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2745.8,
-          "engine": 2725,
-          "diff": 20.8
+          "engine": 2720,
+          "diff": 25.8
         },
         {
           "property": "width",
           "browser": 113,
-          "engine": 1440,
-          "diff": 1327
+          "engine": 114,
+          "diff": 1
         },
         {
           "property": "height",
           "browser": 146,
-          "engine": 132,
-          "diff": 14
+          "engine": 153,
+          "diff": 7
         }
       ]
     },
@@ -2488,29 +3106,35 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 635,
-        "y": 2725,
-        "width": 68,
-        "height": 14
+        "x": 855,
+        "y": 2720,
+        "width": 114,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 854,
-          "engine": 635,
-          "diff": 219
+          "engine": 855,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2745.8,
-          "engine": 2725,
-          "diff": 20.8
+          "engine": 2720,
+          "diff": 25.8
         },
         {
           "property": "width",
           "browser": 113,
-          "engine": 68,
-          "diff": 45
+          "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2525,29 +3149,35 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 635,
-        "y": 2753,
-        "width": 63,
-        "height": 14
+        "x": 855,
+        "y": 2743,
+        "width": 114,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 854,
-          "engine": 635,
-          "diff": 219
+          "engine": 855,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2767.8,
-          "engine": 2753,
-          "diff": 14.8
+          "engine": 2743,
+          "diff": 24.8
         },
         {
           "property": "width",
           "browser": 113,
-          "engine": 63,
-          "diff": 50
+          "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2562,29 +3192,35 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 635,
-        "y": 2781,
-        "width": 63,
-        "height": 14
+        "x": 855,
+        "y": 2766,
+        "width": 114,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 854,
-          "engine": 635,
-          "diff": 219
+          "engine": 855,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2789.8,
-          "engine": 2781,
-          "diff": 8.8
+          "engine": 2766,
+          "diff": 23.8
         },
         {
           "property": "width",
           "browser": 113,
-          "engine": 63,
-          "diff": 50
+          "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2599,29 +3235,35 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 635,
-        "y": 2809,
-        "width": 37,
-        "height": 14
+        "x": 855,
+        "y": 2789,
+        "width": 114,
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 854,
-          "engine": 635,
-          "diff": 219
+          "engine": 855,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2811.8,
-          "engine": 2809,
-          "diff": 2.8
+          "engine": 2789,
+          "diff": 22.8
         },
         {
           "property": "width",
           "browser": 113,
-          "engine": 37,
-          "diff": 76
+          "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
+          "diff": 1
         }
       ]
     },
@@ -2636,28 +3278,34 @@
         "height": 14
       },
       "engine_bounds": {
-        "x": 635,
-        "y": 2837,
+        "x": 855,
+        "y": 2812,
         "width": 114,
-        "height": 14
+        "height": 15
       },
       "mismatches": [
         {
           "property": "x",
           "browser": 854,
-          "engine": 635,
-          "diff": 219
+          "engine": 855,
+          "diff": 1
         },
         {
           "property": "y",
           "browser": 2833.8,
-          "engine": 2837,
-          "diff": 3.2
+          "engine": 2812,
+          "diff": 21.8
         },
         {
           "property": "width",
           "browser": 113,
           "engine": 114,
+          "diff": 1
+        },
+        {
+          "property": "height",
+          "browser": 14,
+          "engine": 15,
           "diff": 1
         }
       ]
@@ -2674,28 +3322,22 @@
       },
       "engine_bounds": {
         "x": 252,
-        "y": 2891,
-        "width": 224,
-        "height": 34
+        "y": 2893,
+        "width": 936,
+        "height": 40
       },
       "mismatches": [
         {
           "property": "y",
           "browser": 2911.8,
-          "engine": 2891,
-          "diff": 20.8
-        },
-        {
-          "property": "width",
-          "browser": 936,
-          "engine": 224,
-          "diff": 712
+          "engine": 2893,
+          "diff": 18.8
         },
         {
           "property": "height",
           "browser": 35,
-          "engine": 34,
-          "diff": 1
+          "engine": 40,
+          "diff": 5
         }
       ]
     }

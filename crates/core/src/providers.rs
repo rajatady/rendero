@@ -36,17 +36,29 @@ pub trait TextMeasurer {
 pub struct HeuristicTextMeasurer;
 
 impl TextMeasurer for HeuristicTextMeasurer {
-    fn measure(&self, runs: &[TextRun], _max_width: f32) -> (f32, f32) {
+    fn measure(&self, runs: &[TextRun], max_width: f32) -> (f32, f32) {
         if runs.is_empty() {
             return (0.0, 0.0);
         }
+        let min_content = max_width == 0.0;
         let mut total_width = 0.0f32;
         let mut max_height = 0.0f32;
+        let mut max_word_width = 0.0f32;
         for run in runs {
-            total_width += run.text.len() as f32 * run.font_size * 0.65;
-            max_height = max_height.max(run.font_size * 1.5);
+            let line_height = run.line_height.unwrap_or(run.font_size * 1.2).max(run.font_size);
+            max_height = max_height.max(line_height);
+            if min_content {
+                for word in run.text.split_whitespace() {
+                    max_word_width = max_word_width.max(word.len() as f32 * run.font_size * 0.65);
+                }
+                if max_word_width == 0.0 && !run.text.is_empty() {
+                    max_word_width = max_word_width.max(run.text.len() as f32 * run.font_size * 0.65);
+                }
+            } else {
+                total_width += run.text.len() as f32 * run.font_size * 0.65;
+            }
         }
-        (total_width, max_height)
+        (if min_content { max_word_width } else { total_width }, max_height)
     }
 }
 

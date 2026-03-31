@@ -29,6 +29,10 @@ use rendero_core::node::TextRun;
 use rendero_core::providers::{HeuristicTextMeasurer, TextMeasurer};
 use wasm_bindgen::JsCast;
 
+fn default_browser_font_family() -> &'static str {
+    "Times"
+}
+
 /// Text measurer that delegates to the browser's canvas.measureText().
 ///
 /// See module-level docs for why this exists and why it's temporary.
@@ -57,6 +61,7 @@ impl BrowserTextMeasurer {
             None => WasmTextMeasurer::Heuristic,
         }
     }
+
 }
 
 /// Either browser-backed or heuristic text measurement.
@@ -81,6 +86,44 @@ impl TextMeasurer for BrowserTextMeasurer {
             return (0.0, 0.0);
         }
 
+        if max_width == 0.0 {
+            let mut max_word_width = 0.0f32;
+            let mut max_line_height = 0.0f32;
+
+            for run in runs {
+                let weight = run.font_weight;
+                let size = run.font_size;
+                let family = if run.font_family.is_empty() {
+                    default_browser_font_family().to_string()
+                } else {
+                    run.font_family.clone()
+                };
+                let font_str = format!("{weight} {size}px {family}");
+                self.ctx.set_font(&font_str);
+
+                let run_line_height = run.line_height.unwrap_or(size * 1.2).max(size);
+                max_line_height = max_line_height.max(run_line_height);
+
+                let mut saw_word = false;
+                for word in run.text.split_whitespace() {
+                    saw_word = true;
+                    let word_width = self.ctx.measure_text(word)
+                        .map(|m| m.width() as f32)
+                        .unwrap_or(0.0);
+                    max_word_width = max_word_width.max(word_width);
+                }
+
+                if !saw_word && !run.text.is_empty() {
+                    let width = self.ctx.measure_text(&run.text)
+                        .map(|m| m.width() as f32)
+                        .unwrap_or(0.0);
+                    max_word_width = max_word_width.max(width);
+                }
+            }
+
+            return (max_word_width.ceil(), max_line_height.ceil());
+        }
+
         // Build font string and full text from runs.
         // For mixed-style runs, we measure each run separately and sum widths.
         // Height is the max line height across all runs.
@@ -95,9 +138,9 @@ impl TextMeasurer for BrowserTextMeasurer {
             let weight = run.font_weight;
             let size = run.font_size;
             let family = if run.font_family.is_empty() {
-                "-apple-system, system-ui, sans-serif"
+                default_browser_font_family().to_string()
             } else {
-                &run.font_family
+                run.font_family.clone()
             };
 
             let font_str = format!("{weight} {size}px {family}");

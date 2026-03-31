@@ -7,7 +7,7 @@
 //
 // Uses a Proxy so ANY style property triggers sync.
 
-import { engineSetProp, markDirty, measureTextBrowser, measureTextElementBrowser } from './engine-runtime.js';
+import { engineSetProp, markDirty } from './engine-runtime.js';
 import { parseColor, parseLength, parseLineHeight, parseFontWeight, parseBoxShadow, parseLinearGradient, parsePercentage, expandShorthand } from './css-values.js';
 import { buildAutoLayout, resolveMargins } from './layout-style.js';
 import { recordShimStyle } from './rendero-api.js';
@@ -74,6 +74,9 @@ function syncToEngine(element) {
     const v = element.style._values;
     const id = element._engineId;
     const isText = element._isTextElement;
+    const textBacked = typeof element._isRenderedAsTextNode === 'function'
+        ? element._isRenderedAsTextNode()
+        : isText;
     const backgroundValue = v.backgroundImage || v.background || '';
     const backgroundColorValue = v.backgroundColor || v.background || '';
 
@@ -170,7 +173,7 @@ function syncToEngine(element) {
 
     // Layout mapping → engine auto-layout
     const autoLayout = buildAutoLayout(v, {
-        isText,
+        isText: textBacked,
         hasChildren: (element.childNodes?.length || 0) > 0,
     });
     const resolvedStyle = {
@@ -192,7 +195,7 @@ function syncToEngine(element) {
             y: (parseLength(v.top) || 0) - (v.position === 'fixed' ? getRenderSurfaceOffset().y : 0),
             mode: v.position,
         } : null,
-        text: isText ? {
+        text: textBacked ? {
             fontSize: parseLength(v.fontSize) || 0,
             fontWeight: parseFontWeight(v.fontWeight || '400'),
             fontFamily: v.fontFamily ? v.fontFamily.replace(/['"]/g, '') : '',
@@ -216,7 +219,7 @@ function syncToEngine(element) {
     }
 
     // Text properties (for text elements)
-    if (isText) {
+    if (textBacked) {
         if (v.fontSize) engineSetProp(id, 'fontSize', parseLength(v.fontSize));
         if (v.fontWeight) engineSetProp(id, 'fontWeight', parseFontWeight(v.fontWeight));
         if (v.fontFamily) engineSetProp(id, 'fontFamily', v.fontFamily.replace(/['"]/g, ''));
@@ -228,21 +231,10 @@ function syncToEngine(element) {
             if (c) engineSetProp(id, 'fill', { r: c[0], g: c[1], b: c[2], a: c[3] });
         }
 
-        const textContent = element.textContent || '';
-        if (textContent.trim() && !globalThis.__RENDERO_NATIVE__) {
-            const measuredFromDom = measureTextElementBrowser(element.localName, textContent, v);
-            const measured = measuredFromDom || measureTextBrowser(
-                textContent,
-                parseLength(v.fontSize) || 16,
-                v.fontWeight || '400',
-                v.fontFamily || '',
-            );
-            if (measured) {
-                const lh = v.lineHeight ? parseLineHeight(v.lineHeight, parseLength(v.fontSize) || 16) : 0;
-                const textH = lh > 0 ? Math.max(lh, measured.height) : measured.height;
-                engineSetProp(id, 'size', { w: measured.width, h: textH });
-            }
-        }
+    }
+
+    if (!textBacked && isText && typeof element._syncFrameBackedTextChildrenToEngine === 'function') {
+        element._syncFrameBackedTextChildrenToEngine();
     }
 
     // Box shadow

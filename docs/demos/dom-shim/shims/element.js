@@ -18,12 +18,13 @@ import { createStyleProxy } from './style.js';
 import {
     engineCreateFrame, engineCreateText, engineDeleteNode,
     engineSetProp, engineGetBounds, setInsertParent, clearInsertParent,
-    markDirty, getNodeIds, measureTextBrowser, measureTextElementBrowser,
+    markDirty, getNodeIds,
 } from './engine-runtime.js';
 import { parseColor, parseLength, parseLineHeight } from './css-values.js';
 
 // Elements that are inherently text containers
 const TEXT_TAGS = new Set(['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a', 'label', 'strong', 'em', 'b', 'i', 'small', 'code', 'pre', 'li']);
+const BLOCK_TEXT_TAGS = new Set(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'li']);
 // Elements that are inherently layout containers (frames)
 const FRAME_TAGS = new Set(['div', 'section', 'header', 'footer', 'nav', 'main', 'article', 'aside', 'ul', 'ol', 'form', 'fieldset', 'figure', 'figcaption', 'details', 'summary', 'dialog', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'tfoot']);
 
@@ -298,7 +299,7 @@ export class ShimElement extends ShimNode {
     }
 
     _isRenderedAsTextNode() {
-        return this._isTextElement && !this._hasElementChildren();
+        return this._isTextElement && !BLOCK_TEXT_TAGS.has(this.localName) && !this._hasElementChildren();
     }
 
     _engineTextContent() {
@@ -321,19 +322,17 @@ export class ShimElement extends ShimNode {
         if (styles.letterSpacing) {
             engineSetProp(this._engineId, 'letterSpacing', parseLength(styles.letterSpacing, fontSize));
         }
-        if (!globalThis.__RENDERO_NATIVE__ && text.trim()) {
-            const measured =
-                measureTextElementBrowser(this.localName, text, styles) ||
-                measureTextBrowser(text, fontSize, styles.fontWeight || '400', styles.fontFamily || '');
-            if (measured) {
-                const lineHeight = styles.lineHeight ? parseLineHeight(styles.lineHeight, fontSize) : 0;
-                engineSetProp(this._engineId, 'size', {
-                    w: measured.width,
-                    h: lineHeight > 0 ? Math.max(lineHeight, measured.height) : measured.height,
-                });
+        markDirty();
+    }
+
+    _syncFrameBackedTextChildrenToEngine() {
+        if (!this._engineCreated || this._isRenderedAsTextNode()) return;
+        if (!this._isTextElement) return;
+        for (const child of this.childNodes) {
+            if (child.nodeType === 3 && typeof child._syncInheritedTextStyleFromParent === 'function') {
+                child._syncInheritedTextStyleFromParent(this);
             }
         }
-        markDirty();
     }
 
     _syncAttribute(name, value) {

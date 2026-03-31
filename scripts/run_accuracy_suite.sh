@@ -8,6 +8,8 @@ OUT_DIR="${OUT_DIR:-${ROOT}/accuracy}"
 URL="${URL:-http://${HOST}:${PORT}/demos/dom-shim/}"
 SERVER_LOG="${OUT_DIR}/serve.log"
 SUMMARY_JSON="${OUT_DIR}/summary.json"
+NATIVE_JSON="${OUT_DIR}/apple-native.json"
+RUNTIME_COMPARISON_JSON="${OUT_DIR}/apple-runtime-comparison.json"
 
 mkdir -p "${OUT_DIR}"
 
@@ -37,16 +39,25 @@ sleep 2
 echo "[5/8] Capture browser oracle"
 (cd "${ROOT}" && python3 scripts/capture-ground-truth.py "${URL}" "${OUT_DIR}/apple-web.json")
 
-echo "[6/8] Capture Rendero engine layout"
+echo "[6/10] Capture Rendero engine layout"
 (cd "${ROOT}" && python3 scripts/capture-engine-truth.py "${URL}" "${OUT_DIR}/apple-engine.json")
 
-echo "[7/8] Compare oracle vs engine"
+echo "[7/10] Capture native Rendero headless layout"
+(cd "${ROOT}" && python3 scripts/capture-native-truth.py "${NATIVE_JSON}" 1440 900)
+
+echo "[8/10] Compare browser oracle vs browser Rendero"
 set +e
 (cd "${ROOT}" && python3 scripts/compare-layout.py "${OUT_DIR}/apple-web.json" "${OUT_DIR}/apple-engine.json" "${OUT_DIR}/apple-comparison.json")
 COMPARE_EXIT=$?
 set -e
 
-echo "[8/8] Run synthetic layout corpus benchmark"
+echo "[9/10] Compare browser, browser Rendero, and native together"
+set +e
+(cd "${ROOT}" && python3 scripts/compare-runtime-triple.py "${OUT_DIR}/apple-web.json" "${OUT_DIR}/apple-engine.json" "${NATIVE_JSON}" "${RUNTIME_COMPARISON_JSON}")
+TRIPLE_COMPARE_EXIT=$?
+set -e
+
+echo "[10/10] Run synthetic layout corpus benchmark"
 (cd "${ROOT}" && python3 scripts/capture-layout-corpus.py "http://${HOST}:${PORT}" "${OUT_DIR}/layout-corpus.json")
 
 python3 - "${ROOT}" "${OUT_DIR}" "${SUMMARY_JSON}" <<'PY'
@@ -59,6 +70,7 @@ out_dir = Path(sys.argv[2])
 summary_path = Path(sys.argv[3])
 
 comparison = json.loads((out_dir / "apple-comparison.json").read_text())
+runtime_comparison = json.loads((out_dir / "apple-runtime-comparison.json").read_text())
 dashboard = json.loads((root / "corpus" / "dashboard.json").read_text())
 layout_corpus = json.loads((out_dir / "layout-corpus.json").read_text())
 layout_property_matches = layout_corpus.get("propertyMatches", layout_corpus.get("matchCount", 0))
@@ -70,6 +82,10 @@ summary = {
     "appleTotalProperties": comparison["totalProperties"],
     "appleElementsCompared": comparison["elementsPaired"],
     "appleElementsWithMismatches": comparison["elementsWithMismatches"],
+    "nativeAccuracy": runtime_comparison["pairwise"]["browserVsNative"]["accuracy"],
+    "nativeMatchCount": runtime_comparison["pairwise"]["browserVsNative"]["matchCount"],
+    "nativeTotalProperties": runtime_comparison["pairwise"]["browserVsNative"]["totalProperties"],
+    "wasmVsNativeAccuracy": runtime_comparison["pairwise"]["wasmVsNative"]["accuracy"],
     "layoutCorpusAccuracy": round((layout_property_matches / max(layout_total_properties, 1)) * 100, 2),
     "layoutCorpusPropertyMatches": layout_property_matches,
     "layoutCorpusTotalProperties": layout_total_properties,
@@ -83,6 +99,8 @@ summary = {
 summary_path.write_text(json.dumps(summary, indent=2))
 print(f"Summary: {summary_path}")
 print(f"Apple accuracy: {summary['appleAccuracy']}% ({summary['appleMatchCount']}/{summary['appleTotalProperties']})")
+print(f"Native accuracy: {summary['nativeAccuracy']}% ({summary['nativeMatchCount']}/{summary['nativeTotalProperties']})")
+print(f"WASM vs native accuracy: {summary['wasmVsNativeAccuracy']}%")
 print(f"Synthetic corpus accuracy: {summary['layoutCorpusAccuracy']}% ({summary['layoutCorpusPropertyMatches']}/{summary['layoutCorpusTotalProperties']})")
 print(f"Corpus: {summary['corpusSiteCount']} sites, {summary['corpusGroundTruthFiles']} ground-truth files")
 PY
@@ -92,12 +110,19 @@ echo "Artifacts:"
 echo "  Browser oracle:   ${OUT_DIR}/apple-web.json"
 echo "  Engine capture:   ${OUT_DIR}/apple-engine.json"
 echo "  Comparison:       ${OUT_DIR}/apple-comparison.json"
+echo "  Runtime comparison: ${RUNTIME_COMPARISON_JSON}"
+echo "  Native capture:   ${NATIVE_JSON}"
 echo "  Layout corpus:    ${OUT_DIR}/layout-corpus.json"
 echo "  Summary:          ${SUMMARY_JSON}"
 echo "  Browser screenshot: ${OUT_DIR}/apple-web.png"
 echo "  Engine screenshot:  ${OUT_DIR}/apple-engine.png"
+echo "  Native screenshot:  ${OUT_DIR}/apple-native.png"
 echo "  Corpus screenshot:  ${OUT_DIR}/layout-corpus.png"
 echo "  Corpus dashboard: ${ROOT}/corpus/dashboard.json"
 echo "  Server log:       ${SERVER_LOG}"
 
-exit "${COMPARE_EXIT}"
+if [[ "${COMPARE_EXIT}" -ne 0 || "${TRIPLE_COMPARE_EXIT}" -ne 0 ]]; then
+  exit 1
+fi
+
+exit 0

@@ -1958,6 +1958,7 @@ impl CanvasEngine {
             margin: LayoutMargin::default(),
             layout_position: None,
             size_constraints: LayoutSizeConstraints::default(),
+            text_size_locked: false,
             constraint_horizontal: ConstraintType::Min,
             constraint_vertical: ConstraintType::Min,
             is_mask: false,
@@ -4970,6 +4971,9 @@ impl CanvasEngine {
         self.redo_stack.clear();
         node.width = w;
         node.height = h;
+        if matches!(node.kind, NodeKind::Text { .. }) {
+            node.text_size_locked = true;
+        }
         if w > 0.0 {
             node.width_percent = None;
         }
@@ -5547,6 +5551,7 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: old_width, height: old_height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             // Update text in first run, preserve styling
             if let Some(run) = runs.first_mut() {
                 let font_size = run.font_size;
@@ -5584,6 +5589,7 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: old_width, height: old_height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             for run in runs.iter_mut() {
                 run.font_size = size;
             }
@@ -5617,6 +5623,7 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: node.width, height: node.height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             for run in runs.iter_mut() {
                 run.font_family = family.to_string();
             }
@@ -5645,6 +5652,7 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: node.width, height: node.height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             for run in runs.iter_mut() {
                 run.font_weight = weight;
             }
@@ -5673,6 +5681,7 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: node.width, height: node.height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             for run in runs.iter_mut() {
                 run.letter_spacing = spacing;
             }
@@ -5701,6 +5710,7 @@ impl CanvasEngine {
                 node_id, runs: old_runs, width: node.width, height: node.height,
             });
             self.redo_stack.clear();
+            node.text_size_locked = false;
             for run in runs.iter_mut() {
                 run.line_height = if height > 0.0 { Some(height) } else { None };
             }

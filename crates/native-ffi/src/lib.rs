@@ -219,6 +219,9 @@ pub extern "C" fn rendero_set_node_size(
         if let Some(node) = page.tree.get_mut(&node_id) {
             node.width = w;
             node.height = h;
+            if matches!(node.kind, NodeKind::Text { .. }) {
+                node.text_size_locked = true;
+            }
             e.invalidate_cache();
         }
     }
@@ -293,13 +296,8 @@ pub extern "C" fn rendero_set_node_text(
         if let Some(node) = page.tree.get_mut(&node_id) {
             if let NodeKind::Text { ref mut runs, .. } = node.kind {
                 if let Some(run) = runs.first_mut() {
+                    node.text_size_locked = false;
                     run.text = text.to_string();
-                    // Recalculate text bounds
-                    let (w, h) = // Same heuristic as WASM version
-                    (text.len() as f32 * run.font_size * 0.65,
-                     run.font_size * 1.5);
-                    node.width = w;
-                    node.height = h;
                 }
             }
             e.invalidate_cache();
@@ -316,17 +314,9 @@ pub extern "C" fn rendero_set_node_font_size(
     if let Some(page) = e.document.page_mut(e.current_page) {
         if let Some(node) = page.tree.get_mut(&node_id) {
             if let NodeKind::Text { ref mut runs, .. } = node.kind {
+                node.text_size_locked = false;
                 for run in runs.iter_mut() {
                     run.font_size = size;
-                }
-                // Recalculate bounds
-                if let Some(run) = runs.first() {
-                    let (w, h) = (
-                        run.text.len() as f32 * size * 0.65,
-                        size * 1.5,
-                    );
-                    node.width = w;
-                    node.height = h;
                 }
             }
             e.invalidate_cache();
@@ -343,6 +333,7 @@ pub extern "C" fn rendero_set_node_font_weight(
     if let Some(page) = e.document.page_mut(e.current_page) {
         if let Some(node) = page.tree.get_mut(&node_id) {
             if let NodeKind::Text { ref mut runs, .. } = node.kind {
+                node.text_size_locked = false;
                 for run in runs.iter_mut() {
                     run.font_weight = weight;
                 }

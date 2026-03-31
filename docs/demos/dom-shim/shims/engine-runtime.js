@@ -80,6 +80,20 @@ export function flushAndRender(...args) {
 let _measureCanvas = null;
 let _measureCtx = null;
 
+function defaultBrowserFontFamily() {
+    if (globalThis.__RENDERO_NATIVE__) return 'Times';
+    try {
+        const body = document?.body;
+        if (body && typeof window?.getComputedStyle === 'function') {
+            const family = window.getComputedStyle(body).fontFamily;
+            if (family) return family;
+        }
+    } catch (_err) {
+        // Ignore and fall back below.
+    }
+    return 'Times';
+}
+
 export function measureTextBrowser(text, fontSize, fontWeight, fontFamily) {
     if (globalThis.__RENDERO_NATIVE__) return null; // native path uses Rust measurer
 
@@ -91,7 +105,7 @@ export function measureTextBrowser(text, fontSize, fontWeight, fontFamily) {
     if (!_measureCtx) return null;
 
     const weight = fontWeight || '400';
-    const family = fontFamily || '-apple-system, system-ui, sans-serif';
+    const family = fontFamily || defaultBrowserFontFamily();
     const size = fontSize || 16;
     _measureCtx.font = `${weight} ${size}px ${family}`;
 
@@ -143,7 +157,9 @@ export function measureTextElementBrowser(tagName, text, styles = {}) {
     el.style.border = '0';
     el.style.boxSizing = 'border-box';
     el.style.position = 'static';
-    el.style.display = styles.display || 'inline-block';
+    if (styles.display) {
+        el.style.display = styles.display;
+    }
     el.style.whiteSpace = styles.whiteSpace || 'normal';
     el.style.font = 'inherit';
 

@@ -54,7 +54,7 @@ impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
             let mut taffy_style = node_to_taffy_style(rendero_node, parent_node);
 
             let text_context = match &rendero_node.kind {
-                NodeKind::Text { runs, .. } if rendero_node.width > 0.0 && rendero_node.height > 0.0 => {
+                NodeKind::Text { runs, .. } if rendero_node.text_size_locked && rendero_node.width > 0.0 && rendero_node.height > 0.0 => {
                     taffy_style.size.width = Dimension::length(rendero_node.width);
                     taffy_style.size.height = Dimension::length(rendero_node.height);
                     None
@@ -265,6 +265,15 @@ fn node_to_taffy_style(node: &crate::node::Node, parent: Option<&crate::node::No
         Some(dir) => dir,
         None => LayoutDirection::Vertical,
     };
+    let parent_align = match parent.and_then(|p| match &p.kind {
+        NodeKind::Frame { auto_layout: Some(al), .. } => Some(al.align),
+        _ => None,
+    }) {
+        Some(align) => align,
+        None => LayoutAlign::Stretch,
+    };
+
+    let text_size_locked = matches!(node.kind, NodeKind::Text { .. }) && node.text_size_locked;
 
     match (parent_direction, node.horizontal_sizing) {
         (LayoutDirection::Horizontal, SizingMode::Fill) => {
@@ -277,7 +286,13 @@ fn node_to_taffy_style(node: &crate::node::Node, parent: Option<&crate::node::No
             style.align_self = Some(AlignSelf::Stretch);
             style.size.width = Dimension::auto();
         }
-        (_, SizingMode::Fixed) if node.width > 0.0 => {
+        (LayoutDirection::Vertical, SizingMode::Hug) if parent_align != LayoutAlign::Stretch => {
+            style.size.width = Dimension::auto();
+            if node.size_constraints.max_width <= 0.0 {
+                style.max_size.width = Dimension::percent(1.0);
+            }
+        }
+        (_, SizingMode::Fixed) if node.width > 0.0 && (!matches!(node.kind, NodeKind::Text { .. }) || text_size_locked) => {
             style.size.width = Dimension::length(node.width);
         }
         _ => {}
@@ -294,7 +309,13 @@ fn node_to_taffy_style(node: &crate::node::Node, parent: Option<&crate::node::No
             style.align_self = Some(AlignSelf::Stretch);
             style.size.height = Dimension::auto();
         }
-        (_, SizingMode::Fixed) if node.height > 0.0 => {
+        (LayoutDirection::Horizontal, SizingMode::Hug) if parent_align != LayoutAlign::Stretch => {
+            style.size.height = Dimension::auto();
+            if node.size_constraints.max_height <= 0.0 {
+                style.max_size.height = Dimension::percent(1.0);
+            }
+        }
+        (_, SizingMode::Fixed) if node.height > 0.0 && (!matches!(node.kind, NodeKind::Text { .. }) || text_size_locked) => {
             style.size.height = Dimension::length(node.height);
         }
         _ => {}
