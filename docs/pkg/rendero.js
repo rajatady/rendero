@@ -1744,10 +1744,14 @@ export class CanvasEngine {
      * @param {number} right
      * @param {number} bottom
      * @param {number} left
+     * @param {boolean} auto_top
+     * @param {boolean} auto_right
+     * @param {boolean} auto_bottom
+     * @param {boolean} auto_left
      * @returns {boolean}
      */
-    set_node_margin(counter, client_id, top, right, bottom, left) {
-        const ret = wasm.canvasengine_set_node_margin(this.__wbg_ptr, counter, client_id, top, right, bottom, left);
+    set_node_margin(counter, client_id, top, right, bottom, left, auto_top, auto_right, auto_bottom, auto_left) {
+        const ret = wasm.canvasengine_set_node_margin(this.__wbg_ptr, counter, client_id, top, right, bottom, left, auto_top, auto_right, auto_bottom, auto_left);
         return ret !== 0;
     }
     /**
@@ -1852,6 +1856,17 @@ export class CanvasEngine {
      */
     set_node_size_constraints(counter, client_id, min_w, min_h, max_w, max_h) {
         const ret = wasm.canvasengine_set_node_size_constraints(this.__wbg_ptr, counter, client_id, min_w, min_h, max_w, max_h);
+        return ret !== 0;
+    }
+    /**
+     * @param {number} counter
+     * @param {number} client_id
+     * @param {number} width_percent
+     * @param {number} height_percent
+     * @returns {boolean}
+     */
+    set_node_size_percent(counter, client_id, width_percent, height_percent) {
+        const ret = wasm.canvasengine_set_node_size_percent(this.__wbg_ptr, counter, client_id, width_percent, height_percent);
         return ret !== 0;
     }
     /**

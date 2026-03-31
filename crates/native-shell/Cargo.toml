@@ -11,7 +11,10 @@ path = "src/main.rs"
 [dependencies]
 rendero-core = { path = "../core" }
 rendero-renderer = { path = "../renderer" }
+rendero-text = { path = "../text" }
 glam = { workspace = true }
 winit = "0.30"
 softbuffer = "0.4"
 rquickjs = { version = "0.11", features = ["bindgen", "parallel"] }
+serde = { workspace = true }
+serde_json = { workspace = true }

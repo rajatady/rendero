@@ -31,12 +31,217 @@ ENGINE_EXTRACTOR_JS = """
 
     const engine = debug.engine;
     const shimDoc = debug.shimDocument;
+    const debugSnapshot =
+        window.__RENDERO_DEBUG__?.getLayeredState?.()
+        || window.__RENDERO_DEBUG__?.layered
+        || window.__RENDERO_DEBUG_STATE__
+        || window.Rendero?.debug?.getSnapshot?.()
+        || {};
     if (!shimDoc) {
         return { error: 'Shim document not found.' };
     }
 
     const elements = [];
+    const engineTextNodes = [];
     let nextId = 0;
+
+    function idKey(value) {
+        if (!value || typeof value !== 'object') return null;
+        const counter = value.counter ?? value.Counter ?? value.id?.counter;
+        const clientId = value.client_id ?? value.clientId ?? value.client_id;
+        if (counter == null || clientId == null) return null;
+        return `${counter}:${clientId}`;
+    }
+
+    function kindName(node) {
+        const kind = node?.kind;
+        if (!kind || typeof kind !== 'object') return 'Unknown';
+        const keys = Object.keys(kind);
+        return keys.length > 0 ? keys[0] : 'Unknown';
+    }
+
+    function summarizeNode(node) {
+        const kind = kindName(node);
+        const summary = {
+            name: node?.name || null,
+            kind,
+            width: node?.width || 0,
+            height: node?.height || 0,
+            transform: {
+                tx: node?.transform?.tx || 0,
+                ty: node?.transform?.ty || 0,
+            },
+            sizing: {
+                horizontal: node?.horizontal_sizing || null,
+                vertical: node?.vertical_sizing || null,
+            },
+            margin: node?.margin || null,
+            layoutPosition: node?.layout_position || null,
+            sizeConstraints: node?.size_constraints || null,
+            autoLayout: node?.kind?.Frame?.auto_layout || null,
+            fills: node?.style?.fills || [],
+            opacity: node?.style?.opacity ?? 1,
+        };
+        if (kind === 'Text') {
+            const runs = node?.kind?.Text?.runs || [];
+            summary.text = {
+                text: runs.map((run) => run.text || '').join(''),
+                runs: runs.map((run) => ({
+                    text: run.text || '',
+                    fontFamily: run.font_family || null,
+                    fontSize: run.font_size || null,
+                    fontWeight: run.font_weight || null,
+                    lineHeight: run.line_height ?? null,
+                    letterSpacing: run.letter_spacing || 0,
+                })),
+                align: node?.kind?.Text?.align || null,
+            };
+        }
+        return summary;
+    }
+
+    function extractEnginePipeline() {
+        const json = engine.export_document_json?.();
+        if (!json) {
+            return { engineDocument: null, engineModel: [], engineLayout: [] };
+        }
+
+        let engineDocument = null;
+        try {
+            engineDocument = JSON.parse(json);
+        } catch (e) {
+            return {
+                engineDocument: { error: String(e) },
+                engineModel: [],
+                engineLayout: [],
+            };
+        }
+
+        const flatNodes = engineDocument?.pages?.[0]?.tree?.nodes || [];
+        const registry = debugSnapshot.nodes || {};
+        const nodeKeyToEngineId = {};
+        for (const [engineId, ids] of Object.entries(registry)) {
+            const key = `${ids.counter}:${ids.clientId}`;
+            nodeKeyToEngineId[key] = Number(engineId);
+        }
+
+        const entries = flatNodes.map(([node, parentId]) => {
+            const key = idKey(node?.id);
+            return {
+                key,
+                parentKey: idKey(parentId),
+                engineId: key ? (nodeKeyToEngineId[key] ?? null) : null,
+                node,
+            };
+        });
+
+        const byKey = new Map(entries.filter((entry) => entry.key).map((entry) => [entry.key, entry]));
+        const worldCache = new Map();
+
+        function worldFor(entry) {
+            if (!entry?.key) return { x: 0, y: 0 };
+            if (worldCache.has(entry.key)) return worldCache.get(entry.key);
+            const local = {
+                x: entry.node?.transform?.tx || 0,
+                y: entry.node?.transform?.ty || 0,
+            };
+            if (!entry.parentKey) {
+                worldCache.set(entry.key, local);
+                return local;
+            }
+            const parent = byKey.get(entry.parentKey);
+            const parentWorld = worldFor(parent);
+            const result = {
+                x: parentWorld.x + local.x,
+                y: parentWorld.y + local.y,
+            };
+            worldCache.set(entry.key, result);
+            return result;
+        }
+
+        const engineModel = entries.map((entry) => ({
+            key: entry.key,
+            parentKey: entry.parentKey,
+            engineId: entry.engineId,
+            ...summarizeNode(entry.node),
+        }));
+
+        const engineLayout = entries.map((entry) => {
+            const world = worldFor(entry);
+            return {
+                key: entry.key,
+                parentKey: entry.parentKey,
+                engineId: entry.engineId,
+                name: entry.node?.name || null,
+                kind: kindName(entry.node),
+                local: {
+                    x: entry.node?.transform?.tx || 0,
+                    y: entry.node?.transform?.ty || 0,
+                },
+                world: {
+                    x: world.x,
+                    y: world.y,
+                },
+                size: {
+                    width: entry.node?.width || 0,
+                    height: entry.node?.height || 0,
+                },
+                bounds: {
+                    x: world.x,
+                    y: world.y,
+                    width: entry.node?.width || 0,
+                    height: entry.node?.height || 0,
+                },
+            };
+        });
+
+        return { engineDocument, engineModel, engineLayout };
+    }
+
+    function collectEngineTextNodes() {
+        try {
+            const json = engine.export_document_json?.();
+            if (!json) return;
+            const doc = JSON.parse(json);
+
+            function walk(value) {
+                if (!value) return;
+                if (Array.isArray(value)) {
+                    for (const item of value) walk(item);
+                    return;
+                }
+                if (typeof value !== 'object') return;
+
+                const kind = value.kind;
+                if (kind && kind.Text && Array.isArray(kind.Text.runs)) {
+                    const runs = kind.Text.runs;
+                    const text = runs.map((run) => run.text || '').join('');
+                    engineTextNodes.push({
+                        name: value.name || null,
+                        width: value.width || 0,
+                        height: value.height || 0,
+                        text,
+                        runs: runs.map((run) => ({
+                            text: run.text || '',
+                            font_family: run.font_family || null,
+                            font_size: run.font_size || null,
+                            font_weight: run.font_weight || null,
+                            letter_spacing: run.letter_spacing || 0,
+                            line_height: run.line_height ?? null,
+                        })),
+                    });
+                }
+
+                for (const child of Object.values(value)) {
+                    walk(child);
+                }
+            }
+
+            walk(doc);
+        } catch (e) {
+            engineTextNodes.push({ error: String(e) });
+        }
+    }
 
     function walkShimNode(node, depth, parentId) {
         const id = nextId++;
@@ -78,6 +283,9 @@ ENGINE_EXTRACTOR_JS = """
             text: node._isTextElement ? (node.textContent || '').slice(0, 200) : '',
             bounds,
             styles,
+            shimStyle: node._engineId != null ? (debugSnapshot.styles?.[String(node._engineId)] || null) : null,
+            bridgeOps: node._engineId != null ? (debugSnapshot.bridgeOps || []).filter((op) => op.engineId === node._engineId) : [],
+            registry: node._engineId != null ? (debugSnapshot.nodes?.[String(node._engineId)] || null) : null,
             childCount: node.childNodes ? node.childNodes.length : 0,
         });
 
@@ -96,8 +304,12 @@ ENGINE_EXTRACTOR_JS = """
     if (body) {
         walkShimNode(body, 0, null);
     }
+    collectEngineTextNodes();
+
+    const pipeline = extractEnginePipeline();
 
     return {
+        pipelineVersion: 1,
         url: location.href,
         title: document.title,
         timestamp: new Date().toISOString(),
@@ -107,6 +319,11 @@ ENGINE_EXTRACTOR_JS = """
         },
         elementCount: elements.length,
         elements,
+        engineTextNodes,
+        debugSnapshot,
+        engineDocument: pipeline.engineDocument,
+        engineModel: pipeline.engineModel,
+        engineLayout: pipeline.engineLayout,
     };
 }
 """

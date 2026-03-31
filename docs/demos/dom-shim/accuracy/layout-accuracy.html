@@ -25,63 +25,63 @@
 
     <script type="module">
         import { CORPUS, VIEWPORT } from './test-corpus.js';
+        import { installShim } from '../shims/index.js';
 
+        const TOLERANCE = 1;
         const container = document.getElementById('container');
         const resultsDiv = document.getElementById('results');
         const summaryDiv = document.getElementById('summary');
 
-        // ─── Build a real DOM tree from a test case definition ───
+        const engineCanvas = document.createElement('canvas');
+        engineCanvas.width = VIEWPORT.width;
+        engineCanvas.height = VIEWPORT.height;
+        engineCanvas.style.position = 'absolute';
+        engineCanvas.style.left = '-9999px';
+        engineCanvas.style.top = '-9999px';
+        engineCanvas.style.width = `${VIEWPORT.width}px`;
+        engineCanvas.style.height = `${VIEWPORT.height}px`;
+        document.body.appendChild(engineCanvas);
 
-        function buildDomTree(node, parent) {
-            const el = document.createElement(node.tag || 'div');
-            el.dataset.testId = node.id;
+        const shim = await installShim(engineCanvas);
+        const shimDoc = shim.document;
+        const shimWindow = shim.window;
 
-            // Apply styles
-            if (node.style) {
-                for (const [key, value] of Object.entries(node.style)) {
-                    el.style[key] = typeof value === 'number' ? `${value}px` : value;
-                }
+        function applyStyles(el, node) {
+            if (!node.style) return;
+            for (const [key, value] of Object.entries(node.style)) {
+                el.style[key] = typeof value === 'number' ? `${value}px` : value;
             }
+        }
 
-            // Add text content
+        function buildTree(node, parent, doc, registry) {
+            const el = doc.createElement(node.tag || 'div');
+            if (node.id) {
+                registry.set(node.id, el);
+            }
+            applyStyles(el, node);
             if (node.text) {
                 el.textContent = node.text;
             }
-
-            // Recurse children
             if (node.children) {
                 for (const child of node.children) {
-                    buildDomTree(child, el);
+                    buildTree(child, el, doc, registry);
                 }
             }
-
             parent.appendChild(el);
             return el;
         }
 
-        // ─── Extract bounds for every element with data-test-id ───
-
-        function extractBounds(rootEl) {
+        function extractBrowserBounds(registry) {
             const bounds = {};
-            const elements = rootEl.querySelectorAll('[data-test-id]');
-            // Include the root itself
-            if (rootEl.dataset.testId) {
-                const r = rootEl.getBoundingClientRect();
-                const pr = rootEl.parentElement.getBoundingClientRect();
-                bounds[rootEl.dataset.testId] = {
-                    x: Math.round(r.left - pr.left),
-                    y: Math.round(r.top - pr.top),
-                    width: Math.round(r.width),
-                    height: Math.round(r.height),
-                };
-            }
-            for (const el of elements) {
+            const entries = Array.from(registry.entries());
+            if (entries.length === 0) return bounds;
+            const [, firstEl] = entries[0];
+            const parentRect = firstEl.parentElement.getBoundingClientRect();
+            for (const [id, el] of entries) {
                 const r = el.getBoundingClientRect();
-                // Get position relative to the test container, not the page
-                const pr = rootEl.parentElement.getBoundingClientRect();
-                bounds[el.dataset.testId] = {
-                    x: Math.round(r.left - pr.left),
-                    y: Math.round(r.top - pr.top),
+                bounds[id] = {
+                    x: Math.round(r.left - parentRect.left),
+                    y: Math.round(r.top - parentRect.top),
                     width: Math.round(r.width),
                     height: Math.round(r.height),
                 };
@@ -89,92 +89,159 @@
             return bounds;
         }
 
-        // ─── Run the sweep ───
+        function extractEngineBounds(registry) {
+            const bounds = {};
+            const entries = Array.from(registry.entries());
+            if (entries.length === 0) return bounds;
+            const [, firstEl] = entries[0];
+            const origin = firstEl.getBoundingClientRect();
+            for (const [id, el] of entries) {
+                const r = el.getBoundingClientRect();
+                bounds[id] = {
+                    x: Math.round(r.left - origin.left),
+                    y: Math.round(r.top - origin.top),
+                    width: Math.round(r.width),
+                    height: Math.round(r.height),
+                };
+            }
+            return bounds;
+        }
+
+        function compareBounds(browserBounds, engineBounds) {
+            const mismatches = [];
+            for (const [id, browser] of Object.entries(browserBounds)) {
+                const engine = engineBounds[id];
+                if (!engine) {
+                    mismatches.push(`${id}: missing in engine`);
+                    continue;
+                }
+                for (const prop of ['x', 'y', 'width', 'height']) {
+                    const diff = Math.abs((browser[prop] || 0) - (engine[prop] || 0));
+                    if (diff >= TOLERANCE) {
+                        mismatches.push(
+                            `${id}.${prop}: browser=${browser[prop]} engine=${engine[prop]} diff=${diff}`
+                        );
+                    }
+                }
+            }
+            for (const id of Object.keys(engineBounds)) {
+                if (!(id in browserBounds)) {
+                    mismatches.push(`${id}: extra engine node`);
+                }
+            }
+            return mismatches;
+        }
+
+        function resetShimRoot() {
+            while (shimDoc.body.childNodes.length > 0) {
+                shimDoc.body.removeChild(shimDoc.body.childNodes[0]);
+            }
+        }
+
+        function settleEngineFrames(frameCount = 4) {
+            return new Promise((resolve) => {
+                let remaining = frameCount;
+                function tick() {
+                    window.Rendero.engine.markDirty();
+                    shimWindow.__renderoUpdateScrollMetrics?.();
+                    if (--remaining <= 0) {
+                        resolve();
+                        return;
+                    }
+                    requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+            });
+        }
 
         const results = [];
         let totalElements = 0;
-        let matchCount = 0;
-        let mismatchCount = 0;
+        let totalProperties = 0;
+        let propertyMatches = 0;
+        let propertyMismatches = 0;
 
         for (const testCase of CORPUS) {
-            // Create a wrapper div to isolate each test
             const wrapper = document.createElement('div');
             wrapper.style.width = `${VIEWPORT.width}px`;
             wrapper.style.position = 'relative';
             container.appendChild(wrapper);
 
-            // Build the DOM tree
-            buildDomTree(testCase.tree, wrapper);
-
-            // Force layout
+            const browserRegistry = new Map();
+            buildTree(testCase.tree, wrapper, document, browserRegistry);
             wrapper.getBoundingClientRect();
+            const browserBounds = extractBrowserBounds(browserRegistry);
 
-            // Extract browser bounds (ground truth)
-            const browserBounds = extractBounds(wrapper.firstElementChild);
+            resetShimRoot();
+            const engineRegistry = new Map();
+            buildTree(testCase.tree, shimDoc.body, shimDoc, engineRegistry);
+            await settleEngineFrames();
+            const engineBounds = extractEngineBounds(engineRegistry);
 
-            // Compare — for now, browser vs browser (baseline)
-            // When engine is wired in, this becomes browser vs engine
-            const elementMismatches = [];
-            for (const [id, bounds] of Object.entries(browserBounds)) {
-                totalElements++;
-                // Record as match (self-comparison always matches)
-                // This establishes the infrastructure — engine comparison plugs in here
-                matchCount++;
-            }
+            const mismatches = compareBounds(browserBounds, engineBounds);
+            const elementCount = Object.keys(browserBounds).length;
+            const propertyMismatchCount = mismatches.filter((m) => m.includes('.')).length;
+
+            totalElements += elementCount;
+            totalProperties += elementCount * 4;
+            propertyMismatches += propertyMismatchCount;
+            propertyMatches += Math.max(0, elementCount * 4 - propertyMismatchCount);
 
             results.push({
                 label: testCase.label,
                 category: testCase.category,
+                elementCount,
+                mismatchCount: mismatches.length,
+                propertyMismatchCount,
                 browserBounds,
-                elementCount: Object.keys(browserBounds).length,
-                mismatches: elementMismatches,
+                engineBounds,
+                mismatches,
             });
 
+            resetShimRoot();
             container.removeChild(wrapper);
         }
 
-        // ─── Render results ───
-
         let html = '';
         for (const result of results) {
-            const pass = result.mismatches.length === 0;
+            const pass = result.mismatchCount === 0;
             html += `<div class="test-result ${pass ? 'test-pass' : 'test-fail'}">`;
             html += `${pass ? '✓' : '✗'} [${result.category}] ${result.label} — ${result.elementCount} elements`;
             if (!pass) {
-                for (const m of result.mismatches) {
-                    html += `<div class="detail">${m}</div>`;
+                for (const mismatch of result.mismatches.slice(0, 6)) {
+                    html += `<div class="detail">${mismatch}</div>`;
+                }
+                if (result.mismatches.length > 6) {
+                    html += `<div class="detail">... ${result.mismatches.length - 6} more</div>`;
                 }
             }
-            // Show browser bounds for verification
-            html += `<div class="detail">bounds: ${JSON.stringify(result.browserBounds)}</div>`;
             html += `</div>`;
         }
         resultsDiv.innerHTML = html;
 
-        const pct = totalElements > 0 ? ((matchCount / totalElements) * 100).toFixed(1) : '0';
-        summaryDiv.innerHTML = `<span class="${mismatchCount === 0 ? 'pass' : 'fail'}">${matchCount}/${totalElements} elements match (${pct}%)</span> — ${results.length} test cases, ${mismatchCount} mismatches`;
-        summaryDiv.innerHTML += `<br><small>Browser ground truth captured. Engine comparison not yet wired.</small>`;
-
-        // ─── Publish report for automation ───
+        const pct = totalProperties > 0 ? ((propertyMatches / totalProperties) * 100).toFixed(1) : '0';
+        summaryDiv.innerHTML =
+            `<span class="${propertyMismatches === 0 ? 'pass' : 'fail'}">${propertyMatches}/${totalProperties} properties match (${pct}%)</span>` +
+            ` — ${results.length} test cases, ${propertyMismatches} property mismatches`;
 
         const report = {
             status: 'ready',
-            total: totalElements,
-            matchCount,
-            mismatchCount,
-            testCases: results.map(r => ({
+            totalElements,
+            totalProperties,
+            propertyMatches,
+            propertyMismatches,
+            testCases: results.map((r) => ({
                 label: r.label,
                 category: r.category,
                 elementCount: r.elementCount,
-                mismatchCount: r.mismatches.length,
-                browserBounds: r.browserBounds,
+                mismatchCount: r.mismatchCount,
+                propertyMismatchCount: r.propertyMismatchCount,
+                mismatches: r.mismatches,
             })),
         };
 
-        // Make available to automation
         window.__LAYOUT_ACCURACY_REPORT__ = report;
+        document.body.dataset.status = 'ready';
 
-        // Hash-based report for headless collection
         const params = new URLSearchParams(location.search);
         if (params.get('report') === '1') {
             location.hash = '#report=' + encodeURIComponent(JSON.stringify(report));

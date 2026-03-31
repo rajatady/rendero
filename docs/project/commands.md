@@ -1,6 +1,6 @@
 # Commands Reference
 
-All commands run from the repo root: `/Users/kumardivyarajat/WebstormProjects/rendero`
+All commands run from the repo root.
 
 ---
 
@@ -31,7 +31,7 @@ Output: `target/release/librendero_native_ffi.dylib` + `target/release/librender
 cd docs/demos/dom-shim
 node build.mjs
 ```
-Output: `dist/react-web.js`, `dist/react-native.js`, `dist/vue-web.js`, `dist/vue-native.js`, `dist/macos-bundle.js`
+Output: `dist/react-web.js`, `dist/react-native.js`, `dist/vue-web.js`, `dist/vue-native.js`, `dist/macos-react-bundle.js`, `dist/macos-vue-bundle.js`, `dist/macos-bundle.js`
 
 ### Full Rebuild (everything)
 ```bash
@@ -60,10 +60,10 @@ Opens a macOS window with React rendering through the Rust engine. Close window 
 # Kill old server first
 lsof -ti:5555 | xargs kill 2>/dev/null
 
-# Start from docs/ directory (serves all demos)
-cd docs && python3 -m http.server 5555
+# Start a no-cache dev server from repo root
+serve -l tcp://127.0.0.1:5555 docs -C --no-etag -c ./serve.rendero.json
 ```
-Then open: `http://localhost:5555/demos/dom-shim/`
+Then open: `http://127.0.0.1:5555/demos/dom-shim/`
 
 ### Swift Shell (legacy, superseded by Rust shell)
 ```bash
@@ -91,6 +91,15 @@ cargo test
 ```bash
 cargo test -p rendero-core -- --nocapture
 ```
+
+### Accuracy Suite
+```bash
+scripts/run_accuracy_suite.sh
+```
+Builds the DOM-shim bundles and WASM output, refreshes `corpus/dashboard.json`,
+starts a no-cache server, captures browser oracle + Rendero engine layout for the
+Apple demo, runs the synthetic layout corpus benchmark, and writes the outputs
+into `accuracy/`.
 
 ### Native App with Log Capture
 ```bash
@@ -178,11 +187,13 @@ wasm-pack build crates/wasm --target web --out-dir ../../pkg --out-name rendero
 ```
 
 ### Cache Busting (web only)
-Python's http.server has no cache headers. Browser caches aggressively. Two options:
+The recommended dev server already serves without ETags and with explicit cache control.
+The page also appends `?v=<timestamp>` to bundle imports on mode switches.
+If you still need to force a refresh:
 1. Hard reload: `Cmd+Shift+R` in browser
-2. Bump `?v=N` on the URL: `http://localhost:5555/demos/dom-shim/?v=42`
+2. Bump `?v=N` on the page URL: `http://127.0.0.1:5555/demos/dom-shim/?v=42`
 
-Native app has NO cache issues (loads bundle fresh every run).
+Native app has no cache issues.
 
 ---
 

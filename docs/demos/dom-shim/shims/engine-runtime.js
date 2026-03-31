@@ -109,3 +109,89 @@ export function measureTextBrowser(text, fontSize, fontWeight, fontFamily) {
 
     return { width: Math.ceil(width), height: Math.ceil(height) };
 }
+
+let _measureElementRoot = null;
+
+function ensureMeasureElementRoot() {
+    if (globalThis.__RENDERO_NATIVE__) return null;
+    if (_measureElementRoot) return _measureElementRoot;
+    if (typeof document === 'undefined' || !document.body || typeof document.createElement !== 'function') return null;
+
+    const root = document.createElement('div');
+    root.style.position = 'absolute';
+    root.style.left = '-100000px';
+    root.style.top = '0';
+    root.style.visibility = 'hidden';
+    root.style.pointerEvents = 'none';
+    root.style.contain = 'layout style paint';
+    root.style.zIndex = '-1';
+    document.body.appendChild(root);
+    _measureElementRoot = root;
+    return root;
+}
+
+export function measureTextElementBrowser(tagName, text, styles = {}) {
+    if (globalThis.__RENDERO_NATIVE__) return null;
+
+    const root = ensureMeasureElementRoot();
+    if (!root) return null;
+
+    const el = document.createElement(tagName || 'div');
+    el.textContent = text || ' ';
+    el.style.margin = '0';
+    el.style.padding = '0';
+    el.style.border = '0';
+    el.style.boxSizing = 'border-box';
+    el.style.position = 'static';
+    el.style.display = styles.display || 'inline-block';
+    el.style.whiteSpace = styles.whiteSpace || 'normal';
+    el.style.font = 'inherit';
+
+    const forwarded = [
+        'fontFamily',
+        'fontSize',
+        'fontWeight',
+        'fontStyle',
+        'fontStretch',
+        'fontVariant',
+        'lineHeight',
+        'letterSpacing',
+        'wordSpacing',
+        'textTransform',
+        'textIndent',
+        'textAlign',
+        'width',
+        'minWidth',
+        'maxWidth',
+        'height',
+        'minHeight',
+        'maxHeight',
+        'padding',
+        'paddingTop',
+        'paddingRight',
+        'paddingBottom',
+        'paddingLeft',
+        'overflowWrap',
+        'wordBreak',
+        'whiteSpace',
+    ];
+
+    for (const key of forwarded) {
+        if (styles[key] !== undefined && styles[key] !== null && styles[key] !== '') {
+            el.style[key] = String(styles[key]);
+        }
+    }
+
+    root.appendChild(el);
+    const rect = el.getBoundingClientRect();
+    root.removeChild(el);
+
+    if (!(rect.width > 0) && !(rect.height > 0)) {
+        return null;
+    }
+
+    return {
+        width: Math.ceil(rect.width),
+        height: Math.ceil(rect.height),
+    };
+}

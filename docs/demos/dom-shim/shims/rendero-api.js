@@ -11,6 +11,77 @@ function notImplemented(domain, method) {
     };
 }
 
+const DEBUG_STATE_KEY = '__RENDERO_DEBUG_STATE__';
+const LEGACY_DEBUG_KEY = '__RENDERO_DEBUG__';
+
+function syncLegacyDebugState() {
+    const g = globalThis;
+    const legacy = g[LEGACY_DEBUG_KEY];
+    if (!legacy || typeof legacy !== 'object') return;
+    legacy.layered = g[DEBUG_STATE_KEY] || null;
+    legacy.getLayeredState = () => g[DEBUG_STATE_KEY] || null;
+}
+
+function getDebugState() {
+    const g = globalThis;
+    if (!g[DEBUG_STATE_KEY]) {
+        g[DEBUG_STATE_KEY] = {
+            surface: null,
+            bridgeOps: [],
+            nodes: {},
+            styles: {},
+        };
+    }
+    syncLegacyDebugState();
+    return g[DEBUG_STATE_KEY];
+}
+
+function cloneDebugState() {
+    return JSON.parse(JSON.stringify(getDebugState()));
+}
+
+export function setDebugSurface(surface) {
+    const state = getDebugState();
+    state.surface = surface;
+    syncLegacyDebugState();
+}
+
+export function traceBridgeOp(op) {
+    const state = getDebugState();
+    state.bridgeOps.push({
+        index: state.bridgeOps.length,
+        ...op,
+    });
+    syncLegacyDebugState();
+}
+
+export function recordNodeRegistration(engineId, counter, clientId) {
+    getDebugState().nodes[String(engineId)] = { engineId, counter, clientId };
+    syncLegacyDebugState();
+}
+
+export function recordNodeUnregistration(engineId) {
+    delete getDebugState().nodes[String(engineId)];
+    delete getDebugState().styles[String(engineId)];
+    syncLegacyDebugState();
+}
+
+export function recordShimStyle(engineId, snapshot) {
+    if (engineId == null) return;
+    getDebugState().styles[String(engineId)] = snapshot;
+    syncLegacyDebugState();
+}
+
+export function resetDebugState() {
+    globalThis[DEBUG_STATE_KEY] = {
+        surface: null,
+        bridgeOps: [],
+        nodes: {},
+        styles: {},
+    };
+    syncLegacyDebugState();
+}
+
 export function ensureRenderoNamespace({ engineBridge = null, nativeApi = null } = {}) {
     const g = globalThis;
     const existing = g.Rendero || {};
@@ -48,6 +119,10 @@ export function ensureRenderoNamespace({ engineBridge = null, nativeApi = null }
             media: nativeApi?.media || existing.native?.media || {
                 pickImage: notImplemented('native.media', 'pickImage'),
             },
+        },
+        debug: {
+            getSnapshot: () => cloneDebugState(),
+            reset: () => resetDebugState(),
         },
     };
 

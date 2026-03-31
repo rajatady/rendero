@@ -1941,6 +1941,8 @@ impl CanvasEngine {
             transform: Transform::translate(min_x, min_y),
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: rendero_core::properties::Style::default(),
             kind: NodeKind::Vector {
                 paths: vec![VectorPath {
@@ -4961,6 +4963,12 @@ impl CanvasEngine {
         self.redo_stack.clear();
         node.width = w;
         node.height = h;
+        if w > 0.0 {
+            node.width_percent = None;
+        }
+        if h > 0.0 {
+            node.height_percent = None;
+        }
         let tx = node.transform.tx;
         let ty = node.transform.ty;
         self.patch_scene_transform(node_id, tx, ty, Some(w), Some(h));
@@ -5057,6 +5065,7 @@ impl CanvasEngine {
     pub fn set_node_margin(
         &mut self, counter: u32, client_id: u32,
         top: f32, right: f32, bottom: f32, left: f32,
+        auto_top: bool, auto_right: bool, auto_bottom: bool, auto_left: bool,
     ) -> bool {
         let node_id = NodeId(rendero_core::id::LogicalClock { counter: counter as u64, client_id });
         let page = match self.document.page_mut(self.current_page) {
@@ -5067,9 +5076,28 @@ impl CanvasEngine {
             Some(n) => n,
             None => return false,
         };
-        node.margin = LayoutMargin { top, right, bottom, left };
+        node.margin = LayoutMargin { top, right, bottom, left, auto_top, auto_right, auto_bottom, auto_left };
         let root_id = page.tree.root_id();
         rendero_core::layout::compute_layout(&mut page.tree, &root_id);
+        self.mark_dirty();
+        true
+    }
+
+    pub fn set_node_size_percent(
+        &mut self, counter: u32, client_id: u32,
+        width_percent: f32, height_percent: f32,
+    ) -> bool {
+        let node_id = NodeId(rendero_core::id::LogicalClock { counter: counter as u64, client_id });
+        let page = match self.document.page_mut(self.current_page) {
+            Some(p) => p,
+            None => return false,
+        };
+        let node = match page.tree.get_mut(&node_id) {
+            Some(n) => n,
+            None => return false,
+        };
+        node.width_percent = if width_percent > 0.0 { Some(width_percent) } else { None };
+        node.height_percent = if height_percent > 0.0 { Some(height_percent) } else { None };
         self.mark_dirty();
         true
     }
@@ -6137,21 +6165,17 @@ impl CanvasEngine {
             1 => LayoutWrap::Wrap,
             _ => LayoutWrap::NoWrap,
         };
+        let resolve_sizing = |mode: SizingMode, extent: f32| match mode {
+            SizingMode::Fixed if extent <= 0.0 => SizingMode::Hug,
+            _ => mode,
+        };
         let primary_sizing = match dir {
-            LayoutDirection::Horizontal => {
-                if node.width > 0.0 { node.horizontal_sizing } else { SizingMode::Hug }
-            }
-            LayoutDirection::Vertical => {
-                if node.height > 0.0 { node.vertical_sizing } else { SizingMode::Hug }
-            }
+            LayoutDirection::Horizontal => resolve_sizing(node.horizontal_sizing, node.width),
+            LayoutDirection::Vertical => resolve_sizing(node.vertical_sizing, node.height),
         };
         let counter_sizing = match dir {
-            LayoutDirection::Horizontal => {
-                if node.height > 0.0 { node.vertical_sizing } else { SizingMode::Hug }
-            }
-            LayoutDirection::Vertical => {
-                if node.width > 0.0 { node.horizontal_sizing } else { SizingMode::Hug }
-            }
+            LayoutDirection::Horizontal => resolve_sizing(node.vertical_sizing, node.height),
+            LayoutDirection::Vertical => resolve_sizing(node.horizontal_sizing, node.width),
         };
         let al = AutoLayout {
             direction: dir,

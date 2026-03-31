@@ -8,6 +8,7 @@ SERVER_LOG="${OUT_DIR}/serve.log"
 NATIVE_LOG="${OUT_DIR}/native.log"
 NATIVE_PPM="${OUT_DIR}/native-headless.ppm"
 NATIVE_PNG="${OUT_DIR}/native-headless.png"
+NATIVE_JSON="${OUT_DIR}/native-headless.json"
 
 mkdir -p "${OUT_DIR}"
 
@@ -42,7 +43,8 @@ echo "[6/6] Running native headless dump and native app"
 (cd "${ROOT}" && \
   RENDERO_DEMO=react \
   RENDERO_HEADLESS_DUMP="${NATIVE_PPM}" \
-  RENDERO_HEADLESS_WIDTH=1024 \
+  RENDERO_HEADLESS_METADATA="${NATIVE_JSON}" \
+  RENDERO_HEADLESS_WIDTH=1440 \
   RENDERO_HEADLESS_HEIGHT=3400 \
   cargo run -p rendero-native-shell >"${NATIVE_LOG}" 2>&1)
 
@@ -58,5 +60,6 @@ echo "  Browser state:          ${OUT_DIR}/browser-state.json"
 echo "  Browser console:        ${OUT_DIR}/browser-console.json"
 echo "  Native headless PPM:    ${NATIVE_PPM}"
 echo "  Native headless PNG:    ${NATIVE_PNG}"
+echo "  Native headless JSON:   ${NATIVE_JSON}"
 echo "  Native log:             ${NATIVE_LOG}"
 echo "  Server log:             ${SERVER_LOG}"

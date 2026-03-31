@@ -2,7 +2,9 @@
 
 A portable rendering engine that lets unmodified React/Vue apps run natively on macOS, Windows, Linux, iOS, and Android -- without a WebView, without Electron, without rewriting your app.
 
-On web: zero overhead (it's just a normal web app).
+On web production builds: zero overhead (it's just a normal web app).
+For parity/debugging builds: the same app can also run through the DOM shim +
+WASM engine in the browser.
 On native: a DOM shim routes framework calls to a Rust rendering engine.
 
 ---
@@ -26,7 +28,9 @@ On native: a DOM shim routes framework calls to a Rust rendering engine.
 
 ### Accuracy
 
-**19.2%** layout accuracy (WASM web path, Apple demo, 107 elements, browser as oracle).
+**57.01%** layout accuracy on the Apple demo (browser oracle vs Rendero WASM path, 107 elements).
+
+Synthetic layout corpus: **83.85%**.
 
 7-site corpus with ground truth at 3 viewports: apple-macbook-pro, fin, github, gumroad, hacker-news, linear, tailadmin.
 
@@ -36,8 +40,8 @@ On native: a DOM shim routes framework calls to a Rust rendering engine.
 |---------|--------|-------|
 | React on browser DOM | Working | Full Apple website, perfect rendering |
 | Vue on browser DOM | Working | Same Apple website |
-| React on WASM canvas | Working | Full Apple page with gradients, 19.2% layout accuracy |
-| React on native macOS | Working | Full Apple page renders, headless mode, system fonts wired |
+| React on WASM canvas | Working | Full Apple page with gradients, layered benchmark pipeline, 57.01% Apple accuracy |
+| React on native macOS | Working | Full Apple page renders through the pure Rust shell, headless mode, system fonts wired |
 | Taffy layout engine | Working | 12 tests, flexbox + justify/wrap/margin/position/min-max |
 | Provider architecture | Working | LayoutEngine, TextMeasurer, CssParser, FontResolver, GlyphRasterizer |
 | Native FFI (C-ABI) | Working | 22 exported C functions, tested with Swift shell |
@@ -52,12 +56,12 @@ On native: a DOM shim routes framework calls to a Rust rendering engine.
 
 | Feature | Status | What's Missing |
 |---------|--------|----------------|
-| Layout accuracy | 19.2% | 20-item fix list in CLAUDE.md |
+| Layout accuracy | 57.01% Apple / 83.85% synthetic | Remaining gaps are root height, fixed offset, constrained text measurement, and native/browser visual parity |
 | CSS font inheritance | Not started | Shim doesn't inherit fontFamily from parent |
 | Text measurement (web) | Partial | canvas.measureText working but font string needs work |
 | Text measurement (native) | Heuristic | Uses `len * fontSize * 0.65`, Parley ready but not wired in |
-| Percentage resolution | Partial | style.js resolves % against viewport, should pass to Taffy |
-| Scroll on native | Partial | Camera movement wired, content height clamping issue |
+| Percentage resolution | Partial | Basic parent-relative width `%` support is wired; extend to height/min-max/flex-basis/positioned cases |
+| Scroll on native | Partial | Shared scroll contract is wired, but live native parity still needs more validation and window capture |
 | GPU rendering | Not started | CPU tiles work, wgpu backend planned |
 | Vue on native | Not tested | Same shim, should work with minimal fixes |
 | iOS/Android | Not started | Same Rust code, different cargo target |
@@ -72,8 +76,8 @@ YOUR APP (React, Vue, Svelte -- unmodified)
     |
 react-dom / vue runtime (UNMODIFIED)
     |
-DOM Shim (JS, ~2000 LOC)                 <-- only on native
-    |                                         on web: bypassed entirely
+DOM Shim (JS)                            <-- used on browser Rendero + native
+    |                                        real browser DOM remains the oracle path
 Engine Bridge (engine.js / engine-native.js)
     |
 Rendero Engine (Rust)
@@ -122,9 +126,9 @@ wasm-pack build crates/wasm --target web --out-dir ../../pkg --out-name rendero
 # Build JS bundles
 cd docs/demos/dom-shim && node build.mjs && cd ../../..
 
-# Start server
-cd docs && python3 -m http.server 5555
-# Open http://localhost:5555/demos/dom-shim/
+# Start a no-cache dev server
+serve -l tcp://127.0.0.1:5555 docs -C --no-etag -c ./serve.rendero.json
+# Open http://127.0.0.1:5555/demos/dom-shim/
 ```
 
 ### Run Tests
@@ -138,12 +142,12 @@ cargo test -p rendero-core
 
 | Decision | Why |
 |----------|-----|
-| Pure Rust native shell (not Swift) | Swift's AppKit run loop conflicts with JS event loop. Rust gives full control. Cross-platform. |
+| Pure Rust native shell (not Swift) | Rust gives full control of the event loop, viewport sync, and native/browser parity work. |
 | QuickJS (not JavaScriptCore) | Embeddable, has execute_pending_job() for event loop, compiles everywhere |
 | Provider traits for everything | Swap implementations without touching API. Mock for testing. Fall back on edge cases. |
 | Taffy for layout (not custom) | Full CSS flexbox + grid. Battle-tested. 0.6ms for 1000 nodes. |
 | softbuffer for now (not wgpu) | Simpler. CPU pixel blit. Swap to wgpu later for GPU rendering. |
-| DOM shim (not custom renderer) | react-dom/Vue work unmodified. Zero framework-specific code. npm packages just work. |
+| DOM shim (not custom renderer) | react-dom/Vue work unmodified. Same shim surface is now benchmarked across browser Rendero and native. |
 | IIFE bundles for native | QuickJS doesn't support ES modules. IIFE wraps everything in one function. |
 
 ---

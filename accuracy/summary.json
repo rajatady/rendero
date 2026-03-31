@@ -1,0 +1,25 @@
+{
+  "appleAccuracy": 57.01,
+  "appleMatchCount": 244,
+  "appleTotalProperties": 428,
+  "appleElementsCompared": 107,
+  "appleElementsWithMismatches": 93,
+  "layoutCorpusAccuracy": 83.85,
+  "layoutCorpusPropertyMatches": 379,
+  "layoutCorpusTotalProperties": 452,
+  "layoutCorpusTestCases": 30,
+  "corpusSiteCount": 7,
+  "corpusGroundTruthFiles": 22,
+  "corpusTotalElementsDesktop": 14966,
+  "featureCoverageAcrossSites": {
+    "overflowHidden": 7,
+    "flex": 6,
+    "grid": 6,
+    "transform": 6,
+    "animation": 6,
+    "transition": 6,
+    "borderRadius": 6,
+    "gradient": 5,
+    "shadow": 4
+  }
+}

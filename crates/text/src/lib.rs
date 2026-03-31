@@ -56,6 +56,8 @@ impl TextMeasurer for ParleyTextMeasurer {
 
         let scale = 1.0;
         let mut builder = layout_cx.ranged_builder(&mut font_cx, &full_text, scale);
+        builder.push_default(StyleProperty::FontSize(16.0));
+        builder.push_default(StyleProperty::LineHeight(1.2));
 
         // Apply styles per run
         let mut offset = 0;
@@ -68,6 +70,13 @@ impl TextMeasurer for ParleyTextMeasurer {
                 StyleProperty::FontWeight(parley::style::FontWeight::new(run.font_weight as f32)),
                 range.clone(),
             );
+            if run.letter_spacing.abs() > f32::EPSILON {
+                builder.push(StyleProperty::LetterSpacing(run.letter_spacing), range.clone());
+            }
+            if let Some(line_height) = run.line_height {
+                let multiplier = if run.font_size > 0.0 { line_height / run.font_size } else { 1.2 };
+                builder.push(StyleProperty::LineHeight(multiplier.max(0.1)), range.clone());
+            }
             if run.italic {
                 builder.push(
                     StyleProperty::FontStyle(parley::style::FontStyle::Italic),
@@ -96,7 +105,12 @@ impl TextMeasurer for ParleyTextMeasurer {
         };
         layout.break_all_lines(width_constraint);
 
-        (layout.width(), layout.height())
+        let width = if width_constraint.is_some() {
+            layout.full_width().min(max_width)
+        } else {
+            layout.full_width()
+        };
+        (width, layout.height())
     }
 }
 

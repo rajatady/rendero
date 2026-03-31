@@ -11,6 +11,7 @@ import AppleApp from './apple-vue.js';
 
 const vpW = (typeof __screenWidth !== 'undefined') ? __screenWidth : 1024;
 const vpH = (typeof __screenHeight !== 'undefined') ? __screenHeight : 768;
+const vpScale = (typeof __screenScale !== 'undefined') ? __screenScale : 1;
 setViewport(vpW, vpH);
 
 initEngine();
@@ -23,7 +24,7 @@ Object.assign(globalThis, windowShim, {
     innerHeight: vpH,
     outerWidth: vpW,
     outerHeight: vpH,
-    devicePixelRatio: 1,
+    devicePixelRatio: vpScale,
 });
 installWindowScrollShim(globalThis, shimDoc);
 shimDoc.defaultView = globalThis;

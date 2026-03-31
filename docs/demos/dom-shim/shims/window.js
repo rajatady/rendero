@@ -6,6 +6,7 @@
 // On web these are real browser APIs. On native they're shimmed.
 
 import { ShimEvent } from './events.js';
+import { setViewport } from './css-values.js';
 
 function ensureScrollState() {
     if (!globalThis.__RENDERO_SCROLL_STATE__) {
@@ -75,6 +76,30 @@ export function installWindowScrollShim(windowRef, shimDocument, { patchRealWind
         return metrics;
     };
 
+    const applyHostViewport = (logicalWidth, logicalHeight, dpr = 1) => {
+        const width = Math.max(1, Math.round(logicalWidth || 0));
+        const height = Math.max(1, Math.round(logicalHeight || 0));
+        const scale = Number.isFinite(dpr) && dpr > 0 ? dpr : 1;
+        setViewport(width, height);
+        try {
+            windowRef.innerWidth = width;
+            windowRef.innerHeight = height;
+            windowRef.outerWidth = width;
+            windowRef.outerHeight = height;
+            windowRef.devicePixelRatio = scale;
+        } catch (_err) {}
+        globalThis.__screenWidth = width;
+        globalThis.__screenHeight = height;
+        globalThis.__screenScale = scale;
+        updateMetrics();
+        const clampedY = clampScrollY(state.y || 0, shimDocument);
+        if (clampedY !== state.y) {
+            state.y = clampedY;
+            syncCameraToScroll(state.y);
+            dispatchScroll();
+        }
+    };
+
     const dispatchScroll = () => {
         if (typeof windowRef.dispatchEvent === 'function') {
             windowRef.dispatchEvent(new ShimEvent('scroll', { bubbles: false, cancelable: false }));
@@ -90,6 +115,19 @@ export function installWindowScrollShim(windowRef, shimDocument, { patchRealWind
             state.x = window.scrollX || 0;
             state.y = clampScrollY(window.scrollY || 0, shimDocument);
             syncCameraToScroll(state.y);
+        };
+        windowRef.__renderoHostResize = (logicalWidth, logicalHeight, dpr = 1) => {
+            applyHostViewport(logicalWidth, logicalHeight, dpr);
+            syncFromViewport();
+        };
+        windowRef.__renderoHostWheel = (deltaY = 0) => {
+            state.syncingViewport = true;
+            try {
+                window.scrollBy(0, deltaY || 0);
+            } finally {
+                state.syncingViewport = false;
+            }
+            syncFromViewport();
         };
         window.addEventListener('scroll', syncFromViewport, { passive: true });
         windowRef.__renderoUpdateScrollMetrics = updateMetrics;
@@ -121,6 +159,8 @@ export function installWindowScrollShim(windowRef, shimDocument, { patchRealWind
     windowRef.scroll = shimScrollTo;
     windowRef.scrollBy = shimScrollBy;
     windowRef.__renderoUpdateScrollMetrics = updateMetrics;
+    windowRef.__renderoHostResize = applyHostViewport;
+    windowRef.__renderoHostWheel = (deltaY = 0) => shimScrollBy(0, deltaY || 0);
     updateMetrics();
 }
 

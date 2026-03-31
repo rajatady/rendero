@@ -7,7 +7,7 @@
 // calls are funneled through a serial queue and flushed once per
 // frame, right before render.
 
-import { ensureRenderoNamespace } from './rendero-api.js';
+import { ensureRenderoNamespace, recordNodeRegistration, recordNodeUnregistration, setDebugSurface, traceBridgeOp } from './rendero-api.js';
 import { setViewport as setCssViewport } from './css-values.js';
 
 let _engine = null;
@@ -60,6 +60,8 @@ function switchRenderer(nextName, reason) {
 
 export function initEngine(engine, canvas) {
     globalThis.__RENDERO_NATIVE__ = false;
+    globalThis.Rendero?.debug?.reset?.();
+    setDebugSurface('rendero_browser');
     _engine = engine;
     _canvas = canvas;
     _ctx = canvas.getContext('2d');
@@ -149,9 +151,11 @@ export function setCamera(x, y, zoom) {
 
 export function registerNode(engineId, counter, clientId) {
     _nodeRegistry.set(engineId, { counter, clientId });
+    recordNodeRegistration(engineId, counter, clientId);
 }
 export function unregisterNode(engineId) {
     _nodeRegistry.delete(engineId);
+    recordNodeUnregistration(engineId);
 }
 export function getNodeIds(engineId) {
     return _nodeRegistry.get(engineId) || null;
@@ -178,11 +182,13 @@ function _flushOps() {
 export function setInsertParent(engineId) {
     const ids = _nodeRegistry.get(engineId);
     if (ids && ids.counter >= 0) {
+        traceBridgeOp({ kind: 'setInsertParent', engineId, counter: ids.counter, clientId: ids.clientId });
         _engine.set_insert_parent(ids.counter, ids.clientId);
     }
 }
 
 export function clearInsertParent() {
+    traceBridgeOp({ kind: 'clearInsertParent' });
     _engine.clear_insert_parent();
 }
 
@@ -194,6 +200,7 @@ export function engineCreateFrame(engineId, name) {
         const ids = _engine.add_frame(name, 0, 0, 0, 0, 0, 0, 0, 0);
         const result = { counter: ids[0], clientId: ids[1] };
         registerNode(engineId, ids[0], ids[1]);
+        traceBridgeOp({ kind: 'createFrame', engineId, counter: ids[0], clientId: ids[1], name });
         _engine.set_node_clip_content(ids[0], ids[1], false);
         _dirty = true;
         return result;
@@ -210,6 +217,7 @@ export function engineCreateText(engineId, name, text) {
         const ids = _engine.add_text(name, safeText, 0, 0, 16, 0, 0, 0, 1);
         const result = { counter: ids[0], clientId: ids[1] };
         registerNode(engineId, ids[0], ids[1]);
+        traceBridgeOp({ kind: 'createText', engineId, counter: ids[0], clientId: ids[1], name, text: safeText });
         _dirty = true;
         return result;
     } catch (e) {
@@ -223,6 +231,7 @@ export function engineDeleteNode(engineId) {
     const ids = _nodeRegistry.get(engineId);
     if (!ids) return;
     unregisterNode(engineId);
+    traceBridgeOp({ kind: 'deleteNode', engineId, counter: ids.counter, clientId: ids.clientId });
     _enqueue(() => {
         try {
             _engine.select_node(ids.counter, ids.clientId);
@@ -251,6 +260,15 @@ export function engineGetBounds(engineId) {
 
 // Apply a single engine property (queued)
 export function engineSetProp(engineId, prop, value) {
+    const ids = _nodeRegistry.get(engineId);
+    traceBridgeOp({
+        kind: 'setProp',
+        engineId,
+        counter: ids?.counter ?? null,
+        clientId: ids?.clientId ?? null,
+        prop,
+        value,
+    });
     _enqueue(() => {
         const ids = _nodeRegistry.get(engineId);
         if (!ids || ids.counter < 0) return;
@@ -267,6 +285,9 @@ export function engineSetProp(engineId, prop, value) {
             case 'size':
                 e.set_node_size(counter, clientId, value.w, value.h);
                 break;
+            case 'sizePercent':
+                e.set_node_size_percent(counter, clientId, value.w, value.h);
+                break;
             case 'sizeConstraints':
                 e.set_node_size_constraints(counter, clientId, value.minW, value.minH, value.maxW, value.maxH);
                 break;
@@ -274,7 +295,18 @@ export function engineSetProp(engineId, prop, value) {
                 e.set_node_sizing(counter, clientId, value.horizontal ?? 0, value.vertical ?? 0);
                 break;
             case 'margin':
-                e.set_node_margin(counter, clientId, value.top, value.right, value.bottom, value.left);
+                e.set_node_margin(
+                    counter,
+                    clientId,
+                    value.top,
+                    value.right,
+                    value.bottom,
+                    value.left,
+                    !!value.autoTop,
+                    !!value.autoRight,
+                    !!value.autoBottom,
+                    !!value.autoLeft,
+                );
                 break;
             case 'fill':
                 e.set_node_fill(counter, clientId, value.r, value.g, value.b, value.a);
@@ -296,6 +328,12 @@ export function engineSetProp(engineId, prop, value) {
                 break;
             case 'fontFamily':
                 e.set_node_font_family(counter, clientId, value);
+                break;
+            case 'letterSpacing':
+                e.set_letter_spacing(counter, clientId, value);
+                break;
+            case 'lineHeight':
+                e.set_line_height(counter, clientId, value);
                 break;
             case 'textAlign':
                 e.set_text_align(counter, clientId, value);

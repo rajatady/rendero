@@ -10,19 +10,28 @@
 use crate::id::NodeId;
 use crate::node::NodeKind;
 use crate::properties::*;
-use crate::providers::{LayoutEngine, HeuristicTextMeasurer};
+use crate::providers::{HeuristicTextMeasurer, LayoutEngine, TextMeasurer};
 use crate::tree::DocumentTree;
 
 /// Default entry point — uses TaffyLayout with heuristic text measurement.
 /// Reads viewport from root node dimensions; falls back to 1280×800.
 pub fn compute_layout(tree: &mut DocumentTree, root: &NodeId) {
+    compute_layout_with_text_measurer(tree, root, HeuristicTextMeasurer);
+}
+
+/// Default Taffy layout using a caller-supplied text measurer.
+pub fn compute_layout_with_text_measurer<M: TextMeasurer>(
+    tree: &mut DocumentTree,
+    root: &NodeId,
+    measurer: M,
+) {
     let viewport = tree.get(root)
         .map(|n| (
             if n.width > 0.0 { n.width } else { 1280.0 },
             if n.height > 0.0 { n.height } else { 800.0 },
         ))
         .unwrap_or((1280.0, 800.0));
-    let mut engine = crate::taffy_layout::TaffyLayout::new(HeuristicTextMeasurer);
+    let mut engine = crate::taffy_layout::TaffyLayout::new(measurer);
     engine.compute(tree, root, viewport);
 }
 

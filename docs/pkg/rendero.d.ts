@@ -599,7 +599,7 @@ export class CanvasEngine {
     /**
      * Set per-edge layout margin for a node.
      */
-    set_node_margin(counter: number, client_id: number, top: number, right: number, bottom: number, left: number): boolean;
+    set_node_margin(counter: number, client_id: number, top: number, right: number, bottom: number, left: number, auto_top: boolean, auto_right: boolean, auto_bottom: boolean, auto_left: boolean): boolean;
     /**
      * Set or unset the mask flag on a node.
      * When true, the node's shape clips all subsequent siblings until the parent ends.
@@ -631,6 +631,7 @@ export class CanvasEngine {
      */
     set_node_size(counter: number, client_id: number, w: number, h: number): boolean;
     set_node_size_constraints(counter: number, client_id: number, min_w: number, min_h: number, max_w: number, max_h: number): boolean;
+    set_node_size_percent(counter: number, client_id: number, width_percent: number, height_percent: number): boolean;
     set_node_sizing(counter: number, client_id: number, horizontal: number, vertical: number): boolean;
     /**
      * Set stroke on a node (color + weight). Replaces all existing strokes.
@@ -867,7 +868,7 @@ export interface InitOutput {
     readonly canvasengine_set_node_font_weight: (a: number, b: number, c: number, d: number) => number;
     readonly canvasengine_set_node_layout_position: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_node_linear_gradient: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => number;
-    readonly canvasengine_set_node_margin: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
+    readonly canvasengine_set_node_margin: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => number;
     readonly canvasengine_set_node_mask: (a: number, b: number, c: number, d: number) => number;
     readonly canvasengine_set_node_name: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_node_opacity: (a: number, b: number, c: number, d: number) => number;
@@ -876,6 +877,7 @@ export interface InitOutput {
     readonly canvasengine_set_node_rotation: (a: number, b: number, c: number, d: number) => number;
     readonly canvasengine_set_node_size: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_node_size_constraints: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
+    readonly canvasengine_set_node_size_percent: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_node_sizing: (a: number, b: number, c: number, d: number, e: number) => number;
     readonly canvasengine_set_node_stroke: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => number;
     readonly canvasengine_set_node_text: (a: number, b: number, c: number, d: number, e: number) => number;

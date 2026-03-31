@@ -1,0 +1,343 @@
+{
+  "status": "ready",
+  "totalElements": 113,
+  "totalProperties": 452,
+  "propertyMatches": 379,
+  "propertyMismatches": 73,
+  "testCases": [
+    {
+      "label": "block-stack-3",
+      "category": "block-flow",
+      "elementCount": 4,
+      "mismatchCount": 3,
+      "propertyMismatchCount": 3,
+      "mismatches": [
+        "a.width: browser=400 engine=0 diff=400",
+        "b.width: browser=400 engine=0 diff=400",
+        "c.width: browser=400 engine=0 diff=400"
+      ]
+    },
+    {
+      "label": "block-width-100pct",
+      "category": "block-flow",
+      "elementCount": 3,
+      "mismatchCount": 2,
+      "propertyMismatchCount": 2,
+      "mismatches": [
+        "a.width: browser=400 engine=0 diff=400",
+        "b.width: browser=200 engine=0 diff=200"
+      ]
+    },
+    {
+      "label": "block-nested",
+      "category": "block-flow",
+      "elementCount": 4,
+      "mismatchCount": 3,
+      "propertyMismatchCount": 3,
+      "mismatches": [
+        "outer.width: browser=400 engine=40 diff=360",
+        "inner.width: browser=360 engine=0 diff=360",
+        "after.width: browser=400 engine=0 diff=400"
+      ]
+    },
+    {
+      "label": "flex-column-basic",
+      "category": "flex-column",
+      "elementCount": 4,
+      "mismatchCount": 3,
+      "propertyMismatchCount": 3,
+      "mismatches": [
+        "a.width: browser=400 engine=0 diff=400",
+        "b.width: browser=400 engine=0 diff=400",
+        "c.width: browser=400 engine=0 diff=400"
+      ]
+    },
+    {
+      "label": "flex-column-gap",
+      "category": "flex-column",
+      "elementCount": 4,
+      "mismatchCount": 3,
+      "propertyMismatchCount": 3,
+      "mismatches": [
+        "a.width: browser=400 engine=0 diff=400",
+        "b.width: browser=400 engine=0 diff=400",
+        "c.width: browser=400 engine=0 diff=400"
+      ]
+    },
+    {
+      "label": "flex-column-padding",
+      "category": "flex-column",
+      "elementCount": 2,
+      "mismatchCount": 1,
+      "propertyMismatchCount": 1,
+      "mismatches": [
+        "a.width: browser=340 engine=0 diff=340"
+      ]
+    },
+    {
+      "label": "flex-column-align-center",
+      "category": "flex-column",
+      "elementCount": 3,
+      "mismatchCount": 0,
+      "propertyMismatchCount": 0,
+      "mismatches": []
+    },
+    {
+      "label": "flex-row-basic",
+      "category": "flex-row",
+      "elementCount": 4,
+      "mismatchCount": 0,
+      "propertyMismatchCount": 0,
+      "mismatches": []
+    },
+    {
+      "label": "flex-row-gap",
+      "category": "flex-row",
+      "elementCount": 4,
+      "mismatchCount": 0,
+      "propertyMismatchCount": 0,
+      "mismatches": []
+    },
+    {
+      "label": "flex-row-wrap",
+      "category": "flex-row",
+      "elementCount": 5,
+      "mismatchCount": 0,
+      "propertyMismatchCount": 0,
+      "mismatches": []
+    },
+    {
+      "label": "flex-row-justify-center",
+      "category": "flex-row",
+      "elementCount": 3,
+      "mismatchCount": 0,
+      "propertyMismatchCount": 0,
+      "mismatches": []
+    },
+    {
+      "label": "size-min-height",
+      "category": "sizing",
+      "elementCount": 2,
+      "mismatchCount": 1,
+      "propertyMismatchCount": 1,
+      "mismatches": [
+        "a.width: browser=400 engine=0 diff=400"
+      ]
+    },
+    {
+      "label": "size-max-width",
+      "category": "sizing",
+      "elementCount": 2,
+      "mismatchCount": 1,
+      "propertyMismatchCount": 1,
+      "mismatches": [
+        "a.width: browser=300 engine=0 diff=300"
+      ]
+    },
+    {
+      "label": "size-percentage",
+      "category": "sizing",
+      "elementCount": 3,
+      "mismatchCount": 0,
+      "propertyMismatchCount": 0,
+      "mismatches": []
+    },
+    {
+      "label": "size-flex-grow",
+      "category": "sizing",
+      "elementCount": 3,
+      "mismatchCount": 2,
+      "propertyMismatchCount": 2,
+      "mismatches": [
+        "fixed.height: browser=100 engine=0 diff=100",
+        "grow.height: browser=100 engine=0 diff=100"
+      ]
+    },
+    {
+      "label": "size-flex-grow-multiple",
+      "category": "sizing",
+      "elementCount": 4,
+      "mismatchCount": 8,
+      "propertyMismatchCount": 8,
+      "mismatches": [
+        "a.width: browser=150 engine=300 diff=150",
+        "a.height: browser=100 engine=0 diff=100",
+        "b.x: browser=150 engine=300 diff=150",
+        "b.width: browser=300 engine=0 diff=300",
+        "b.height: browser=100 engine=0 diff=100",
+        "c.x: browser=450 engine=300 diff=150",
+        "c.width: browser=150 engine=300 diff=150",
+        "c.height: browser=100 engine=0 diff=100"
+      ]
+    },
+    {
+      "label": "size-padding-contributes-height",
+      "category": "sizing",
+      "elementCount": 3,
+      "mismatchCount": 2,
+      "propertyMismatchCount": 2,
+      "mismatches": [
+        "padded.width: browser=400 engine=40 diff=360",
+        "inner.width: browser=360 engine=0 diff=360"
+      ]
+    },
+    {
+      "label": "margin-basic",
+      "category": "margin",
+      "elementCount": 3,
+      "mismatchCount": 2,
+      "propertyMismatchCount": 2,
+      "mismatches": [
+        "a.width: browser=400 engine=0 diff=400",
+        "b.width: browser=400 engine=0 diff=400"
+      ]
+    },
+    {
+      "label": "margin-auto-center",
+      "category": "margin",
+      "elementCount": 2,
+      "mismatchCount": 0,
+      "propertyMismatchCount": 0,
+      "mismatches": []
+    },
+    {
+      "label": "nested-row-in-column",
+      "category": "nesting",
+      "elementCount": 5,
+      "mismatchCount": 2,
+      "propertyMismatchCount": 2,
+      "mismatches": [
+        "row.width: browser=500 engine=210 diff=290",
+        "below.width: browser=500 engine=0 diff=500"
+      ]
+    },
+    {
+      "label": "nested-column-in-row",
+      "category": "nesting",
+      "elementCount": 5,
+      "mismatchCount": 4,
+      "propertyMismatchCount": 4,
+      "mismatches": [
+        "col.height: browser=300 engine=165 diff=135",
+        "c1.width: browser=200 engine=0 diff=200",
+        "c2.width: browser=200 engine=0 diff=200",
+        "side.height: browser=300 engine=0 diff=300"
+      ]
+    },
+    {
+      "label": "nested-3-levels",
+      "category": "nesting",
+      "elementCount": 6,
+      "mismatchCount": 5,
+      "propertyMismatchCount": 5,
+      "mismatches": [
+        "l2.width: browser=480 engine=170 diff=310",
+        "l3.height: browser=80 engine=60 diff=20",
+        "leaf1.width: browser=150 engine=0 diff=150",
+        "leaf2.width: browser=150 engine=0 diff=150",
+        "leaf3.width: browser=310 engine=0 diff=310"
+      ]
+    },
+    {
+      "label": "align-stretch",
+      "category": "alignment",
+      "elementCount": 3,
+      "mismatchCount": 2,
+      "propertyMismatchCount": 2,
+      "mismatches": [
+        "a.height: browser=200 engine=0 diff=200",
+        "b.height: browser=200 engine=0 diff=200"
+      ]
+    },
+    {
+      "label": "justify-space-between",
+      "category": "alignment",
+      "elementCount": 4,
+      "mismatchCount": 0,
+      "propertyMismatchCount": 0,
+      "mismatches": []
+    },
+    {
+      "label": "align-center-justify-center",
+      "category": "alignment",
+      "elementCount": 3,
+      "mismatchCount": 0,
+      "propertyMismatchCount": 0,
+      "mismatches": []
+    },
+    {
+      "label": "position-absolute",
+      "category": "position",
+      "elementCount": 3,
+      "mismatchCount": 1,
+      "propertyMismatchCount": 1,
+      "mismatches": [
+        "flow.width: browser=400 engine=0 diff=400"
+      ]
+    },
+    {
+      "label": "overflow-hidden",
+      "category": "overflow",
+      "elementCount": 2,
+      "mismatchCount": 1,
+      "propertyMismatchCount": 1,
+      "mismatches": [
+        "tall.width: browser=200 engine=0 diff=200"
+      ]
+    },
+    {
+      "label": "apple-hero-section",
+      "category": "real-page",
+      "elementCount": 6,
+      "mismatchCount": 9,
+      "propertyMismatchCount": 9,
+      "mismatches": [
+        "hero.height: browser=339 engine=329 diff=10",
+        "subtitle.y: browser=202 engine=192 diff=10",
+        "links.x: browser=301 engine=263 diff=38",
+        "links.y: browser=255 engine=245 diff=10",
+        "links.width: browser=197 engine=274 diff=77",
+        "link1.x: browser=301 engine=263 diff=38",
+        "link1.y: browser=255 engine=245 diff=10",
+        "link2.x: browser=446 engine=412 diff=34",
+        "link2.y: browser=255 engine=245 diff=10"
+      ]
+    },
+    {
+      "label": "apple-product-grid",
+      "category": "real-page",
+      "elementCount": 5,
+      "mismatchCount": 2,
+      "propertyMismatchCount": 2,
+      "mismatches": [
+        "card1-title.width: browser=244 engine=245 diff=1",
+        "card2-title.x: browser=480 engine=540 diff=60"
+      ]
+    },
+    {
+      "label": "apple-footer",
+      "category": "real-page",
+      "elementCount": 9,
+      "mismatchCount": 16,
+      "propertyMismatchCount": 16,
+      "mismatches": [
+        "col1.x: browser=299 engine=260 diff=39",
+        "col1.width: browser=93 engine=94 diff=1",
+        "col1-title.x: browser=299 engine=260 diff=39",
+        "col1-title.width: browser=93 engine=94 diff=1",
+        "col1-link1.x: browser=299 engine=260 diff=39",
+        "col1-link1.width: browser=93 engine=31 diff=62",
+        "col1-link2.x: browser=299 engine=260 diff=39",
+        "col1-link2.width: browser=93 engine=24 diff=69",
+        "col2.x: browser=432 engine=394 diff=38",
+        "col2.width: browser=69 engine=146 diff=77",
+        "col2.height: browser=61 engine=56 diff=5",
+        "col2-title.x: browser=432 engine=394 diff=38",
+        "col2-title.width: browser=69 engine=53 diff=16",
+        "col2-link1.x: browser=432 engine=394 diff=38",
+        "col2-link1.y: browser=43 engine=52 diff=9",
+        "col2-link1.width: browser=69 engine=70 diff=1"
+      ]
+    }
+  ]
+}

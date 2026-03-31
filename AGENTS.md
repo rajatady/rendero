@@ -1,6 +1,6 @@
 ## Rendero
 
-A portable rendering engine that lets unmodified React/Vue apps run natively on macOS, Windows, Linux, iOS, and Android — without a WebView, without Electron, without rewriting your app. On web: zero overhead (it's just a normal web app). On native: a DOM shim routes framework calls to a Rust rendering engine.
+A portable rendering engine that lets unmodified React/Vue apps run natively on macOS, Windows, Linux, iOS, and Android — without a WebView, without Electron, without rewriting your app. On web production builds: zero overhead (it's just a normal web app). For parity/debugging, the same app can also run through the DOM shim + WASM engine in the browser. On native: the DOM shim routes framework calls to a Rust rendering engine.
 
 ### Commands
 
@@ -13,9 +13,9 @@ wasm-pack build crates/wasm --target web --out-dir ../../pkg --out-name rendero 
 cd docs/demos/dom-shim && node build.mjs          # JS bundles (React/Vue, web/native)
 
 # Run
-cargo run -p rendero-native-shell                 # windowed app
-RENDERO_HEADLESS_DUMP=/tmp/out.ppm RENDERO_HEADLESS_WIDTH=1024 RENDERO_HEADLESS_HEIGHT=3400 cargo run -p rendero-native-shell  # headless render
-cd docs && python3 -m http.server 5555            # web dev server → http://localhost:5555/demos/dom-shim/
+cargo run -p rendero-native-shell                 # windowed app (1440x900 baseline)
+RENDERO_HEADLESS_DUMP=/tmp/out.ppm RENDERO_HEADLESS_WIDTH=1440 RENDERO_HEADLESS_HEIGHT=3400 cargo run -p rendero-native-shell  # headless render
+serve -l tcp://127.0.0.1:5555 docs -C --no-etag -c ./serve.rendero.json  # no-cache web dev server → http://127.0.0.1:5555/demos/dom-shim/
 
 # Test
 cargo test -p rendero-core                        # 12 layout tests
@@ -26,6 +26,7 @@ cargo test -p rendero-text                        # 7 text measurement tests
 python3 scripts/capture-ground-truth.py http://localhost:5555/demos/dom-shim/ accuracy/apple-web.json
 python3 scripts/capture-engine-truth.py http://localhost:5555/demos/dom-shim/ accuracy/apple-engine.json
 python3 scripts/compare-layout.py accuracy/apple-web.json accuracy/apple-engine.json accuracy/apple-comparison.json
+scripts/run_accuracy_suite.sh
 ```
 
 ### Architecture
@@ -35,8 +36,8 @@ YOUR APP (React, Vue, Svelte — unmodified)
     |
 react-dom / vue runtime (UNMODIFIED)
     |
-DOM Shim (JS, ~2000 LOC)                 <-- only on native
-    |                                         on web: bypassed entirely
+DOM Shim (JS, ~2000 LOC)                 <-- used on browser Rendero + native
+    |                                         real browser DOM remains the oracle path
 Engine Bridge (engine.js / engine-native.js)
     |
 Rendero Engine (Rust)
@@ -71,21 +72,26 @@ Platform Backend (swappable)
 - `scripts/capture-ground-truth.py` — extract browser layout as JSON (Playwright)
 - `scripts/capture-engine-truth.py` — extract engine layout as JSON (Playwright)
 - `scripts/compare-layout.py` — diff browser vs engine, report accuracy %
+- `scripts/capture-layout-corpus.py` — run the synthetic layout corpus page against the Rendero WASM shim
+- `scripts/run_accuracy_suite.sh` — rebuild bundles, refresh corpus dashboard, run the Apple oracle loop end to end
 - `corpus/capture-site.py` — capture real website ground truth at multiple viewports
 - `corpus/dashboard.py` — rebuild corpus dashboard from ground truth JSON
 - `docs/demos/dom-shim/accuracy/` — browser-based accuracy test page + corpus
 
 ### Current accuracy
 
-**19.2%** — 82/428 properties match (Apple demo page, 107 elements, WASM web path).
+**57.01%** — 244/428 properties match (Apple demo page, 107 elements, WASM web path).
 
-Progress: 1.6% → 12.4% (element alignment fix) → 12.9% (viewport-aware layout) → 19.2% (browser text measurement).
+Synthetic layout corpus: **83.85%** — 379/452 properties.
+
+Progress: 1.6% → 12.4% (element alignment fix) → 12.9% (viewport-aware layout) → 19.2% (browser text measurement) → 49.3% (layered capture + translation fixes) → 57.01% (`margin:auto` + parent-relative `%` sizing).
 
 Run the full accuracy loop:
 ```sh
 python3 scripts/capture-ground-truth.py http://localhost:5555/demos/dom-shim/ accuracy/apple-web.json   # once
 python3 scripts/capture-engine-truth.py http://localhost:5555/demos/dom-shim/ accuracy/apple-engine.json
 python3 scripts/compare-layout.py accuracy/apple-web.json accuracy/apple-engine.json accuracy/apple-comparison.json
+scripts/run_accuracy_suite.sh
 ```
 
 ### Corpus
@@ -104,11 +110,11 @@ Every item is a DOM/CSS behavior the shim must handle correctly. Fix in priority
 
 **Fix first (layout breaks without these):**
 
-1. `margin: auto` — centering. Taffy supports `LengthPercentageAuto::Auto`. The shim must parse `margin: '0 auto'` and pass Auto, not Length(0).
+1. `margin: auto` — centering. Basic auto-margin support is now wired through the shared layout contract. Keep validating against more pages and edge cases.
 2. `flex` shorthand — `flex: '1'` → `flex-grow: 1; flex-shrink: 1; flex-basis: 0%`. `flex: 'none'` → `0 0 auto`. `flex: '0 0 auto'` → three values. Getting this wrong breaks most layouts.
 3. `padding`/`margin` shorthand — 1-value, 2-value, 3-value, 4-value expansion. Already partially handled in `css-values.js expandShorthand()` but verify all cases.
 4. `position: fixed` — navbar. Taffy doesn't have fixed. Must attach to root Taffy node regardless of DOM position. Currently shimmed as absolute.
-5. Percentage `width`/`height` — `width: '100%'` must become `Dimension::Percent(1.0)`, not a computed pixel value. Taffy resolves percentages against the parent.
+5. Percentage `width`/`height` — basic parent-relative `%` sizing is now carried into the node model. Extend this to more cases (`height`, min/max, flex-basis, positioned elements) without collapsing back to viewport pixels.
 6. `getComputedStyle()` / `offsetWidth` / `offsetHeight` — libraries read computed values. Must return values from Taffy's computed layout, not the raw set values. `width: '100%'` read back should return `'1280px'`.
 7. `line-height` parsing — `lineHeight: '1.5'` (unitless multiplier) vs `lineHeight: '24px'` (pixels). Affects text spacing.
 8. `overflow: hidden` — card clipping. Already wired but verify with border-radius (clip path must follow radius, not rectangular).
@@ -137,7 +143,7 @@ Every item is a DOM/CSS behavior the shim must handle correctly. Fix in priority
 - **No hardcoding for specific pages.** A fix that works for apple.com but breaks news.ycombinator.com is not a fix. Run accuracy checks against multiple pages.
 - **Trait-based, swappable.** Every subsystem is behind a trait: LayoutEngine, TextMeasurer, CssParser, FontResolver, GlyphRasterizer. Swap implementations without touching callers.
 - **The shim IS the browser.** It doesn't care if it's React, Vue, Svelte, Angular, or vanilla JS. They all call the same DOM APIs. Fix the DOM, all frameworks work.
-- **Accuracy is a number.** Currently 19.2%. Track it. Every commit either improves it or doesn't. No subjective "looks better."
+- **Accuracy is a number.** Currently 57.01% on the Apple page and 83.85% on the synthetic corpus. Track it. Every commit either improves it or doesn't. No subjective "looks better."
 
 ### Key quirks to know
 

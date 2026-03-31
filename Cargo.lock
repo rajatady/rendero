@@ -2124,6 +2124,7 @@ dependencies = [
  "rendero-core",
  "rendero-crdt",
  "rendero-renderer",
+ "rendero-text",
 ]
 
 [[package]]
@@ -2133,7 +2134,10 @@ dependencies = [
  "glam",
  "rendero-core",
  "rendero-renderer",
+ "rendero-text",
  "rquickjs",
+ "serde",
+ "serde_json",
  "softbuffer",
  "winit",
 ]

@@ -11,4 +11,5 @@ crate-type = ["cdylib", "staticlib"]
 rendero-core = { path = "../core" }
 rendero-renderer = { path = "../renderer" }
 rendero-crdt = { path = "../crdt" }
+rendero-text = { path = "../text" }
 glam = { workspace = true }

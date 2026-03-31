@@ -6,50 +6,85 @@ Last updated: 2026-03-31
 
 ## Layout Accuracy
 
-**19.2%** — 82/428 properties match (Apple demo page, 107 elements, WASM web path).
+**57.01%** — 244/428 properties match on the Apple demo page (107 elements,
+browser oracle vs Rendero WASM path).
 
-Progress: 1.6% → 12.4% (element alignment) → 12.9% (viewport-aware layout) → 19.2% (browser text measurement).
+Synthetic layout corpus: **83.85%** — 379/452 properties.
 
-Remaining mismatches by property:
-- y position: 100 mismatches, avg 74px off
-- x position: 91 mismatches, avg 136px off
-- width: 84 mismatches, avg 75px off
-- height: 71 mismatches, avg 49px off
+Progress on the Apple page so far:
 
-Root causes: text width differences (canvas.measureText font string), container height cascading from text size errors, CSS properties not yet mapped.
+- 1.6% → 12.4% — element alignment fixes
+- 12.9% — viewport-aware layout
+- 19.2% — browser text measurement
+- 49.3% — layered capture pipeline made the real gaps explicit
+- 57.01% — `margin:auto` + parent-relative `%` sizing through the shared layout contract
+
+Current high-signal mismatches:
+
+- root/page height collapse: browser `2966.8` vs engine `1617`
+- fixed navbar offset: browser `y=-44` vs engine `y=0`
+- feature-card text still measured too wide/short in constrained layouts
+- lower-section heights still drift from text/layout cascades
+
+### Comparison Baseline
+
+For parity work, native should be compared against the same desktop baseline as
+the browser oracle: **1440×900 at DPR 1**. Until that baseline matches, avoid
+mixing viewport-size mismatches into layout debugging.
+
+Follow-up after the 1440 desktop baseline matches:
+
+- `%` and other containing-block-relative sizes must stay parent-relative until
+  layout time
+- viewport units like `vw` / `vh` must remain viewport-relative and be tested
+  separately from `%`
+- media queries and browser-environment resolution (viewport size, DPR,
+  orientation, pointer/hover, color scheme, reduced motion) belong in the
+  translation/style-resolution layer, not in the engine
 
 ---
 
 ## What Renders Today
 
 ### Apple Website (React)
-**Status: Full page renders on both web (WASM canvas) and native (Rust softbuffer).**
 
-What shows:
-- Navigation bar with all links
-- Hero section: "iPhone 16 Pro", subtitle, links, gradient image
-- Product grid: MacBook Pro, MacBook Air, iPad Pro, iPad Air in 2×2 wrap layout
-- Feature section: "Why Apple." with Apple Intelligence, Privacy cards
-- CTA section: "Get the new iPhone." with pricing and blue Buy button
-- Footer: 4-column layout with links, copyright
+**Status: Full page renders on browser Rendero and native Rendero.**
 
-What's off:
-- Text widths differ from browser (monospace heuristic on native, canvas.measureText on WASM)
-- Heights cascade errors from text size differences
-- No CSS font inheritance — most elements use default font
-- Scroll partially working (camera movement wired, content height issue)
+What is working:
 
-### TestApp (colored rectangles)
-**Status: Pixel-perfect on both web and native.**
+- navigation bar
+- hero section with gradient image block
+- 2×2 product grid
+- feature section
+- CTA section
+- footer
+
+What is still off:
+
+- native live scroll/input parity is still being validated against the same
+  shared contracts as WASM
+- feature-card paragraphs do not yet wrap like the browser oracle, which
+  inflates some card widths/heights
+- root/document height is still too short
+- text metrics and line wrapping are still weaker than browser truth
+
+### TestApp / Synthetic Corpus
+
+**Status: Core layout behavior is stable enough to hit 83.85% across the
+synthetic corpus.**
+
+This is the main proof that Taffy itself is not the primary blocker anymore;
+the remaining misses are in the translation and measurement pipeline.
 
 ---
 
 ## Corpus
 
-7 real websites with ground truth captured at 3 viewports (desktop 1440, tablet 768, mobile 375):
+7 real websites with ground truth captured at 3 viewports (desktop 1440,
+tablet 768, mobile 375):
 
 | Site | Elements (desktop) | Purpose |
-|------|-------------------|---------|
+|------|-------------------:|---------|
 | apple-macbook-pro | ~200 | Marketing, flex-heavy |
 | fin | ~150 | Dashboard, data-heavy |
 | github | ~300 | Complex nested layouts |
@@ -58,88 +93,105 @@ What's off:
 | linear | ~250 | SaaS app, modern CSS |
 | tailadmin | ~350 | Admin dashboard, Tailwind |
 
-Ground truth stored in `corpus/ground-truth/`. Not yet plugged into automated comparison — Apple demo is the active test target.
+Ground truth lives in `corpus/ground-truth/`. The broader corpus currently
+drives coverage/oracle reporting; the Apple demo remains the active end-to-end
+comparison target.
 
 ---
 
-## The 20-Item Fix List
+## Most Important Recent Changes
 
-See CLAUDE.md (or AGENTS.md) for the full prioritized list. Summary:
+### Shared layout / translation contract
 
-**Fix first (layout breaks):** margin:auto, flex shorthand, padding/margin shorthand, position:fixed, percentage width/height, getComputedStyle, line-height, overflow:hidden.
+- `margin:auto` now survives the shim → bridge → node model → Taffy path
+- parent-relative `%` sizing is now represented explicitly in the node model
+  instead of being collapsed to viewport pixels or generic fill semantics
+- native and WASM now share those same layout inputs
 
-**Fix second (looks wrong):** linear-gradient, rgba/hsla, border shorthand, named colors, text-align:center, z-index.
+Files:
 
-**Fix third (edge cases):** min/max constraints, createDocumentFragment, font-weight visual, sub-pixel rounding, group opacity, white-space:nowrap.
+- `crates/core/src/node.rs`
+- `crates/core/src/properties.rs`
+- `crates/core/src/taffy_layout.rs`
+- `crates/wasm/src/lib.rs`
+- `crates/native-shell/src/engine_bridge.rs`
+- `docs/demos/dom-shim/shims/style.js`
+- `docs/demos/dom-shim/shims/layout-style.js`
+- `docs/demos/dom-shim/shims/engine.js`
+- `docs/demos/dom-shim/shims/engine-native.js`
+
+### Layered capture pipeline
+
+The benchmark pipeline now captures more than final bounds. We now inspect:
+
+- browser oracle
+- shim normalization
+- engine command stream
+- engine model
+- engine layout
+- final surface
+
+Files:
+
+- `scripts/capture-ground-truth.py`
+- `scripts/capture-engine-truth.py`
+- `scripts/run_accuracy_suite.sh`
+- `docs/demos/dom-shim/shims/rendero-api.js`
+- `docs/demos/dom-shim/shims/engine-runtime.js`
+
+### Native parity baseline
+
+- native window defaults to the same desktop baseline used by the oracle
+- native scroll now routes through the shared window/shim path rather than
+  mutating camera state directly in the host
+
+Files:
+
+- `crates/native-shell/src/main.rs`
+- `docs/demos/dom-shim/shims/window.js`
+- `docs/demos/dom-shim/src/entry-macos.jsx`
+- `docs/demos/dom-shim/src/entry-macos-vue.js`
 
 ---
 
-## Crates Built This Session
+## Main Remaining Gaps
 
-| Crate | Tests | Status |
-|-------|-------|--------|
-| rendero-css (Lightning CSS) | 25 pass | Built, trait-based, not used for visual output yet |
-| rendero-text (Parley) | 7 pass | Built, trait-based, not wired into renderer yet |
+1. **Root/document height propagation**
+   Browser page height is still far larger than engine page height.
 
-Provider traits added to `crates/core/src/providers.rs`: CssParser, FontResolver, GlyphRasterizer (joining existing LayoutEngine, TextMeasurer).
+2. **Fixed/root offset behavior**
+   The navbar is structurally correct, but the page/root offset is still off by
+   `44px`.
+
+3. **Constrained text measurement**
+   Feature-card paragraphs are still measured as if they are unconstrained
+   single-line text too early in the browser path. That is the next
+   translation-layer target.
+
+4. **Live native screenshot capture**
+   Still blocked by Codex runtime macOS permissions, so true live-window
+   screenshots remain separate from deterministic headless captures.
 
 ---
 
-## Infrastructure Built This Session
+## Infrastructure Available
 
 | Tool | What it does |
-|------|-------------|
+|------|--------------|
+| `scripts/run_accuracy_suite.sh` | Full oracle loop: build, serve, capture, compare, corpus refresh |
 | `scripts/capture-ground-truth.py` | Extract browser layout as JSON via Playwright |
-| `scripts/capture-engine-truth.py` | Extract engine layout as JSON via Playwright |
+| `scripts/capture-engine-truth.py` | Extract Rendero engine state/layout as JSON via Playwright |
 | `scripts/compare-layout.py` | Diff browser vs engine, report accuracy % |
-| `corpus/capture-site.py` | Capture real website at multiple viewports |
-| Headless rendering | `RENDERO_HEADLESS_DUMP` env var, PPM output |
-| System font resolution | fontdb in renderer, per-run font lookup |
-| Browser text measurement | canvas.measureText() on WASM path |
+| `corpus/dashboard.py` | Rebuild corpus dashboard from captured ground truth |
+| `scripts/verify_rendero_runtime.sh` | Browser/native parity verification loop |
+| `RENDERO_HEADLESS_DUMP` | Native deterministic framebuffer dump |
 
 ---
 
-## Key Changes Since Last Session
+## Notes
 
-### Rust
-
-- `crates/core/src/properties.rs` — Added LayoutJustify, LayoutWrap, LayoutMargin, LayoutPosition, LayoutSizeConstraints
-- `crates/core/src/node.rs` — Added margin, layout_position, size_constraints fields to Node
-- `crates/core/src/taffy_layout.rs` — justify-content, flex-wrap, margin, absolute position, min/max mapping. Column default for frames. inf handling.
-- `crates/core/src/providers.rs` — CssParser trait, FontResolver trait, GlyphRasterizer trait, CssValue enum
-- `crates/core/src/layout.rs` — compute_layout reads viewport from root node
-- `crates/renderer/src/text.rs` — System font resolution via fontdb, per-run font lookup
-- `crates/css/` — NEW: rendero-css crate with LightningCssParser
-- `crates/text/` — NEW: rendero-text crate with ParleyTextMeasurer, FontiqueResolver
-- `crates/native-shell/src/engine_bridge.rs` — Many new dispatch commands (margin, position, size_constraints, gradients, stroke, shadow)
-- `crates/native-shell/src/main.rs` — Headless mode, scroll handling, RENDERO_DEMO env var
-
-### JS Shims
-
-- `shims/style.js` — Browser text measurement, size constraints, margin, autoLayout with align/justify/wrap
-- `shims/engine-native.js` — Full dispatch bridge with gradient, stroke, shadow, font family, text align
-- `shims/engine.js` — Renderer switching (canvas2d/raster), Rendero namespace
-- `shims/window.js` — Scroll shim with camera sync
-- `shims/layout-style.js` — NEW: autoLayout builder
-- `shims/engine-runtime.js` — NEW: bridge abstraction + measureTextBrowser
-- `shims/rendero-api.js` — NEW: Rendero namespace with engine/native APIs
-
-### WASM
-
-- Updated set_auto_layout with align/justify/wrap params
-- 6 new API methods: set_node_layout_position, set_node_size_constraints, set_node_sizing, set_node_clip_content, set_node_margin
-- Pre-built WASM binary in docs/pkg/
-
----
-
-## Key Bugs Found and Fixed This Session
-
-| Bug | Root Cause | Fix |
-|-----|-----------|-----|
-| Sections overlap at (0,0) | Frames without autoLayout had no flex direction | Default to FlexDirection::Column (CSS block flow) |
-| Root height = infinity | Taffy returns inf for unconstrained nodes | Leave node size unchanged on inf (don't clamp to viewport) |
-| Width = 8401 on root div | compute_layout used (0,0) viewport | Read viewport from root node dimensions |
-| Text too wide on WASM | Rust heuristic (len*0.65*fontSize) | Browser canvas.measureText() on WASM path |
-| Text nodes size=0 after constructor change | Node::text() set 0x0, heuristic removed | Taffy measurer handles 0x0 text nodes via else branch |
-| WASM build fails with getrandom | rendero-css pulled in rayon→getrandom | Removed rendero-css dep from rendero-wasm |
-| Scroll not working on native | installWindowScrollShim not called in native init | Added to installShimNative() |
+- The browser remains the oracle.
+- Taffy is good enough for the simple/synthetic cases; the remaining misses are
+  almost entirely in translation and measurement.
+- Temporary shortcuts and known debt are tracked in
+  `docs/project/parity-shortcuts.md`.

@@ -28,6 +28,7 @@ struct App {
     engine: Rc<RefCell<Engine>>,
     js: QuickJSRuntime,
     initialized: bool,
+    bootstrapped: bool,
     frame_count: u64,
 }
 
@@ -47,24 +48,6 @@ impl App {
             eprintln!("[Rendero] Polyfill error: {e}");
         }
 
-        // Load the React + DOM shim bundle
-        let bundle_path = Self::find_bundle();
-        match std::fs::read_to_string(&bundle_path) {
-            Ok(code) => {
-                println!("[Rendero] Loading bundle: {bundle_path} ({} chars)", code.len());
-                if let Err(e) = js.evaluate(&code) {
-                    eprintln!("[Rendero] Bundle error: {e}");
-                }
-            }
-            Err(e) => eprintln!("[Rendero] Bundle not found at {bundle_path}: {e}"),
-        }
-
-        // CRITICAL: Drain pending jobs — React's scheduler posts the commit
-        // via MessageChannel/setTimeout. This fires the commit synchronously.
-        println!("[Rendero] Draining JS jobs (React commit)...");
-        js.drain_pending_jobs();
-        println!("[Rendero] Jobs drained. Ready to render.");
-
         Self {
             window: None,
             surface: None,
@@ -72,6 +55,7 @@ impl App {
             engine,
             js,
             initialized: false,
+            bootstrapped: false,
             frame_count: 0,
         }
     }
@@ -95,6 +79,10 @@ impl App {
     }
 
     fn render_frame(&mut self) {
+        if !self.bootstrapped {
+            return;
+        }
+
         // 1. Drain JS callbacks (React state updates, setTimeout, etc.)
         self.js.drain_pending_jobs();
 
@@ -163,6 +151,71 @@ impl App {
         file.flush()?;
         Ok(())
     }
+
+    fn sync_host_viewport(&mut self) {
+        let Some(window) = &self.window_rc else { return };
+        let size = window.inner_size();
+        let scale = window.scale_factor();
+        let logical_width = ((size.width as f64) / scale).round().max(1.0) as u32;
+        let logical_height = ((size.height as f64) / scale).round().max(1.0) as u32;
+
+        let script = format!(
+            "globalThis.__screenWidth = {w};\
+             globalThis.__screenHeight = {h};\
+             globalThis.__screenScale = {scale};\
+             if (typeof globalThis.__renderoHostResize === 'function') {{\
+               globalThis.__renderoHostResize({w}, {h}, {scale});\
+             }}",
+            w = logical_width,
+            h = logical_height,
+            scale = scale
+        );
+        if let Err(err) = self.js.evaluate(&script) {
+            eprintln!("[Rendero] Viewport sync error: {err}");
+        }
+    }
+
+    fn bootstrap_runtime(&mut self) {
+        if self.bootstrapped {
+            return;
+        }
+
+        self.sync_host_viewport();
+
+        let bundle_path = Self::find_bundle();
+        match std::fs::read_to_string(&bundle_path) {
+            Ok(code) => {
+                println!("[Rendero] Loading bundle: {bundle_path} ({} chars)", code.len());
+                if let Err(err) = self.js.evaluate(&code) {
+                    eprintln!("[Rendero] Bundle error: {err}");
+                    return;
+                }
+            }
+            Err(err) => {
+                eprintln!("[Rendero] Bundle not found at {bundle_path}: {err}");
+                return;
+            }
+        }
+
+        self.sync_host_viewport();
+
+        println!("[Rendero] Draining JS jobs (React commit)...");
+        self.js.drain_pending_jobs();
+        println!("[Rendero] Jobs drained. Ready to render.");
+        self.bootstrapped = true;
+    }
+
+    fn dispatch_native_scroll(&mut self, delta_y: f32) {
+        let script = format!(
+            "if (typeof globalThis.__renderoHostWheel === 'function') {{\
+               globalThis.__renderoHostWheel({delta});\
+             }}",
+            delta = delta_y
+        );
+        if let Err(err) = self.js.evaluate(&script) {
+            eprintln!("[Rendero] Scroll dispatch error: {err}");
+        }
+    }
 }
 
 fn dump_ppm(path: &str, pixels: &[u8], width: u32, height: u32) -> std::io::Result<()> {
@@ -186,12 +239,12 @@ fn run_headless_dump(path: &str) -> Result<(), String> {
         .ok()
         .and_then(|v| v.parse::<u32>().ok())
         .filter(|v| *v > 0)
-        .unwrap_or(1024);
+        .unwrap_or(1440);
     let height = std::env::var("RENDERO_HEADLESS_HEIGHT")
         .ok()
         .and_then(|v| v.parse::<u32>().ok())
         .filter(|v| *v > 0)
-        .unwrap_or(768);
+        .unwrap_or(900);
     {
         let mut e = engine.borrow_mut();
         e.viewport_width = width;
@@ -225,6 +278,27 @@ fn run_headless_dump(path: &str) -> Result<(), String> {
     js.drain_pending_jobs();
     let _ = js.call_global("__shimFlushAndRender");
 
+    let native_metadata = {
+        let mut e = engine.borrow_mut();
+        e.compute_layout();
+        serde_json::json!({
+            "pipelineVersion": 1,
+            "viewport": {
+                "width": width,
+                "height": height,
+            },
+            "engineDocument": serde_json::from_str::<serde_json::Value>(&e.export_document_json()).unwrap_or_else(|err| serde_json::json!({"error": err.to_string()})),
+            "engineModel": serde_json::from_str::<serde_json::Value>(&e.export_engine_model_json()).unwrap_or_else(|err| serde_json::json!({"error": err.to_string()})),
+            "engineLayout": serde_json::from_str::<serde_json::Value>(&e.export_layout_json()).unwrap_or_else(|err| serde_json::json!({"error": err.to_string()})),
+        })
+    };
+
+    if let Ok(path) = std::env::var("RENDERO_HEADLESS_METADATA") {
+        std::fs::write(&path, serde_json::to_vec_pretty(&native_metadata).map_err(|e| e.to_string())?)
+            .map_err(|e| e.to_string())?;
+        println!("[Rendero] Headless metadata written to {path}");
+    }
+
     let pixels = engine.borrow_mut().render_pixels(width, height);
     dump_ppm(path, &pixels, width, height).map_err(|e| e.to_string())?;
     println!("[Rendero] Headless frame written to {path}");
@@ -237,8 +311,8 @@ impl ApplicationHandler for App {
         self.initialized = true;
 
         let attrs = WindowAttributes::default()
-            .with_title("Rendero — React on Native Rust Engine")
-            .with_inner_size(LogicalSize::new(1024u32, 768u32));
+            .with_title("Rendero Codex Version")
+            .with_inner_size(LogicalSize::new(1440u32, 900u32));
 
         let window = event_loop.create_window(attrs).expect("Failed to create window");
         let window_rc = Rc::new(window);
@@ -248,6 +322,7 @@ impl ApplicationHandler for App {
 
         self.window_rc = Some(window_rc);
         self.surface = Some(surface);
+        self.bootstrap_runtime();
 
         println!("[Rendero] Window created. Running render loop.");
     }
@@ -265,6 +340,9 @@ impl ApplicationHandler for App {
                         NonZeroU32::new(size.height.max(1)).unwrap(),
                     );
                 }
+                if self.bootstrapped {
+                    self.sync_host_viewport();
+                }
             }
             WindowEvent::RedrawRequested => {
                 self.render_frame();
@@ -275,9 +353,7 @@ impl ApplicationHandler for App {
                     MouseScrollDelta::PixelDelta(pos) => -pos.y as f32,
                 };
                 if dy.abs() > 0.0 {
-                    // Move camera directly — no JS round-trip needed
-                    let mut e = self.engine.borrow_mut();
-                    e.cam_y = (e.cam_y + dy).max(0.0);
+                    self.dispatch_native_scroll(dy);
                 }
             }
             _ => {}

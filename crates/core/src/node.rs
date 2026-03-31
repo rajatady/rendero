@@ -220,6 +220,10 @@ pub struct Node {
     pub transform: Transform,
     pub width: f32,
     pub height: f32,
+    #[serde(default)]
+    pub width_percent: Option<f32>,
+    #[serde(default)]
+    pub height_percent: Option<f32>,
 
     // Visual
     pub style: Style,
@@ -262,6 +266,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Frame {
                 clip_content: true,
@@ -289,6 +295,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Rectangle {
                 corner_radii: CornerRadii::default(),
@@ -313,6 +321,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Ellipse {
                 arc_start: 0.0,
@@ -339,6 +349,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width: 0.0,  // measured by layout engine or JS browser measurement
             height: 0.0,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Text {
                 runs: vec![TextRun {
@@ -377,6 +389,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Component,
             horizontal_sizing: SizingMode::Fixed,
@@ -399,6 +413,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Instance {
                 component_id,
@@ -424,6 +440,8 @@ impl Node {
             transform: Transform::IDENTITY,
             width,
             height,
+            width_percent: None,
+            height_percent: None,
             style: Style::default(),
             kind: NodeKind::Image {
                 data,

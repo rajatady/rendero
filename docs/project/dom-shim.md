@@ -7,7 +7,7 @@ The Rendero DOM Shim is a virtual DOM implementation that intercepts standard br
 **Key properties:**
 
 - **Framework-agnostic** -- works with React (react-dom) and Vue out of the box. Any framework that targets the standard DOM API can use it.
-- **Platform-agnostic** -- runs in three modes: real browser DOM, browser canvas via WASM, and native macOS via JavaScriptCore + Rust FFI.
+- **Platform-agnostic** -- runs in three modes: real browser DOM, browser Rendero via WASM, and native Rendero via the pure Rust QuickJS shell.
 - **Zero framework patches** -- no forked react-dom, no custom reconciler. Stock `react-dom/client` and `vue` packages.
 
 ---
@@ -26,24 +26,24 @@ The shim supports three rendering modes, all sharing the same application code (
 |   |                 |      |   |                 |      |   |                 |
 |   v                 |      |   v                 |      |   v                 |
 | Browser DOM         |      | ShimDocument        |      | ShimDocument        |
-| (real elements)     |      | ShimElement          |      | ShimElement          |
+| (real elements)     |      | ShimElement         |      | ShimElement         |
 |                     |      | ShimTextNode        |      | ShimTextNode        |
 |                     |      |   |                 |      |   |                 |
 |                     |      |   v                 |      |   v                 |
 |                     |      | engine.js           |      | engine-native.js    |
-|                     |      | (ops queue + WASM)  |      | (ops queue + FFI)   |
+|                     |      | (ops queue + WASM)  |      | (ops queue + Rust)  |
 |                     |      |   |                 |      |   |                 |
 |                     |      |   v                 |      |   v                 |
-|                     |      | CanvasEngine (WASM) |      | Rust engine (C FFI) |
-|                     |      | renders to <canvas> |      | renders to MTKView  |
+|                     |      | WASM engine         |      | Native shell engine |
+|                     |      | renders to <canvas> |      | renders to window   |
 +---------------------+      +---------------------+      +---------------------+
 ```
 
 | Mode | Entry Point | Engine Bridge | Runtime | Rendering Target |
 |------|-------------|---------------|---------|------------------|
 | Web | `entry-react-web.jsx` / `entry-vue-web.js` | None (real DOM) | Browser | Browser compositor |
-| Web Canvas | `entry-react-native.jsx` / `entry-vue-native.js` | `engine.js` (WASM) | Browser | `<canvas>` element |
-| Native macOS | `entry-macos.jsx` | `engine-native.js` (FFI) | JavaScriptCore | `MTKView` (Metal) |
+| Browser Rendero | `entry-react-native.jsx` / `entry-vue-native.js` | `engine.js` (WASM) | Browser | `<canvas>` element |
+| Native Rendero | `entry-macos.jsx` / `entry-macos-vue.js` | `engine-native.js` | QuickJS in the Rust shell | Native window surface (`softbuffer`) |
 
 ---
 
@@ -62,7 +62,7 @@ The shim supports three rendering modes, all sharing the same application code (
 | `style.js` | 8.5 KB | `CSSStyleDeclaration` Proxy. Intercepts every `element.style.*` write and translates it to engine property calls. Handles shorthand expansion and CSS text parsing. | `createStyleProxy(element)` |
 | `css-values.js` | 12.3 KB | CSS value parsers. Converts CSS color strings, length units, font weights, box shadows, and linear gradients into engine-compatible numeric values. | `parseColor`, `parseLength`, `parseFontWeight`, `parseBoxShadow`, `parseLinearGradient`, `expandShorthand`, `setViewport` |
 | `engine.js` | 9.2 KB | WASM engine bridge. Manages the ops queue, node registry (shimId -> counter/clientId), render loop via `requestAnimationFrame`. All engine mutations are serialized through the queue. | `initEngine`, `allocId`, `markDirty`, `engineCreateFrame`, `engineCreateText`, `engineDeleteNode`, `engineSetProp`, `engineGetBounds`, `hitTest` |
-| `engine-native.js` | 8.4 KB | Native engine bridge (drop-in replacement for `engine.js`). Same API, but calls `__rendero_*` global functions registered by Swift instead of WASM methods. Tree ops (create/insert) are synchronous; property changes are queued. | `initEngine`, `allocId`, `markDirty`, `engineCreateFrame`, `engineCreateText`, `engineDeleteNode`, `engineSetProp`, `engineGetBounds`, `hitTest`, `flushAndRender` |
+| `engine-native.js` | 8.4 KB | Native engine bridge (drop-in replacement for `engine.js`). Same API, but calls `__rendero_*` globals registered by the Rust native shell instead of WASM methods. Tree ops (create/insert) are synchronous; property changes are queued. | `initEngine`, `allocId`, `markDirty`, `engineCreateFrame`, `engineCreateText`, `engineDeleteNode`, `engineSetProp`, `engineGetBounds`, `hitTest`, `flushAndRender` |
 | `events.js` | 5.9 KB | DOM Event system. Implements `Event`, `MouseEvent`, `KeyboardEvent`, `FocusEvent`, `InputEvent` classes and the `EventTarget` mixin with full capture/target/bubble phase dispatching. | `ShimEvent`, `ShimMouseEvent`, `ShimKeyboardEvent`, `ShimFocusEvent`, `ShimInputEvent`, `EventTargetMixin` |
 
 ### `src/` Directory
@@ -74,6 +74,7 @@ The shim supports three rendering modes, all sharing the same application code (
 | `entry-vue-web.js` | 0.6 KB | Vue + real browser DOM entry (Mode 1) |
 | `entry-vue-native.js` | 1.0 KB | Vue + DOM shim + WASM canvas entry (Mode 2) |
 | `entry-macos.jsx` | 3.0 KB | React + DOM shim + native Rust engine entry (Mode 3) |
+| `entry-macos-vue.js` | 2.5 KB | Vue + DOM shim + native Rust engine entry (Mode 3) |
 | `apple-react.jsx` | 15.2 KB | Demo application (React version) |
 | `apple-vue.js` | 12.3 KB | Demo application (Vue version) |
 
@@ -315,7 +316,7 @@ hitTest(screenX, screenY)      // --> engineId | null  (flushes ops first)
 
 ### `engine-native.js` -- Native FFI Bridge
 
-Drop-in replacement for `engine.js`. Instead of calling methods on a WASM `CanvasEngine` instance, calls global `__rendero_*` functions that Swift registers in the JSContext before loading the JS bundle.
+Drop-in replacement for `engine.js`. Instead of calling methods on a WASM `CanvasEngine` instance, calls global `__rendero_*` functions that the Rust native shell registers in the QuickJS context before loading the JS bundle.
 
 **Key differences from WASM bridge:**
 
@@ -324,11 +325,11 @@ Drop-in replacement for `engine.js`. Instead of calling methods on a WASM `Canva
 | Engine instance | `CanvasEngine` JS object | No JS object; global `__rendero_*` functions |
 | Tree creation | Queued (deferred) | **Synchronous** -- parent must be set before child is created |
 | Property changes | Queued | Queued (same pattern) |
-| Render trigger | `requestAnimationFrame` loop | `flushAndRender()` called by Swift's display link |
-| Canvas | Real `<canvas>` element | None; Swift renders to `MTKView` |
+| Render trigger | `requestAnimationFrame` loop | `flushAndRender()` called by the Rust shell each frame |
+| Canvas | Real `<canvas>` element | None; the native shell blits to the window surface |
 | ID encoding | Array return `[counter, clientId]` | Packed integer: `counter * 0x100000000 + clientId` |
 
-**Native FFI functions expected (registered by Swift):**
+**Native globals expected (registered by the Rust shell):**
 
 ```
 __rendero_set_viewport(w, h)
@@ -390,7 +391,7 @@ In WASM mode, `_wireCanvasEvents(canvas, shimDoc)` translates real browser event
 | `mousedown` on canvas | `hitTest(x, y)` to find engine node, walk shim tree to find element, dispatch `ShimMouseEvent('click')` |
 | `mousemove` on canvas | Track `lastHover`, dispatch `mouseout`/`mouseleave` on previous, `mouseover`/`mouseenter` on new |
 | `touchstart` / `touchmove` / `touchend` | Detect taps (not scrolls), dispatch `click` on touch end |
-| `wheel` on canvas | Prevents default, marks dirty (per-element scroll not yet implemented) |
+| `wheel` on canvas | Prevents default, routes through the shared `window.scrollBy` path, then syncs the engine camera |
 
 ---
 
@@ -434,18 +435,18 @@ app.mount(container);  // ShimElement, not a real DOM node
 
 `installShim(canvas)` initializes the WASM engine, creates a `ShimDocument`, wires canvas events, and returns `{document, window, engine, getContainer()}`. The `getContainer()` helper creates a `<div id="root">` in the shim body.
 
-### Mode 3: Native macOS (DOM Shim + Rust FFI)
+### Mode 3: Native Rendero (DOM Shim + Rust shell)
 
 **React** (`entry-macos.jsx`):
 
-This entry point is built as an IIFE (not ESM) for JavaScriptCore. It:
+This entry point is built as an IIFE (not ESM) for QuickJS. It:
 
-1. Sets viewport from `__screenWidth` / `__screenHeight` globals (provided by Swift)
+1. Sets viewport from host-provided globals such as `__screenWidth`, `__screenHeight`, and DPR metadata
 2. Calls `initEngine()` from `engine-native.js`
 3. Creates `ShimDocument` and connects to engine
 4. Sets `shimDoc.defaultView = globalThis` (critical for react-dom's `instanceof` checks)
 5. Creates root container, mounts React
-6. Exports `__shimFlushAndRender` to `self`/`global` for Swift's display link to call
+6. Exports `__shimFlushAndRender` to `self`/`globalThis` for the Rust shell's frame loop to call
 
 ---
 
@@ -481,7 +482,7 @@ const nativeCommon = {
 };
 ```
 
-**The native engine alias** is the key mechanism that makes Mode 3 work. The `nativeEnginePlugin` intercepts any import of `engine.js` from within the `shims/` directory and rewrites it to `engine-native.js`:
+**The native engine alias** is the key mechanism that makes Mode 3 work. The native bundles resolve to `engine-native.js` instead of the WASM bridge:
 
 ```js
 build.onResolve({ filter: /engine\.js$/ }, (args) => {
@@ -515,7 +516,7 @@ Elements may render with zero height when:
 - `parseLength` returns 0 for `'auto'` and `'none'`, which means content-sized elements get no explicit size set in the engine. The engine's auto-layout handles sizing for flex children, but non-flex children with no explicit size will collapse.
 - Microtask-based style batching was previously attempted but caused first-frame 0x0 nodes. The current approach uses immediate sync, but the underlying issue is that the engine needs explicit dimensions when auto-layout is not in use.
 
-### `instanceof` errors in JSC/QuickJS
+### `instanceof` errors in non-browser runtimes
 
 React-dom performs checks like `element instanceof HTMLIFrameElement` internally (e.g., in `getActiveElementDeep`). In JavaScriptCore and QuickJS:
 

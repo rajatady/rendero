@@ -259,7 +259,7 @@ struct App {
 
 | Event | Handler behavior |
 |---|---|
-| `resumed` | Create the winit window (1024x768 logical), create softbuffer context and surface. Runs once. |
+| `resumed` | Create the winit window (1440x900 logical baseline), create softbuffer context and surface. Runs once. |
 | `WindowEvent::CloseRequested` | Exit the event loop. |
 | `WindowEvent::Resized` | Resize the softbuffer surface. |
 | `WindowEvent::RedrawRequested` | Call `render_frame()`. |
@@ -278,7 +278,7 @@ Each frame:
 
 ### Viewport scaling
 
-The window opens at 1024x768 **logical** pixels. On Retina displays, the physical size is 2048x1536. The engine renders at physical pixel dimensions with `cam_zoom = 1.0`, meaning 1 engine unit = 1 physical pixel. Content authored at 1024 units wide would fill half a 2048px Retina surface.
+The window now opens at a 1440x900 **logical** desktop baseline for parity work. On Retina displays, the physical size is larger, and the shell syncs viewport dimensions and device-pixel-ratio metadata into JS so browser Rendero and native compare against the same desktop contract.
 
 
 ## 7. Native FFI

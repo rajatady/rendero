@@ -7,9 +7,10 @@
 //
 // Uses a Proxy so ANY style property triggers sync.
 
-import { engineSetProp, markDirty, measureTextBrowser } from './engine-runtime.js';
-import { parseColor, parseLength, parseFontWeight, parseBoxShadow, parseLinearGradient, expandShorthand } from './css-values.js';
+import { engineSetProp, markDirty, measureTextBrowser, measureTextElementBrowser } from './engine-runtime.js';
+import { parseColor, parseLength, parseLineHeight, parseFontWeight, parseBoxShadow, parseLinearGradient, parsePercentage, expandShorthand } from './css-values.js';
 import { buildAutoLayout, resolveMargins } from './layout-style.js';
+import { recordShimStyle } from './rendero-api.js';
 
 export function createStyleProxy(element) {
     const _values = {};
@@ -77,9 +78,12 @@ function syncToEngine(element) {
     const backgroundColorValue = v.backgroundColor || v.background || '';
 
     // Width / Height → engine size
-    // Resolve %, vh, vw to actual pixels
-    let w = parseLength(v.width) || 0;
-    let h = parseLength(v.height) || 0;
+    const rawWidth = typeof v.width === 'string' ? v.width.trim() : '';
+    const rawHeight = typeof v.height === 'string' ? v.height.trim() : '';
+    const widthPercent = parsePercentage(rawWidth);
+    const heightPercent = parsePercentage(rawHeight);
+    let w = widthPercent > 0 ? 0 : (parseLength(v.width) || 0);
+    let h = heightPercent > 0 ? 0 : (parseLength(v.height) || 0);
 
     if (typeof __rendero_log === 'function' && (w || h || v.backgroundColor || v.display)) {
         __rendero_log('SYNC id=' + id +
@@ -93,10 +97,13 @@ function syncToEngine(element) {
     const minW = parseLength(v.minWidth);
     const minH = parseLength(v.minHeight);
     const wantsFillX = v.flex === '1' || v.flex === '1 1 0' || v.flexGrow === '1' || v.flexGrow === 1;
-    const hasExplicitWidth = !!w;
-    const hasExplicitHeight = !!h;
+    const hasExplicitWidth = widthPercent <= 0 && !!w;
+    const hasExplicitHeight = heightPercent <= 0 && !!h;
     if (w || h) {
         engineSetProp(id, 'size', { w, h });
+    }
+    if (widthPercent > 0 || heightPercent > 0) {
+        engineSetProp(id, 'sizePercent', { w: widthPercent || 0, h: heightPercent || 0 });
     }
     if (minW || minH || maxW || maxH) {
         engineSetProp(id, 'sizeConstraints', { minW: minW || 0, minH: minH || 0, maxW: maxW || 0, maxH: maxH || 0 });
@@ -144,7 +151,8 @@ function syncToEngine(element) {
     }
 
     const margins = resolveMargins(v);
-    if (margins.top || margins.right || margins.bottom || margins.left) {
+    if (margins.top || margins.right || margins.bottom || margins.left ||
+        margins.autoTop || margins.autoRight || margins.autoBottom || margins.autoLeft) {
         engineSetProp(id, 'margin', margins);
     }
 
@@ -152,6 +160,40 @@ function syncToEngine(element) {
     const autoLayout = buildAutoLayout(v, {
         isText,
         hasChildren: (element.childNodes?.length || 0) > 0,
+    });
+    const resolvedStyle = {
+        width: w,
+        height: h,
+        widthPercent: widthPercent || 0,
+        heightPercent: heightPercent || 0,
+        minWidth: minW || 0,
+        minHeight: minH || 0,
+        maxWidth: maxW || 0,
+        maxHeight: maxH || 0,
+        wantsFillX,
+        hasExplicitWidth,
+        hasExplicitHeight,
+        margins,
+        autoLayout,
+        position: (v.position === 'absolute' || v.position === 'fixed') ? {
+            x: parseLength(v.left) || 0,
+            y: parseLength(v.top) || 0,
+            mode: v.position,
+        } : null,
+        text: isText ? {
+            fontSize: parseLength(v.fontSize) || 0,
+            fontWeight: parseFontWeight(v.fontWeight || '400'),
+            fontFamily: v.fontFamily ? v.fontFamily.replace(/['"]/g, '') : '',
+            letterSpacing: v.letterSpacing ? parseLength(v.letterSpacing, parseLength(v.fontSize) || 16) : 0,
+            lineHeight: v.lineHeight ? parseLineHeight(v.lineHeight, parseLength(v.fontSize) || 16) : 0,
+            textAlign: v.textAlign || '',
+            textContent: element.textContent || '',
+        } : null,
+    };
+    recordShimStyle(id, {
+        tagName: element.localName,
+        raw: { ...v },
+        resolved: resolvedStyle,
     });
     if (autoLayout) {
         engineSetProp(id, 'sizing', {
@@ -166,27 +208,26 @@ function syncToEngine(element) {
         if (v.fontSize) engineSetProp(id, 'fontSize', parseLength(v.fontSize));
         if (v.fontWeight) engineSetProp(id, 'fontWeight', parseFontWeight(v.fontWeight));
         if (v.fontFamily) engineSetProp(id, 'fontFamily', v.fontFamily.replace(/['"]/g, ''));
+        if (v.letterSpacing) engineSetProp(id, 'letterSpacing', parseLength(v.letterSpacing, parseLength(v.fontSize) || 16));
+        if (v.lineHeight) engineSetProp(id, 'lineHeight', parseLineHeight(v.lineHeight, parseLength(v.fontSize) || 16));
         if (v.textAlign) engineSetProp(id, 'textAlign', v.textAlign);
         if (v.color) {
             const c = parseColor(v.color);
             if (c) engineSetProp(id, 'fill', { r: c[0], g: c[1], b: c[2], a: c[3] });
         }
 
-        // Browser-accurate text measurement (oracle approach).
-        // Use canvas.measureText() to get the real dimensions the browser would use,
-        // then send as the node's size. This overrides the Rust heuristic.
         const textContent = element.textContent || '';
-        if (textContent.trim()) {
-            const measured = measureTextBrowser(
+        if (textContent.trim() && !globalThis.__RENDERO_NATIVE__) {
+            const measuredFromDom = measureTextElementBrowser(element.localName, textContent, v);
+            const measured = measuredFromDom || measureTextBrowser(
                 textContent,
                 parseLength(v.fontSize) || 16,
                 v.fontWeight || '400',
                 v.fontFamily || '',
             );
             if (measured) {
-                // Use line-height if set, otherwise use measured height
-                const lh = v.lineHeight ? parseLength(v.lineHeight) : 0;
-                const textH = lh > 0 ? lh : measured.height;
+                const lh = v.lineHeight ? parseLineHeight(v.lineHeight, parseLength(v.fontSize) || 16) : 0;
+                const textH = lh > 0 ? Math.max(lh, measured.height) : measured.height;
                 engineSetProp(id, 'size', { w: measured.width, h: textH });
             }
         }

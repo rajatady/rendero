@@ -76,6 +76,10 @@ EXTRACTOR_JS = """
         const computed = window.getComputedStyle(el);
 
         const styles = {};
+        const computedStyle = {};
+        for (const propName of computed) {
+            computedStyle[propName] = computed.getPropertyValue(propName);
+        }
         for (const prop of STYLE_PROPERTIES) {
             const kebab = prop.replace(/([A-Z])/g, '-$1').toLowerCase();
             const val = computed.getPropertyValue(kebab);
@@ -101,6 +105,7 @@ EXTRACTOR_JS = """
                 width: Math.round(rect.width * 10) / 10,
                 height: Math.round(rect.height * 10) / 10,
             },
+            computedStyle,
             styles,
             childCount: el.children.length,
         });

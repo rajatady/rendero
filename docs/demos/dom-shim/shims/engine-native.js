@@ -15,7 +15,7 @@
 //
 // The Swift side holds the engine pointer and wraps each C call.
 
-import { ensureRenderoNamespace } from './rendero-api.js';
+import { ensureRenderoNamespace, recordNodeRegistration, recordNodeUnregistration, setDebugSurface, traceBridgeOp } from './rendero-api.js';
 
 let _nextId = 1;
 let _dirty = true;
@@ -41,14 +41,17 @@ function _legacyBridge() {
                 case 'set_node_layout_position': return __rendero_set_node_layout_position(args[0], args[1], args[2], args[3]);
                 case 'set_node_clip_content': return __rendero_set_node_clip_content(args[0], args[1], args[2]);
                 case 'set_node_size': return __rendero_set_node_size(args[0], args[1], args[2], args[3]);
+                case 'set_node_size_percent': return __rendero_set_node_size_percent(args[0], args[1], args[2], args[3]);
                 case 'set_node_size_constraints': return __rendero_set_node_size_constraints(args[0], args[1], args[2], args[3], args[4], args[5]);
                 case 'set_node_sizing': return __rendero_set_node_sizing(args[0], args[1], args[2], args[3]);
-                case 'set_node_margin': return __rendero_set_node_margin(args[0], args[1], args[2], args[3], args[4], args[5]);
+                case 'set_node_margin': return __rendero_set_node_margin(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
                 case 'set_node_fill': return __rendero_set_node_fill(args[0], args[1], args[2], args[3], args[4], args[5]);
                 case 'set_node_corner_radius': return __rendero_set_node_corner_radius(args[0], args[1], args[2], args[3], args[4], args[5]);
                 case 'set_node_opacity': return __rendero_set_node_opacity(args[0], args[1], args[2]);
                 case 'set_node_font_size': return __rendero_set_node_font_size(args[0], args[1], args[2]);
                 case 'set_node_font_weight': return __rendero_set_node_font_weight(args[0], args[1], args[2]);
+                case 'set_node_letter_spacing': return __rendero_set_node_letter_spacing(args[0], args[1], args[2]);
+                case 'set_node_line_height': return __rendero_set_node_line_height(args[0], args[1], args[2]);
                 case 'set_node_stroke': return __rendero_set_node_stroke(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
                 case 'set_node_rotation': return __rendero_set_node_rotation(args[0], args[1], args[2]);
                 case 'add_drop_shadow': return __rendero_add_drop_shadow(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
@@ -103,6 +106,8 @@ function _bridge() {
 
 export function initEngine() {
     globalThis.__RENDERO_NATIVE__ = true;
+    globalThis.Rendero?.debug?.reset?.();
+    setDebugSurface('rendero_native');
     // On native, the engine is already created by Swift.
     // We just need to set up the render loop callback.
     const bridge = _bridge();
@@ -163,10 +168,12 @@ export function setCamera(x, y, zoom) {
 
 export function registerNode(engineId, counter, clientId) {
     _nodeRegistry.set(engineId, { counter, clientId });
+    recordNodeRegistration(engineId, counter, clientId);
 }
 
 export function unregisterNode(engineId) {
     _nodeRegistry.delete(engineId);
+    recordNodeUnregistration(engineId);
 }
 
 export function getNodeIds(engineId) {
@@ -194,11 +201,13 @@ function _flushOps() {
 export function setInsertParent(engineId) {
     const ids = _nodeRegistry.get(engineId);
     if (ids && ids.counter >= 0) {
+        traceBridgeOp({ kind: 'setInsertParent', engineId, counter: ids.counter, clientId: ids.clientId });
         _bridge().dispatch('set_insert_parent', [ids.counter, ids.clientId]);
     }
 }
 
 export function clearInsertParent() {
+    traceBridgeOp({ kind: 'clearInsertParent' });
     _bridge().dispatch('clear_insert_parent');
 }
 
@@ -208,6 +217,7 @@ export function engineCreateFrame(engineId, name) {
         const counter = Math.floor(packed / 0x100000000);
         const clientId = packed & 0xFFFFFFFF;
         registerNode(engineId, counter, clientId);
+        traceBridgeOp({ kind: 'createFrame', engineId, counter, clientId, name });
         _bridge().dispatch('set_node_clip_content', [counter, clientId, 0]);
         _dirty = true;
         return { counter, clientId };
@@ -224,6 +234,7 @@ export function engineCreateText(engineId, name, text) {
         const counter = Math.floor(packed / 0x100000000);
         const clientId = packed & 0xFFFFFFFF;
         registerNode(engineId, counter, clientId);
+        traceBridgeOp({ kind: 'createText', engineId, counter, clientId, name, text: safeText });
         _dirty = true;
         return { counter, clientId };
     } catch (e) {
@@ -236,6 +247,7 @@ export function engineDeleteNode(engineId) {
     const ids = _nodeRegistry.get(engineId);
     if (!ids) return;
     unregisterNode(engineId);
+    traceBridgeOp({ kind: 'deleteNode', engineId, counter: ids.counter, clientId: ids.clientId });
     _enqueue(() => {
         try {
             _bridge().dispatch('select_node', [ids.counter, ids.clientId]);
@@ -258,6 +270,15 @@ export function engineGetBounds(engineId) {
 }
 
 export function engineSetProp(engineId, prop, value) {
+    const ids = _nodeRegistry.get(engineId);
+    traceBridgeOp({
+        kind: 'setProp',
+        engineId,
+        counter: ids?.counter ?? null,
+        clientId: ids?.clientId ?? null,
+        prop,
+        value,
+    });
     _enqueue(() => {
         const ids = _nodeRegistry.get(engineId);
         if (!ids || ids.counter < 0) return;
@@ -303,6 +324,12 @@ export function engineSetProp(engineId, prop, value) {
                 break;
             case 'fontFamily':
                 bridge.dispatchStr('set_node_font_family', [counter, clientId], value);
+                break;
+            case 'letterSpacing':
+                bridge.dispatch('set_node_letter_spacing', [counter, clientId, value]);
+                break;
+            case 'lineHeight':
+                bridge.dispatch('set_node_line_height', [counter, clientId, value]);
                 break;
             case 'textAlign':
                 bridge.dispatchStr('set_text_align', [counter, clientId], value);

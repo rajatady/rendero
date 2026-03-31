@@ -30,6 +30,7 @@ import AppleApp from './apple-react.jsx';
 // Set viewport from Swift-provided screen dimensions
 const vpW = (typeof __screenWidth !== 'undefined') ? __screenWidth : 1024;
 const vpH = (typeof __screenHeight !== 'undefined') ? __screenHeight : 768;
+const vpScale = (typeof __screenScale !== 'undefined') ? __screenScale : 1;
 setViewport(vpW, vpH);
 
 // Init the native engine bridge
@@ -44,7 +45,7 @@ Object.assign(globalThis, windowShim, {
     innerHeight: vpH,
     outerWidth: vpW,
     outerHeight: vpH,
-    devicePixelRatio: 1,
+    devicePixelRatio: vpScale,
 });
 installWindowScrollShim(globalThis, shimDoc);
 

@@ -1,8 +1,8 @@
 # Rendero -- Vision and Architecture
 
 A portable browser engine optimized for apps. Run React, Vue, or Svelte on
-every platform with zero overhead on the web and a custom Rust rendering
-engine on native.
+every platform with zero overhead on the web, a browser Rendero parity/debug
+path via WASM, and a custom Rust rendering engine on native.
 
 ---
 
@@ -62,16 +62,17 @@ registers a callback. That is the entire contract.
 The insight:
 
 ```
-On web:  Framework --> real browser DOM --> browser engine --> pixels
-On native:  Framework --> DOM SHIM --> Rust engine --> pixels
+On web production:  Framework --> real browser DOM --> browser engine --> pixels
+On browser Rendero: Framework --> DOM SHIM --> WASM engine --> canvas pixels
+On native:          Framework --> DOM SHIM --> Rust engine --> native pixels
 ```
 
-The DOM shim is the only new thing. It is approximately 2,300 lines of
+The DOM shim is the main new thing. It is approximately 2,300 lines of
 JavaScript. It implements `document.createElement`, `element.style`,
 `appendChild`, `removeChild`, `addEventListener`, `dispatchEvent`, and the
 other DOM APIs that React and Vue actually call. Under the hood, each DOM
-mutation becomes a call to the Rendero engine: create a node, set a property,
-recompute layout, re-render.
+mutation becomes a call into the Rendero pipeline: normalize styles, emit
+engine commands, update the engine model, recompute layout, and re-render.
 
 React, Vue, and Svelte run **completely unmodified**. They import `react-dom`
 and call `createRoot`. They never know they are not in a browser.
@@ -114,13 +115,13 @@ Rendero has a four-layer architecture. Each layer is independently replaceable.
 |  COMPLETELY UNMODIFIED                                           |
 +------------------------------------------------------------------+
         |                                    |
-        | (on web: real DOM)                 | (on native: DOM shim)
+        | (on web: real DOM)                 | (on browser Rendero + native: DOM shim)
         v                                    v
 +-------------------------+    +-------------------------------+
 |  Browser Engine         |    |  Layer 2: DOM Shim            |
 |  (Chrome, Safari, etc.) |    |  ~2,300 LOC JavaScript        |
-|  Zero Rendero code      |    |  document, element, style,    |
-|  runs on this path      |    |  events, CSS value parsing    |
+|  Real DOM oracle path   |    |  document, element, style,    |
+|  for production + tests |    |  events, CSS value parsing    |
 +-------------------------+    +-------------------------------+
                                          |
                                          | engine calls
@@ -173,10 +174,11 @@ the subset of the DOM API that frameworks actually use:
 | `engine-native.js`| Bridge to native engine (QuickJS mode)                 |
 | `index.js`        | Barrel export, `installShim()`, event wiring           |
 
-The shim has two modes:
+The shim has two Rendero modes:
 
 - **Web mode** (`installShim(canvas)`): Intercepts DOM calls, routes to
-  the WASM engine, renders to a canvas. Used for demos and testing.
+  the WASM engine, renders to a canvas. Used for parity work, browser
+  benchmarking, and deterministic layer capture.
 - **Native mode** (`installShimNative()`): Same DOM API, but routes to
   pre-registered native functions (`__rendero_*`) exposed by the Rust shell
   via QuickJS. No WASM, no canvas, no browser.
@@ -237,8 +239,8 @@ Current implementations:
 |------------------|---------------------------|--------------------------------------|
 | `LayoutEngine`   | `TaffyLayout`             | Full CSS flexbox via Taffy           |
 | `LayoutEngine`   | `LegacyLayout`            | Original basic auto-layout           |
-| `TextMeasurer`   | `HeuristicTextMeasurer`   | `width = len * fontSize * 0.65` (fast, approximate) |
-| `TextMeasurer`   | (planned) `ParleyTextMeasurer` | Real text shaping via rustybuzz  |
+| `TextMeasurer`   | `HeuristicTextMeasurer`   | Current native fallback, still approximate |
+| `TextMeasurer`   | `ParleyTextMeasurer`      | Integrated in `rendero-text`, not yet the default render/layout path |
 | `JSRuntime`      | `QuickJSRuntime`          | Via `rquickjs` crate                 |
 | `JSRuntime`      | (planned) `HermesRuntime` | Meta's Hermes engine                 |
 
@@ -268,8 +270,9 @@ Planned additional traits:
 | **Terminal**   | crossterm     | CPU tiles         | N/A          | Experimental  |
 
 The pure Rust stack (winit + softbuffer/wgpu + QuickJS) compiles on every
-platform with `cargo build`. No Swift, no Kotlin, no platform-specific build
-system.
+platform with `cargo build`. The legacy Swift shell remains as a compatibility
+path, but parity work now targets the pure Rust shell plus the browser Rendero
+WASM path.
 
 ---
 

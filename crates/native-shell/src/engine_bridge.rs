@@ -8,6 +8,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use rquickjs::Ctx;
+use serde_json::json;
 
 use rendero_core::document::Document;
 use rendero_core::id::NodeId;
@@ -15,6 +16,7 @@ use rendero_core::node::{Node, NodeKind};
 use rendero_core::properties::*;
 use rendero_renderer::pipeline;
 use rendero_renderer::scene::AABB;
+use rendero_text::ParleyTextMeasurer;
 use glam::Vec2;
 
 use crate::providers::NativeAPI;
@@ -76,12 +78,142 @@ impl Engine {
         (wx, wy)
     }
 
-    pub fn render_pixels(&mut self, width: u32, height: u32) -> Vec<u8> {
-        // Run Taffy layout before rendering
+    pub fn compute_layout(&mut self) {
         if let Some(page) = self.document.page_mut(self.current_page) {
             let root = page.tree.root_id();
-            rendero_core::layout::compute_layout(&mut page.tree, &root);
+            rendero_core::layout::compute_layout_with_text_measurer(
+                &mut page.tree,
+                &root,
+                ParleyTextMeasurer::new(),
+            );
         }
+    }
+
+    pub fn export_document_json(&self) -> String {
+        serde_json::to_string(&self.document.to_snapshot())
+            .unwrap_or_else(|e| format!("{{\"error\":\"{}\"}}", e))
+    }
+
+    pub fn export_engine_model_json(&self) -> String {
+        let Some(page) = self.document.page(self.current_page) else {
+            return "[]".to_string();
+        };
+        let root_id = page.tree.root_id();
+        let traversal = page.tree.traverse_depth_first(&root_id);
+        let entries: Vec<_> = traversal.iter().filter_map(|node_id| {
+            let node = page.tree.get(node_id)?;
+            let parent = page.tree.parent_of(node_id);
+            let kind = match &node.kind {
+                NodeKind::Frame { .. } => "Frame",
+                NodeKind::Rectangle { .. } => "Rectangle",
+                NodeKind::Ellipse { .. } => "Ellipse",
+                NodeKind::Line => "Line",
+                NodeKind::Polygon { .. } => "Polygon",
+                NodeKind::Vector { .. } => "Vector",
+                NodeKind::Text { .. } => "Text",
+                NodeKind::BooleanOp { .. } => "BooleanOp",
+                NodeKind::Component => "Component",
+                NodeKind::Instance { .. } => "Instance",
+                NodeKind::Image { .. } => "Image",
+            };
+            let text = match &node.kind {
+                NodeKind::Text { runs, align, .. } => Some(json!({
+                    "text": runs.iter().map(|run| run.text.as_str()).collect::<String>(),
+                    "align": align,
+                    "runs": runs.iter().map(|run| json!({
+                        "text": run.text,
+                        "fontFamily": run.font_family,
+                        "fontSize": run.font_size,
+                        "fontWeight": run.font_weight,
+                        "lineHeight": run.line_height,
+                        "letterSpacing": run.letter_spacing,
+                    })).collect::<Vec<_>>(),
+                })),
+                _ => None,
+            };
+            Some(json!({
+                "key": format!("{}:{}", node.id.0.counter, node.id.0.client_id),
+                "parentKey": parent.map(|p| format!("{}:{}", p.0.counter, p.0.client_id)),
+                "name": node.name,
+                "kind": kind,
+                "width": node.width,
+                "height": node.height,
+                "transform": {
+                    "tx": node.transform.tx,
+                    "ty": node.transform.ty,
+                },
+                "sizing": {
+                    "horizontal": node.horizontal_sizing,
+                    "vertical": node.vertical_sizing,
+                },
+                "margin": node.margin,
+                "layoutPosition": node.layout_position,
+                "sizeConstraints": node.size_constraints,
+                "autoLayout": match &node.kind {
+                    NodeKind::Frame { auto_layout, .. } => auto_layout,
+                    _ => &None,
+                },
+                "fills": node.style.fills,
+                "opacity": node.style.opacity,
+                "text": text,
+            }))
+        }).collect();
+        serde_json::to_string(&entries).unwrap_or_else(|e| format!("{{\"error\":\"{}\"}}", e))
+    }
+
+    pub fn export_layout_json(&self) -> String {
+        let Some(page) = self.document.page(self.current_page) else {
+            return "[]".to_string();
+        };
+        let root_id = page.tree.root_id();
+        let traversal = page.tree.traverse_depth_first(&root_id);
+        let entries: Vec<_> = traversal.iter().filter_map(|node_id| {
+            let node = page.tree.get(node_id)?;
+            let parent = page.tree.parent_of(node_id);
+            let (wx, wy) = self.node_world_pos(node_id);
+            let kind = match &node.kind {
+                NodeKind::Frame { .. } => "Frame",
+                NodeKind::Rectangle { .. } => "Rectangle",
+                NodeKind::Ellipse { .. } => "Ellipse",
+                NodeKind::Line => "Line",
+                NodeKind::Polygon { .. } => "Polygon",
+                NodeKind::Vector { .. } => "Vector",
+                NodeKind::Text { .. } => "Text",
+                NodeKind::BooleanOp { .. } => "BooleanOp",
+                NodeKind::Component => "Component",
+                NodeKind::Instance { .. } => "Instance",
+                NodeKind::Image { .. } => "Image",
+            };
+            Some(json!({
+                "key": format!("{}:{}", node.id.0.counter, node.id.0.client_id),
+                "parentKey": parent.map(|p| format!("{}:{}", p.0.counter, p.0.client_id)),
+                "name": node.name,
+                "kind": kind,
+                "local": {
+                    "x": node.transform.tx,
+                    "y": node.transform.ty,
+                },
+                "world": {
+                    "x": wx,
+                    "y": wy,
+                },
+                "size": {
+                    "width": node.width,
+                    "height": node.height,
+                },
+                "bounds": {
+                    "x": wx,
+                    "y": wy,
+                    "width": node.width,
+                    "height": node.height,
+                },
+            }))
+        }).collect();
+        serde_json::to_string(&entries).unwrap_or_else(|e| format!("{{\"error\":\"{}\"}}", e))
+    }
+
+    pub fn render_pixels(&mut self, width: u32, height: u32) -> Vec<u8> {
+        self.compute_layout();
 
         let page = match self.document.page(self.current_page) {
             Some(p) => p,
@@ -245,6 +377,12 @@ impl Engine {
                     if let Some(node) = page.tree.get_mut(&node_id) {
                         node.width = args[2] as f32;
                         node.height = args[3] as f32;
+                        if node.width > 0.0 {
+                            node.width_percent = None;
+                        }
+                        if node.height > 0.0 {
+                            node.height_percent = None;
+                        }
                     }
                 }
                 0.0
@@ -285,7 +423,21 @@ impl Engine {
                             right: args[3] as f32,
                             bottom: args[4] as f32,
                             left: args[5] as f32,
+                            auto_top: args.get(6).copied().unwrap_or_default() != 0.0,
+                            auto_right: args.get(7).copied().unwrap_or_default() != 0.0,
+                            auto_bottom: args.get(8).copied().unwrap_or_default() != 0.0,
+                            auto_left: args.get(9).copied().unwrap_or_default() != 0.0,
                         };
+                    }
+                }
+                0.0
+            }
+            "set_node_size_percent" => {
+                let node_id = NodeId::new(args[0] as u64, args[1] as u32);
+                if let Some(page) = self.document.page_mut(self.current_page) {
+                    if let Some(node) = page.tree.get_mut(&node_id) {
+                        node.width_percent = if args[2] > 0.0 { Some(args[2] as f32) } else { None };
+                        node.height_percent = if args[3] > 0.0 { Some(args[3] as f32) } else { None };
                     }
                 }
                 0.0
@@ -454,14 +606,18 @@ impl Engine {
                             1 => LayoutWrap::Wrap,
                             _ => LayoutWrap::NoWrap,
                         };
+                        let resolve_sizing = |mode: SizingMode, extent: f32| match mode {
+                            SizingMode::Fixed if extent <= 0.0 => SizingMode::Hug,
+                            _ => mode,
+                        };
                         let (primary_sizing, counter_sizing) = match dir {
                             LayoutDirection::Horizontal => (
-                                if node.width > 0.0 { node.horizontal_sizing } else { SizingMode::Hug },
-                                if node.height > 0.0 { node.vertical_sizing } else { SizingMode::Hug },
+                                resolve_sizing(node.horizontal_sizing, node.width),
+                                resolve_sizing(node.vertical_sizing, node.height),
                             ),
                             LayoutDirection::Vertical => (
-                                if node.height > 0.0 { node.vertical_sizing } else { SizingMode::Hug },
-                                if node.width > 0.0 { node.horizontal_sizing } else { SizingMode::Hug },
+                                resolve_sizing(node.vertical_sizing, node.height),
+                                resolve_sizing(node.horizontal_sizing, node.width),
                             ),
                         };
                         if let NodeKind::Frame { ref mut auto_layout, .. } = node.kind {
@@ -560,6 +716,33 @@ impl Engine {
                         if let NodeKind::Text { ref mut runs, .. } = node.kind {
                             for run in runs.iter_mut() {
                                 run.font_family = text.to_string();
+                            }
+                        }
+                    }
+                }
+                0.0
+            }
+            "set_node_letter_spacing" => {
+                let node_id = NodeId::new(args[0] as u64, args[1] as u32);
+                if let Some(page) = self.document.page_mut(self.current_page) {
+                    if let Some(node) = page.tree.get_mut(&node_id) {
+                        if let NodeKind::Text { ref mut runs, .. } = node.kind {
+                            for run in runs.iter_mut() {
+                                run.letter_spacing = args[2] as f32;
+                            }
+                        }
+                    }
+                }
+                0.0
+            }
+            "set_node_line_height" => {
+                let node_id = NodeId::new(args[0] as u64, args[1] as u32);
+                if let Some(page) = self.document.page_mut(self.current_page) {
+                    if let Some(node) = page.tree.get_mut(&node_id) {
+                        if let NodeKind::Text { ref mut runs, .. } = node.kind {
+                            let height = args[2] as f32;
+                            for run in runs.iter_mut() {
+                                run.line_height = if height > 0.0 { Some(height) } else { None };
                             }
                         }
                     }
@@ -680,9 +863,10 @@ pub fn register_engine_functions(ctx: &Ctx<'_>, engine: &Rc<RefCell<Engine>>, na
         function __rendero_set_node_layout_position(c, ci, x, y) { return __RenderoHostBridge.dispatch('set_node_layout_position', [c, ci, x, y]); }
         function __rendero_set_node_clip_content(c, ci, clip) { return __RenderoHostBridge.dispatch('set_node_clip_content', [c, ci, clip ? 1 : 0]); }
         function __rendero_set_node_size(c, ci, w, h) { return __RenderoHostBridge.dispatch('set_node_size', [c, ci, w, h]); }
+        function __rendero_set_node_size_percent(c, ci, w, h) { return __RenderoHostBridge.dispatch('set_node_size_percent', [c, ci, w, h]); }
         function __rendero_set_node_size_constraints(c, ci, minW, minH, maxW, maxH) { return __RenderoHostBridge.dispatch('set_node_size_constraints', [c, ci, minW, minH, maxW, maxH]); }
         function __rendero_set_node_sizing(c, ci, h, v) { return __RenderoHostBridge.dispatch('set_node_sizing', [c, ci, h, v]); }
-        function __rendero_set_node_margin(c, ci, t, r, b, l) { return __RenderoHostBridge.dispatch('set_node_margin', [c, ci, t, r, b, l]); }
+        function __rendero_set_node_margin(c, ci, t, r, b, l, at, ar, ab, al) { return __RenderoHostBridge.dispatch('set_node_margin', [c, ci, t, r, b, l, at ? 1 : 0, ar ? 1 : 0, ab ? 1 : 0, al ? 1 : 0]); }
         function __rendero_set_node_fill(c, ci, r, g, b, a) { return __RenderoHostBridge.dispatch('set_node_fill', [c, ci, r, g, b, a]); }
         function __rendero_set_node_corner_radius(c, ci, tl, tr, br, bl) { return __RenderoHostBridge.dispatch('set_node_corner_radius', [c, ci, tl, tr, br, bl]); }
         function __rendero_set_node_opacity(c, ci, o) { return __RenderoHostBridge.dispatch('set_node_opacity', [c, ci, o]); }
@@ -690,6 +874,8 @@ pub fn register_engine_functions(ctx: &Ctx<'_>, engine: &Rc<RefCell<Engine>>, na
         function __rendero_set_node_font_size(c, ci, s) { return __RenderoHostBridge.dispatch('set_node_font_size', [c, ci, s]); }
         function __rendero_set_node_font_weight(c, ci, w) { return __RenderoHostBridge.dispatch('set_node_font_weight', [c, ci, w]); }
         function __rendero_set_node_font_family(c, ci, family) { return __RenderoHostBridge.dispatchStr('set_node_font_family', [c, ci], family); }
+        function __rendero_set_node_letter_spacing(c, ci, spacing) { return __RenderoHostBridge.dispatch('set_node_letter_spacing', [c, ci, spacing]); }
+        function __rendero_set_node_line_height(c, ci, height) { return __RenderoHostBridge.dispatch('set_node_line_height', [c, ci, height]); }
         function __rendero_set_text_align(c, ci, align) { return __RenderoHostBridge.dispatchStr('set_text_align', [c, ci], align); }
         function __rendero_set_node_stroke(c, ci, r, g, b, a, w) { return __RenderoHostBridge.dispatch('set_node_stroke', [c, ci, r, g, b, a, w]); }
         function __rendero_set_node_rotation(c, ci, degrees) { return __RenderoHostBridge.dispatch('set_node_rotation', [c, ci, degrees]); }

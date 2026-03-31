@@ -66,6 +66,8 @@ export async function installShim(canvas) {
             engine,
             shimDocument: shimDoc,
             canvas,
+            layered: globalThis.__RENDERO_DEBUG_STATE__ || null,
+            getLayeredState: () => globalThis.__RENDERO_DEBUG_STATE__ || null,
         };
     }
 

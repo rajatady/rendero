@@ -13,6 +13,7 @@ use rendero_core::node::{Node, NodeKind};
 use rendero_core::properties::*;
 use rendero_renderer::pipeline;
 use rendero_renderer::scene::{AABB, RenderItem};
+use rendero_text::ParleyTextMeasurer;
 use glam::Vec2;
 
 /// The native engine — same as CanvasEngine in WASM but without wasm_bindgen.
@@ -432,7 +433,7 @@ pub extern "C" fn rendero_render_pixels(
     // Run layout before rendering (Taffy flexbox)
     if let Some(page) = e.document.page_mut(e.current_page) {
         let root = page.tree.root_id();
-        rendero_core::layout::compute_layout(&mut page.tree, &root);
+    rendero_core::layout::compute_layout_with_text_measurer(&mut page.tree, &root, ParleyTextMeasurer::new());
     }
 
     let page = match e.document.page(e.current_page) {

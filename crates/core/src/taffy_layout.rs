@@ -14,7 +14,7 @@ use taffy::prelude::*;
 use taffy::TaffyTree;
 
 use crate::id::NodeId;
-use crate::node::NodeKind;
+use crate::node::{NodeKind, TextRun};
 use crate::properties::*;
 use crate::providers::{LayoutEngine, TextMeasurer};
 use crate::tree::DocumentTree;
@@ -22,6 +22,11 @@ use crate::tree::DocumentTree;
 /// Layout engine powered by Taffy (CSS flexbox + grid).
 pub struct TaffyLayout<M: TextMeasurer> {
     measurer: M,
+}
+
+#[derive(Clone)]
+struct TextMeasureContext {
+    runs: Vec<TextRun>,
 }
 
 impl<M: TextMeasurer> TaffyLayout<M> {
@@ -32,7 +37,7 @@ impl<M: TextMeasurer> TaffyLayout<M> {
 
 impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
     fn compute(&mut self, tree: &mut DocumentTree, root: &NodeId, viewport: (f32, f32)) {
-        let mut taffy: TaffyTree = TaffyTree::new();
+        let mut taffy: TaffyTree<Option<TextMeasureContext>> = TaffyTree::new();
         let mut id_map: HashMap<NodeId, taffy::NodeId> = HashMap::new();
 
         // Build Taffy tree bottom-up (children before parents)
@@ -45,21 +50,18 @@ impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
                 None => continue,
             };
 
-            let mut taffy_style = node_to_taffy_style(rendero_node);
+            let parent_node = tree.parent_of(node_id).and_then(|pid| tree.get(&pid));
+            let mut taffy_style = node_to_taffy_style(rendero_node, parent_node);
 
-            // For text nodes: use explicit size if already set (e.g. from JS browser
-            // measurement), otherwise fall back to the Rust text measurer.
-            if let NodeKind::Text { ref runs, .. } = rendero_node.kind {
-                if rendero_node.width > 0.0 && rendero_node.height > 0.0 {
-                    // Pre-measured (browser canvas.measureText or explicit size)
+            let text_context = match &rendero_node.kind {
+                NodeKind::Text { runs, .. } if rendero_node.width > 0.0 && rendero_node.height > 0.0 => {
                     taffy_style.size.width = Dimension::length(rendero_node.width);
                     taffy_style.size.height = Dimension::length(rendero_node.height);
-                } else {
-                    let (tw, th) = self.measurer.measure(runs, f32::INFINITY);
-                    if tw > 0.0 { taffy_style.size.width = Dimension::length(tw); }
-                    if th > 0.0 { taffy_style.size.height = Dimension::length(th); }
+                    None
                 }
-            }
+                NodeKind::Text { runs, .. } => Some(TextMeasureContext { runs: runs.clone() }),
+                _ => None,
+            };
 
             // Collect child Taffy IDs
             let child_ids: Vec<taffy::NodeId> = tree.children_of(node_id)
@@ -71,7 +73,10 @@ impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
                 .unwrap_or_default();
 
             let taffy_node = if child_ids.is_empty() {
-                taffy.new_leaf(taffy_style).unwrap()
+                match text_context {
+                    Some(context) => taffy.new_leaf_with_context(taffy_style, Some(context)).unwrap(),
+                    None => taffy.new_leaf(taffy_style).unwrap(),
+                }
             } else {
                 taffy.new_with_children(taffy_style, &child_ids).unwrap()
             };
@@ -88,9 +93,31 @@ impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
         let vp_h = if viewport.1 > 0.0 { viewport.1 }
             else { root_node.map(|n| n.height).filter(|h| *h > 0.0).unwrap_or(800.0) };
 
-        if taffy.compute_layout(
+        if taffy.compute_layout_with_measure(
             taffy_root,
-            Size { width: AvailableSpace::Definite(vp_w), height: AvailableSpace::Definite(vp_h) }
+            Size { width: AvailableSpace::Definite(vp_w), height: AvailableSpace::Definite(vp_h) },
+            |known_dimensions, available_space, _node_id, node_context, _style| {
+                let Some(context) = node_context.and_then(|ctx| ctx.as_ref()) else {
+                    return Size::ZERO;
+                };
+
+                let max_width = known_dimensions.width
+                    .or(match available_space.width {
+                        AvailableSpace::Definite(width) => Some(width),
+                        AvailableSpace::MinContent => Some(0.0),
+                        AvailableSpace::MaxContent => None,
+                    })
+                    .unwrap_or(f32::INFINITY);
+
+                let (mut width, mut height) = self.measurer.measure(&context.runs, max_width);
+                if let Some(known_width) = known_dimensions.width {
+                    width = known_width;
+                }
+                if let Some(known_height) = known_dimensions.height {
+                    height = known_height;
+                }
+                Size { width, height }
+            }
         ).is_err() {
             return;
         }
@@ -118,7 +145,7 @@ impl<M: TextMeasurer> LayoutEngine for TaffyLayout<M> {
 }
 
 /// Convert a Rendero Node to a Taffy Style.
-fn node_to_taffy_style(node: &crate::node::Node) -> taffy::Style {
+fn node_to_taffy_style(node: &crate::node::Node, parent: Option<&crate::node::Node>) -> taffy::Style {
     let mut style = taffy::Style::default();
 
     if !node.visible {
@@ -215,37 +242,73 @@ fn node_to_taffy_style(node: &crate::node::Node) -> taffy::Style {
         if node.height > 0.0 { style.size.height = Dimension::length(node.height); }
     }
 
-    // Child sizing within parent (flex item properties)
-    match node.horizontal_sizing {
-        SizingMode::Fill => {
+    let parent_direction = match parent.and_then(|p| match &p.kind {
+        NodeKind::Frame { auto_layout: Some(al), .. } => Some(al.direction),
+        _ => None,
+    }) {
+        Some(dir) => dir,
+        None => LayoutDirection::Vertical,
+    };
+
+    match (parent_direction, node.horizontal_sizing) {
+        (LayoutDirection::Horizontal, SizingMode::Fill) => {
             style.flex_grow = 1.0;
             style.flex_shrink = 1.0;
             style.flex_basis = Dimension::length(0.0);
             style.size.width = Dimension::auto();
         }
-        SizingMode::Fixed if node.width > 0.0 => {
+        (LayoutDirection::Vertical, SizingMode::Fill) => {
+            style.align_self = Some(AlignSelf::Stretch);
+            style.size.width = Dimension::auto();
+        }
+        (_, SizingMode::Fixed) if node.width > 0.0 => {
             style.size.width = Dimension::length(node.width);
         }
         _ => {}
     }
 
-    match node.vertical_sizing {
-        SizingMode::Fill => {
+    match (parent_direction, node.vertical_sizing) {
+        (LayoutDirection::Vertical, SizingMode::Fill) => {
+            style.flex_grow = 1.0;
+            style.flex_shrink = 1.0;
+            style.flex_basis = Dimension::length(0.0);
+            style.size.height = Dimension::auto();
+        }
+        (LayoutDirection::Horizontal, SizingMode::Fill) => {
             style.align_self = Some(AlignSelf::Stretch);
             style.size.height = Dimension::auto();
         }
-        SizingMode::Fixed if node.height > 0.0 => {
+        (_, SizingMode::Fixed) if node.height > 0.0 => {
             style.size.height = Dimension::length(node.height);
         }
         _ => {}
     }
 
+    if let Some(width_percent) = node.width_percent {
+        style.size.width = Dimension::percent(width_percent);
+        style.flex_grow = 0.0;
+        style.flex_basis = Dimension::auto();
+        if matches!(parent_direction, LayoutDirection::Vertical) {
+            style.align_self = None;
+        }
+    }
+    if let Some(height_percent) = node.height_percent {
+        style.size.height = Dimension::percent(height_percent);
+    }
+
     // Margin
+    let margin_edge = |value: f32, is_auto: bool| {
+        if is_auto {
+            LengthPercentageAuto::auto()
+        } else {
+            LengthPercentageAuto::length(value)
+        }
+    };
     style.margin = taffy::Rect {
-        top: LengthPercentageAuto::length(node.margin.top),
-        right: LengthPercentageAuto::length(node.margin.right),
-        bottom: LengthPercentageAuto::length(node.margin.bottom),
-        left: LengthPercentageAuto::length(node.margin.left),
+        top: margin_edge(node.margin.top, node.margin.auto_top),
+        right: margin_edge(node.margin.right, node.margin.auto_right),
+        bottom: margin_edge(node.margin.bottom, node.margin.auto_bottom),
+        left: margin_edge(node.margin.left, node.margin.auto_left),
     };
 
     // Absolute positioning

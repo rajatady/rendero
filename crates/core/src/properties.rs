@@ -394,6 +394,14 @@ pub struct LayoutMargin {
     pub right: f32,
     pub bottom: f32,
     pub left: f32,
+    #[serde(default)]
+    pub auto_top: bool,
+    #[serde(default)]
+    pub auto_right: bool,
+    #[serde(default)]
+    pub auto_bottom: bool,
+    #[serde(default)]
+    pub auto_left: bool,
 }
 
 /// Absolute positioning data for nodes taken out of normal layout flow.

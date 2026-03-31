@@ -23,11 +23,25 @@ export function parseJustifyMode(value) {
 }
 
 export function resolveMargins(values) {
+    const parseMarginEdge = (value) => {
+        if (typeof value === 'string' && value.trim() === 'auto') {
+            return { value: 0, auto: true };
+        }
+        return { value: parseLength(value) || 0, auto: false };
+    };
+    const top = parseMarginEdge(values.marginTop);
+    const right = parseMarginEdge(values.marginRight);
+    const bottom = parseMarginEdge(values.marginBottom);
+    const left = parseMarginEdge(values.marginLeft);
     return {
-        top: parseLength(values.marginTop) || 0,
-        right: parseLength(values.marginRight) || 0,
-        bottom: parseLength(values.marginBottom) || 0,
-        left: parseLength(values.marginLeft) || 0,
+        top: top.value,
+        right: right.value,
+        bottom: bottom.value,
+        left: left.value,
+        autoTop: top.auto,
+        autoRight: right.auto,
+        autoBottom: bottom.auto,
+        autoLeft: left.auto,
     };
 }
 

@@ -136,7 +136,7 @@ export const canvasengine_set_node_font_size: (a: number, b: number, c: number, 
 export const canvasengine_set_node_font_weight: (a: number, b: number, c: number, d: number) => number;
 export const canvasengine_set_node_layout_position: (a: number, b: number, c: number, d: number, e: number) => number;
 export const canvasengine_set_node_linear_gradient: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => number;
-export const canvasengine_set_node_margin: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
+export const canvasengine_set_node_margin: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number, k: number) => number;
 export const canvasengine_set_node_mask: (a: number, b: number, c: number, d: number) => number;
 export const canvasengine_set_node_name: (a: number, b: number, c: number, d: number, e: number) => number;
 export const canvasengine_set_node_opacity: (a: number, b: number, c: number, d: number) => number;
@@ -145,6 +145,7 @@ export const canvasengine_set_node_radial_gradient: (a: number, b: number, c: nu
 export const canvasengine_set_node_rotation: (a: number, b: number, c: number, d: number) => number;
 export const canvasengine_set_node_size: (a: number, b: number, c: number, d: number, e: number) => number;
 export const canvasengine_set_node_size_constraints: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => number;
+export const canvasengine_set_node_size_percent: (a: number, b: number, c: number, d: number, e: number) => number;
 export const canvasengine_set_node_sizing: (a: number, b: number, c: number, d: number, e: number) => number;
 export const canvasengine_set_node_stroke: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => number;
 export const canvasengine_set_node_text: (a: number, b: number, c: number, d: number, e: number) => number;

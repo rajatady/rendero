@@ -187,6 +187,27 @@ export function parseLength(value, base) {
     return isNaN(n) ? 0 : n;
 }
 
+export function parsePercentage(value) {
+    if (typeof value !== 'string') return 0;
+    const str = value.trim();
+    if (!str.endsWith('%')) return 0;
+    const pct = parseFloat(str);
+    return Number.isFinite(pct) ? pct / 100 : 0;
+}
+
+export function parseLineHeight(value, fontSize) {
+    if (value == null || value === '' || value === 'normal') return 0;
+    if (typeof value === 'number') {
+        return value <= 4 ? value * (fontSize || 16) : value;
+    }
+    const str = String(value).trim();
+    if (/^[\d.]+$/.test(str)) {
+        const unitless = parseFloat(str);
+        return isNaN(unitless) ? 0 : unitless * (fontSize || 16);
+    }
+    return parseLength(str, fontSize);
+}
+
 // Parse font-weight string to numeric
 export function parseFontWeight(value) {
     if (typeof value === 'number') return value;

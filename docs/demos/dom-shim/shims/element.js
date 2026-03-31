@@ -18,9 +18,9 @@ import { createStyleProxy } from './style.js';
 import {
     engineCreateFrame, engineCreateText, engineDeleteNode,
     engineSetProp, engineGetBounds, setInsertParent, clearInsertParent,
-    markDirty, getNodeIds,
+    markDirty, getNodeIds, measureTextBrowser, measureTextElementBrowser,
 } from './engine-runtime.js';
-import { parseColor } from './css-values.js';
+import { parseColor, parseLength, parseLineHeight } from './css-values.js';
 
 // Elements that are inherently text containers
 const TEXT_TAGS = new Set(['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a', 'label', 'strong', 'em', 'b', 'i', 'small', 'code', 'pre', 'li']);
@@ -308,7 +308,31 @@ export class ShimElement extends ShimNode {
 
     _syncTextChildrenToEngine() {
         if (!this._engineCreated || !this._isRenderedAsTextNode()) return;
-        engineSetProp(this._engineId, 'text', this._engineTextContent());
+        const text = this._engineTextContent();
+        const styles = this.style?._values || {};
+        engineSetProp(this._engineId, 'text', text);
+        if (typeof this.style?._syncNow === 'function') {
+            this.style._syncNow();
+        }
+        const fontSize = parseLength(styles.fontSize) || 16;
+        if (styles.lineHeight) {
+            engineSetProp(this._engineId, 'lineHeight', parseLineHeight(styles.lineHeight, fontSize));
+        }
+        if (styles.letterSpacing) {
+            engineSetProp(this._engineId, 'letterSpacing', parseLength(styles.letterSpacing, fontSize));
+        }
+        if (!globalThis.__RENDERO_NATIVE__ && text.trim()) {
+            const measured =
+                measureTextElementBrowser(this.localName, text, styles) ||
+                measureTextBrowser(text, fontSize, styles.fontWeight || '400', styles.fontFamily || '');
+            if (measured) {
+                const lineHeight = styles.lineHeight ? parseLineHeight(styles.lineHeight, fontSize) : 0;
+                engineSetProp(this._engineId, 'size', {
+                    w: measured.width,
+                    h: lineHeight > 0 ? Math.max(lineHeight, measured.height) : measured.height,
+                });
+            }
+        }
         markDirty();
     }
 
