@@ -1,0 +1,56 @@
+ UPDATE  The latest version of `serve` is 14.2.6
+ INFO  Accepting connections at http://127.0.0.1:5555
+ HTTP  3/31/2026 5:12:35 PM 127.0.0.1 GET /demos/dom-shim/?v=1774957355771
+ HTTP  3/31/2026 5:12:35 PM 127.0.0.1 Returned 200 in 9 ms
+ HTTP  3/31/2026 5:12:35 PM 127.0.0.1 GET /demos/dom-shim/dist/react-web.js?v=1774957355817
+ HTTP  3/31/2026 5:12:35 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:39 PM 127.0.0.1 GET /demos/dom-shim/?v=1774957359429
+ HTTP  3/31/2026 5:12:39 PM 127.0.0.1 Returned 200 in 1 ms
+ HTTP  3/31/2026 5:12:39 PM 127.0.0.1 GET /demos/dom-shim/dist/react-web.js?v=1774957359436
+ HTTP  3/31/2026 5:12:39 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:41 PM 127.0.0.1 GET /demos/dom-shim/dist/react-native.js?v=1774957361997
+ HTTP  3/31/2026 5:12:41 PM 127.0.0.1 Returned 200 in 1 ms
+ HTTP  3/31/2026 5:12:42 PM 127.0.0.1 GET /pkg/rendero.js?v=1774957361997
+ HTTP  3/31/2026 5:12:42 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:42 PM 127.0.0.1 GET /pkg/rendero_bg.wasm?v=1774957361997
+ HTTP  3/31/2026 5:12:42 PM 127.0.0.1 Returned 200 in 1 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/accuracy/layout-accuracy.html?report=1&v=1774957365826
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 301 in 1 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/accuracy/layout-accuracy
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 1 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/accuracy/test-corpus.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 1 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/index.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/engine.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/document.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 1 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/element.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/text-node.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 1 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/events.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/window.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/node.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/rendero-api.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/css-values.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/engine-runtime.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/style.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/engine-native.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /demos/dom-shim/shims/layout-style.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /pkg/rendero.js
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 GET /pkg/rendero_bg.wasm
+ HTTP  3/31/2026 5:12:46 PM 127.0.0.1 Returned 200 in 0 ms
+
+ INFO  Gracefully shutting down. Please wait...

@@ -200,33 +200,20 @@ fn node_to_taffy_style(node: &crate::node::Node, parent: Option<&crate::node::No
             LayoutWrap::NoWrap => FlexWrap::NoWrap,
         };
 
-        // Container sizing
-        let is_h = matches!(al.direction, LayoutDirection::Horizontal);
-        let (primary_sizing, counter_sizing) = (al.primary_sizing, al.counter_sizing);
-
-        let primary_dim = match primary_sizing {
-            SizingMode::Fixed => {
-                let v = if is_h { node.width } else { node.height };
-                if v > 0.0 { Dimension::length(v) } else { Dimension::auto() }
-            }
-            SizingMode::Hug => Dimension::auto(),
-            SizingMode::Fill => Dimension::percent(1.0),
-        };
-
-        let counter_dim = match counter_sizing {
-            SizingMode::Fixed => {
-                let v = if is_h { node.height } else { node.width };
-                if v > 0.0 { Dimension::length(v) } else { Dimension::auto() }
-            }
-            SizingMode::Hug => Dimension::auto(),
-            SizingMode::Fill => Dimension::percent(1.0),
-        };
-
-        style.size = if is_h {
-            Size { width: primary_dim, height: counter_dim }
-        } else {
-            Size { width: counter_dim, height: primary_dim }
-        };
+        // Container size comes from node.width/height directly — same as any node.
+        //
+        // CHANGE (rev 63de7cf): Removed primary_sizing/counter_sizing from container
+        // sizing path. These Figma-style fields conflated container sizing with item
+        // sizing. In CSS flexbox, a node's size as a container is independent of how
+        // it sizes as a flex item in its parent. Item sizing (flex-grow, flex-basis)
+        // is handled below via node.horizontal_sizing/vertical_sizing.
+        //
+        // AutoLayout.primary_sizing/counter_sizing still exist on the struct for
+        // backwards compat with legacy layout and CRDT ops, but the Taffy path
+        // no longer reads them. Container size is node.width/height, item size is
+        // node.horizontal_sizing/vertical_sizing. No conflation.
+        if node.width > 0.0 { style.size.width = Dimension::length(node.width); }
+        if node.height > 0.0 { style.size.height = Dimension::length(node.height); }
     } else {
         // No explicit auto-layout. Frames default to vertical column (CSS block flow).
         // Leaf nodes (rect, text, ellipse) just get explicit dimensions.
