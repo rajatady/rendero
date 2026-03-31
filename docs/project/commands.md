@@ -97,9 +97,22 @@ cargo test -p rendero-core -- --nocapture
 scripts/run_accuracy_suite.sh
 ```
 Builds the DOM-shim bundles and WASM output, refreshes `corpus/dashboard.json`,
-starts a no-cache server, captures browser oracle + Rendero engine layout for the
-Apple demo, runs the synthetic layout corpus benchmark, and writes the outputs
-into `accuracy/`.
+starts a no-cache server, captures browser oracle + Rendero WASM + native
+headless for the Apple demo, runs the synthetic layout corpus benchmark, and
+writes the outputs into `accuracy/`.
+
+### Three-Way Runtime Capture
+```bash
+python3 scripts/capture-ground-truth.py http://localhost:5555/demos/dom-shim/ accuracy/apple-web.json
+python3 scripts/capture-engine-truth.py http://localhost:5555/demos/dom-shim/ accuracy/apple-engine.json
+python3 scripts/capture-native-truth.py http://localhost:5555/demos/dom-shim/ accuracy/apple-native.json
+python3 scripts/compare-runtime-triple.py accuracy/apple-web.json accuracy/apple-engine.json accuracy/apple-native.json accuracy/apple-runtime-comparison.json
+```
+Produces:
+- `accuracy/apple-web.json`
+- `accuracy/apple-engine.json`
+- `accuracy/apple-native.json`
+- `accuracy/apple-runtime-comparison.json`
 
 ### Native App with Log Capture
 ```bash

@@ -3,6 +3,13 @@
 This file tracks temporary shortcuts used to move the browser/native parity work
 forward without losing sight of the proper long-term translation model.
 
+Current committed checkpoint:
+
+- browser oracle vs WASM: `44.86%`
+- browser oracle vs native: `7.94%`
+- WASM vs native: `10.42%`
+- synthetic corpus: `83.41%`
+
 ## Active Shortcuts
 
 - Native comparison baseline is currently forced to the desktop browser oracle:

@@ -25,7 +25,9 @@ cargo test -p rendero-text                        # 7 text measurement tests
 # Accuracy (oracle loop — browser is ground truth)
 python3 scripts/capture-ground-truth.py http://localhost:5555/demos/dom-shim/ accuracy/apple-web.json
 python3 scripts/capture-engine-truth.py http://localhost:5555/demos/dom-shim/ accuracy/apple-engine.json
+python3 scripts/capture-native-truth.py http://localhost:5555/demos/dom-shim/ accuracy/apple-native.json
 python3 scripts/compare-layout.py accuracy/apple-web.json accuracy/apple-engine.json accuracy/apple-comparison.json
+python3 scripts/compare-runtime-triple.py accuracy/apple-web.json accuracy/apple-engine.json accuracy/apple-native.json accuracy/apple-runtime-comparison.json
 scripts/run_accuracy_suite.sh
 ```
 
@@ -71,7 +73,9 @@ Platform Backend (swappable)
 - `crates/renderer/src/text.rs` — text rasterization with fontdb system font resolution + fontdue
 - `scripts/capture-ground-truth.py` — extract browser layout as JSON (Playwright)
 - `scripts/capture-engine-truth.py` — extract engine layout as JSON (Playwright)
+- `scripts/capture-native-truth.py` — extract native headless layout/render state as JSON
 - `scripts/compare-layout.py` — diff browser vs engine, report accuracy %
+- `scripts/compare-runtime-triple.py` — compare browser, WASM, and native in one report
 - `scripts/capture-layout-corpus.py` — run the synthetic layout corpus page against the Rendero WASM shim
 - `scripts/run_accuracy_suite.sh` — rebuild bundles, refresh corpus dashboard, run the Apple oracle loop end to end
 - `corpus/capture-site.py` — capture real website ground truth at multiple viewports
@@ -80,11 +84,15 @@ Platform Backend (swappable)
 
 ### Current accuracy
 
-**60.98%** — 261/428 properties match (Apple demo page, 107 elements, WASM web path).
+**44.86%** — 192/428 properties match (Apple demo page, 107 elements, browser oracle vs Rendero WASM path).
 
-Synthetic layout corpus: **83.19%** — 376/452 properties.
+Native parity on the same Apple page: **7.94%** — 34/428 properties match.
 
-Progress: 1.6% → 12.4% (element alignment fix) → 12.9% (viewport-aware layout) → 19.2% (browser text measurement) → 49.3% (layered capture + translation fixes) → 57.01% (`margin:auto` + parent-relative `%` sizing) → 60.98% (surface-coordinate normalization, fixed-position translation, root/container height propagation fixes).
+WASM vs native parity on the same Apple page: **10.42%** — 45/432 properties match.
+
+Synthetic layout corpus: **83.41%** — 377/452 properties.
+
+Recent checkpoints: 1.6% → 12.4% (element alignment fix) → 12.9% (viewport-aware layout) → 19.2% (browser text measurement) → 49.3% (layered capture + translation fixes) → 57.01% (`margin:auto` + parent-relative `%` sizing) → 60.98% (surface-coordinate normalization, fixed-position translation, root/container height propagation fixes) → 44.86% / 7.94% / 10.42% (latest committed three-way runtime capture + text-layout fixes).
 
 Run the full accuracy loop:
 ```sh
@@ -143,7 +151,7 @@ Every item is a DOM/CSS behavior the shim must handle correctly. Fix in priority
 - **No hardcoding for specific pages.** A fix that works for apple.com but breaks news.ycombinator.com is not a fix. Run accuracy checks against multiple pages.
 - **Trait-based, swappable.** Every subsystem is behind a trait: LayoutEngine, TextMeasurer, CssParser, FontResolver, GlyphRasterizer. Swap implementations without touching callers.
 - **The shim IS the browser.** It doesn't care if it's React, Vue, Svelte, Angular, or vanilla JS. They all call the same DOM APIs. Fix the DOM, all frameworks work.
-- **Accuracy is a number.** Currently 60.98% on the Apple page and 83.19% on the synthetic corpus. Track it. Every commit either improves it or doesn't. No subjective "looks better."
+- **Accuracy is a number.** Currently 44.86% on the Apple page, 7.94% native-vs-browser, 10.42% WASM-vs-native, and 83.41% on the synthetic corpus. Track it. Every commit either improves it or doesn't. No subjective "looks better."
 
 ### Key quirks to know
 

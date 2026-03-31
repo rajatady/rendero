@@ -28,11 +28,17 @@ On native: a DOM shim routes framework calls to a Rust rendering engine.
 
 ### Accuracy
 
-**60.98%** layout accuracy on the Apple demo (browser oracle vs Rendero WASM path, 107 elements).
+**44.86%** layout accuracy on the Apple demo (browser oracle vs Rendero WASM path, 107 elements).
 
-Synthetic layout corpus: **83.19%**.
+Native parity on the same Apple page: **7.94%**.
+
+WASM vs native parity on the same Apple page: **10.42%**.
+
+Synthetic layout corpus: **83.41%**.
 
 7-site corpus with ground truth at 3 viewports: apple-macbook-pro, fin, github, gumroad, hacker-news, linear, tailadmin.
+
+This is the latest committed checkpoint on `codex/rendering-dom-parity`. It is lower than the earlier browser-only `60.98%` checkpoint because the branch now carries the three-way runtime capture, native parity reporting, and in-flight text/layout changes.
 
 ### What Works
 
@@ -40,28 +46,30 @@ Synthetic layout corpus: **83.19%**.
 |---------|--------|-------|
 | React on browser DOM | Working | Full Apple website, perfect rendering |
 | Vue on browser DOM | Working | Same Apple website |
-| React on WASM canvas | Working | Full Apple page with gradients, layered benchmark pipeline, 60.98% Apple accuracy |
-| React on native macOS | Working | Full Apple page renders through the pure Rust shell, headless mode, system fonts wired |
+| React on WASM canvas | Partial | Full Apple page renders; latest committed browser parity checkpoint is 44.86% |
+| React on native macOS | Partial | Pure Rust shell renders live and headless, but native parity is only 7.94% in the latest committed run |
 | Taffy layout engine | Working | 12 tests, flexbox + justify/wrap/margin/position/min-max |
 | Provider architecture | Working | LayoutEngine, TextMeasurer, CssParser, FontResolver, GlyphRasterizer |
 | Native FFI (C-ABI) | Working | 22 exported C functions, tested with Swift shell |
 | Pure Rust native shell | Working | winit + QuickJS + softbuffer, headless PPM dump |
 | Lightning CSS parser | Working | 25 tests, CssParser trait, not yet used for visual output |
 | Parley text measurer | Working | 7 tests, system font discovery via Fontique |
+| BrowserTextMeasurer | Working | WASM-only browser-canvas oracle path during layout |
 | System font resolution | Working | fontdb resolves font families, renderer uses per-run fonts |
-| Layout oracle loop | Working | Playwright captures browser ground truth, compares vs engine |
+| Layout oracle loop | Working | Playwright captures browser ground truth, compares vs WASM engine |
+| Three-way runtime compare | Working | Browser, WASM, and native headless captured together into one report |
 | Headless rendering | Working | `RENDERO_HEADLESS_DUMP` env var, PPM output |
 
 ### What Needs Work
 
 | Feature | Status | What's Missing |
 |---------|--------|----------------|
-| Layout accuracy | 60.98% Apple / 83.19% synthetic | Remaining gaps are constrained feature-card text measurement, one residual top-level wrapper height drift, and native/browser visual parity |
+| Layout accuracy | 44.86% Apple / 83.41% synthetic | Remaining gaps are over-tall top-level wrappers, constrained text measurement, and browser/native divergence |
 | CSS font inheritance | Not started | Shim doesn't inherit fontFamily from parent |
-| Text measurement (web) | Partial | `BrowserTextMeasurer` is the deliberate WASM oracle path; browser Rendero still carries a temporary JS-side eager text-size sync for some constrained text |
-| Text measurement (native) | Partial | `ParleyTextMeasurer` is the intended path; remaining parity issues are now more about constrained wrapping than total collapse |
+| Text measurement (web) | Partial | `BrowserTextMeasurer` is the deliberate WASM oracle path; constrained wrapping is still wrong in some cards/blocks |
+| Text measurement (native) | Partial | `ParleyTextMeasurer` is the intended path; native still diverges sharply from WASM and browser in the latest checkpoint |
 | Percentage resolution | Partial | Basic parent-relative width `%` support is wired; extend to height/min-max/flex-basis/positioned cases |
-| Scroll on native | Partial | Shared scroll contract is wired, but live native parity still needs more validation and window capture |
+| Scroll and viewport parity on native | Partial | Shared scroll contract is wired, but live native parity and viewport/media-query behavior still need validation |
 | GPU rendering | Not started | CPU tiles work, wgpu backend planned |
 | Vue on native | Not tested | Same shim, should work with minimal fixes |
 | iOS/Android | Not started | Same Rust code, different cargo target |

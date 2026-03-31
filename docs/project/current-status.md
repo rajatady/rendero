@@ -6,10 +6,14 @@ Last updated: 2026-03-31
 
 ## Layout Accuracy
 
-**60.98%** — 261/428 properties match on the Apple demo page (107 elements,
+**44.86%** — 192/428 properties match on the Apple demo page (107 elements,
 browser oracle vs Rendero WASM path).
 
-Synthetic layout corpus: **83.19%** — 376/452 properties.
+Native parity on the same Apple page: **7.94%** — 34/428 properties.
+
+WASM vs native parity on the same Apple page: **10.42%** — 45/432 properties.
+
+Synthetic layout corpus: **83.41%** — 377/452 properties.
 
 Progress on the Apple page so far:
 
@@ -19,13 +23,18 @@ Progress on the Apple page so far:
 - 49.3% — layered capture pipeline made the real gaps explicit
 - 57.01% — `margin:auto` + parent-relative `%` sizing through the shared layout contract
 - 60.98% — surface-coordinate normalization, fixed-position translation, and root/container height propagation fixes
+- 44.86% / 7.94% / 10.42% — latest committed three-way browser/WASM/native checkpoint after text-layout refactors and native capture were added
 
 Current high-signal mismatches:
 
-- one top-level page wrapper is still short: browser `2966.8` vs engine `2931`
-- feature-card text is still measured too wide/short in constrained layouts
-- first feature card remains inflated: browser `292x218` vs engine `352x197`
-- many remaining nav/product-grid diffs are now small `1–6px` errors rather than structural offsets
+- browser vs WASM top-level wrapper is now too tall in the latest committed run:
+  browser `2966.8` vs WASM `3477`
+- native top-level wrappers are closer on height (`2909`) but native still diverges
+  heavily elsewhere, with browser-vs-native accuracy at only `7.94%`
+- native navbar width is still dramatically wrong in the latest headless capture:
+  browser `1440` vs native `843`
+- constrained text and block widths are still wrong enough to cascade into card
+  and section layout differences
 
 ### Comparison Baseline
 
@@ -49,7 +58,8 @@ Follow-up after the 1440 desktop baseline matches:
 
 ### Apple Website (React)
 
-**Status: Full page renders on browser Rendero and native Rendero.**
+**Status: Full page renders on browser Rendero and native Rendero, but parity is
+still poor in the latest committed checkpoint.**
 
 What is working:
 
@@ -62,16 +72,16 @@ What is working:
 
 What is still off:
 
-- native live scroll/input parity is still being validated against the same
-  shared contracts as WASM
-- feature-card paragraphs do not yet wrap like the browser oracle, which
-  inflates some card widths/heights
-- one top-level page wrapper is still too short
+- native browser-equivalent layout is still far off despite the same shared
+  translation contracts being present
+- feature-card and other constrained paragraphs still do not wrap with the same
+  effective containing width as the browser oracle
+- one browser/WASM top-level wrapper is now too tall rather than too short
 - text metrics and line wrapping are still weaker than browser truth
 
 ### TestApp / Synthetic Corpus
 
-**Status: Core layout behavior is stable enough to hit 83.19% across the
+**Status: Core layout behavior is stable enough to hit 83.41% across the
 synthetic corpus.**
 
 This is the main proof that Taffy itself is not the primary blocker anymore;
@@ -108,6 +118,10 @@ comparison target.
 - parent-relative `%` sizing is now represented explicitly in the node model
   instead of being collapsed to viewport pixels or generic fill semantics
 - native and WASM now share those same layout inputs
+- flex shorthand now follows the CSS spec: `flex: 1` maps to `grow=1 shrink=1 basis=0%`
+- Taffy no longer reads `primary_sizing` / `counter_sizing` to size containers
+  themselves; container size comes from node width/height, item sizing stays
+  independent
 
 Files:
 
@@ -118,14 +132,20 @@ Files:
 - `crates/native-shell/src/engine_bridge.rs`
 - `docs/demos/dom-shim/shims/style.js`
 - `docs/demos/dom-shim/shims/layout-style.js`
+- `docs/demos/dom-shim/shims/css-values.js`
 - `docs/demos/dom-shim/shims/engine.js`
 - `docs/demos/dom-shim/shims/engine-native.js`
 
 ### Layered capture pipeline
 
-The benchmark pipeline now captures more than final bounds. We now inspect:
+The benchmark pipeline now captures and compares all three runtime surfaces:
 
 - browser oracle
+- browser Rendero / WASM
+- native headless
+
+And within those surfaces we inspect more than final bounds:
+
 - shim normalization
 - engine command stream
 - engine model
@@ -136,26 +156,35 @@ Files:
 
 - `scripts/capture-ground-truth.py`
 - `scripts/capture-engine-truth.py`
+- `scripts/capture-native-truth.py`
+- `scripts/compare-runtime-triple.py`
 - `scripts/run_accuracy_suite.sh`
 - `docs/demos/dom-shim/shims/rendero-api.js`
 - `docs/demos/dom-shim/shims/engine-runtime.js`
 
-### Recent layout parity fixes
+### Recent text/layout parity fixes
 
-- browser-engine capture is normalized into the same surface coordinate space
-  as the browser oracle, eliminating the old `44px` origin mismatch
-- `position: fixed` translation now subtracts the render-surface offset so
-  fixed nodes are positioned relative to the viewport
-- Taffy layout no longer reuses prior computed container sizes as new authored
-  layout inputs
-- root layout size is written back, and frame heights now get a bottom-up
-  safeguard so containers cannot end above their deepest child
+- block text elements stay frame-backed instead of collapsing into a single
+  engine text node
+- child text nodes inherit parent text styling
+- text-size locking distinguishes explicit authored text sizes from measured
+  layout output
+- `BrowserTextMeasurer` is now the explicit WASM text measurer because browser
+  sandboxes do not expose font files to Fontique/Parley
+- browser-engine capture remains normalized into the same surface coordinate
+  space as the browser oracle
 
 Files:
 
+- `crates/text/src/lib.rs`
+- `crates/wasm/src/browser_text.rs`
+- `crates/wasm/src/lib.rs`
 - `scripts/capture-engine-truth.py`
+- `docs/demos/dom-shim/shims/element.js`
 - `docs/demos/dom-shim/shims/style.js`
+- `docs/demos/dom-shim/shims/text-node.js`
 - `crates/core/src/taffy_layout.rs`
+- `crates/renderer/src/text.rs`
 
 ### Native parity baseline
 
@@ -175,17 +204,16 @@ Files:
 ## Main Remaining Gaps
 
 1. **Constrained text measurement**
-   Feature-card paragraphs are still measured as if they are unconstrained
-   single-line text too early in the browser path. That is the next
-   translation-layer target.
+   Wrapped paragraphs and block text still lose the correct containing width
+   before measurement in some paths. That is still the first wrong layer.
 
-2. **Residual top-level wrapper height drift**
-   Most of the page-height collapse is fixed, but one wrapper is still about
-   `35.8px` short.
+2. **Top-level wrapper height drift**
+   The latest committed WASM capture overshoots one top-level wrapper badly:
+   browser `2966.8` vs WASM `3477`.
 
-3. **Live native screenshot capture**
-   Still blocked by Codex runtime macOS permissions, so true live-window
-   screenshots remain separate from deterministic headless captures.
+3. **Native parity**
+   Native headless captures are now part of the suite, but native is still far
+   from browser/WASM parity.
 
 ---
 
@@ -193,10 +221,12 @@ Files:
 
 | Tool | What it does |
 |------|--------------|
-| `scripts/run_accuracy_suite.sh` | Full oracle loop: build, serve, capture, compare, corpus refresh |
+| `scripts/run_accuracy_suite.sh` | Full oracle loop: build, serve, capture browser/WASM/native, compare, corpus refresh |
 | `scripts/capture-ground-truth.py` | Extract browser layout as JSON via Playwright |
 | `scripts/capture-engine-truth.py` | Extract Rendero engine state/layout as JSON via Playwright |
+| `scripts/capture-native-truth.py` | Extract native headless state/layout as JSON |
 | `scripts/compare-layout.py` | Diff browser vs engine, report accuracy % |
+| `scripts/compare-runtime-triple.py` | Build one browser/WASM/native comparison report |
 | `corpus/dashboard.py` | Rebuild corpus dashboard from captured ground truth |
 | `scripts/verify_rendero_runtime.sh` | Browser/native parity verification loop |
 | `RENDERO_HEADLESS_DUMP` | Native deterministic framebuffer dump |

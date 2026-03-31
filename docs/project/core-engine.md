@@ -142,7 +142,8 @@ Full CSS flexbox layout powered by the [Taffy](https://github.com/DioxusLabs/taf
 1. Traverse the `DocumentTree` in DFS order
 2. Build a parallel `TaffyTree` bottom-up (children created before parents)
 3. Convert each Rendero node to a `taffy::Style` via `node_to_taffy_style()`
-4. For text nodes, measure via the `TextMeasurer` and set explicit dimensions
+4. For text nodes, measure via the `TextMeasurer`, keeping authored text size
+   separate from measured layout output
 5. Call `taffy.compute_layout()` with the viewport size
 6. Apply computed positions and sizes back to the `DocumentTree` (skipping root)
 
@@ -159,6 +160,13 @@ Key mapping details:
 | `SizingMode::Fixed` | `Dimension::length(value)` |
 | Leaf nodes (no auto-layout) | `Display::Flex` with explicit width/height |
 | Invisible nodes | `Display::None` |
+
+One important recent correction: Taffy no longer reads `AutoLayout`'s
+`primary_sizing` / `counter_sizing` to size a container itself. Container size
+comes from `node.width` / `node.height`; item sizing still flows independently
+through `horizontal_sizing` / `vertical_sizing`. This avoids conflating "how a
+node sizes itself as a container" with "how it sizes itself as an item in its
+parent."
 
 #### LegacyLayout (`layout.rs`)
 

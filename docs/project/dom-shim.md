@@ -45,6 +45,10 @@ The shim supports three rendering modes, all sharing the same application code (
 | Browser Rendero | `entry-react-native.jsx` / `entry-vue-native.js` | `engine.js` (WASM) | Browser | `<canvas>` element |
 | Native Rendero | `entry-macos.jsx` / `entry-macos-vue.js` | `engine-native.js` | QuickJS in the Rust shell | Native window surface (`softbuffer`) |
 
+These three modes are also the benchmark surfaces now captured together by the
+current parity pipeline: browser oracle, browser Rendero/WASM, and native
+headless Rendero.
+
 ---
 
 ## 3. File Inventory
@@ -217,11 +221,14 @@ Converts CSS length values to pixels.
 | `em` | Value * base (default 16) |
 | `vh` | Value * viewportHeight / 100 |
 | `vw` | Value * viewportWidth / 100 |
-| `%` | Value / 100 * base (default: viewport width) |
+| `%` | Value / 100 * base |
 | `auto`, `none` | 0 |
 | Bare number | Direct value |
 
 Viewport dimensions are set via `setViewport(w, h)` (defaults: 1280x800).
+For layout-relevant properties like `width: 100%`, the current direction is to
+preserve `%` as structured layout input wherever possible instead of eagerly
+collapsing it to viewport pixels.
 
 ### `parseFontWeight(value) --> number`
 

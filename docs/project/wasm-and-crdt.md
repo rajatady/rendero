@@ -478,10 +478,10 @@ React / Vue / React Native
   Engine Bridge (engine.js or engine-native.js)
         |
         v
-  WASM CanvasEngine  (web)   OR   NativeEngine (iOS/macOS via C FFI)
-        |                              |
-        v                              v
-  rendero-core + rendero-renderer  (same Rust code)
+  WASM CanvasEngine (web)   OR   Native shell / native FFI
+        |                             |
+        v                             v
+  rendero-core + rendero-renderer (same Rust code)
 ```
 
 **Web path (`shims/engine.js`):**
@@ -489,13 +489,21 @@ React / Vue / React Native
 - Holds a single shared engine instance
 - Maps shim element IDs to engine `(counter, client_id)` pairs via `_nodeRegistry`
 - Queues all engine mutations in `_ops[]` and flushes them serially before each render frame (WASM uses `&mut self` borrows, so concurrent calls are forbidden)
+- Uses `BrowserTextMeasurer` in `rendero-wasm` as the deliberate WASM-only text
+  oracle during layout until shared browser font loading exists
 
 **Native path (`shims/engine-native.js`):**
 - Drop-in replacement for `engine.js` with the same exports
-- Calls global C functions injected by Swift via `JSContext`: `__rendero_create()`, `__rendero_add_frame()`, `__rendero_set_node_fill()`, `__rendero_render_pixels()`, etc.
-- The Swift host holds the engine pointer and wraps each Rust FFI call
+- In the current parity path, calls global `__rendero_*` functions registered by
+  the pure Rust native shell in QuickJS
+- The legacy Swift shell still exists through `crates/native-ffi/` and
+  `native/macos-app.swift`, but it is not the primary parity target anymore
 
-The key insight: **CanvasEngine (WASM) and NativeEngine (C FFI) wrap the same `rendero-core` and `rendero-renderer` crates.** The DOM shim's engine bridge is the only file that differs between platforms. All other shim files (element.js, style.js, document.js, events.js) are platform-agnostic.
+The key insight: **CanvasEngine (WASM), the pure Rust native shell, and the
+legacy native FFI path all wrap the same `rendero-core` and
+`rendero-renderer` crates.** The DOM shim's engine bridge is the only file that
+differs between platforms. All other shim files (element.js, style.js,
+document.js, events.js) are platform-agnostic.
 
 ---
 
@@ -519,6 +527,16 @@ This produces:
 
 The `--target web` flag generates ES module output suitable for direct `<script type="module">` import or bundler consumption. The `--out-dir ../../pkg` places output at the repo root's `pkg/` directory, where demos reference it.
 
-### Native build (iOS/macOS)
+### Native build
 
-The native build uses `cargo build --release --target aarch64-apple-darwin` (or the iOS target triple) via the `crates/native-ffi/` crate, producing a static library that Swift links against. See `native/` for the macOS app wrapper.
+Current parity work targets the pure Rust shell directly:
+
+```bash
+cargo build -p rendero-native-shell
+```
+
+The legacy FFI build still exists for Swift/C++ callers:
+
+```bash
+cargo build --release -p rendero-native-ffi
+```

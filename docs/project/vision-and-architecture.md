@@ -372,6 +372,13 @@ pub fn apply_physics(tree: &mut DocumentTree, dt: f32) {
 
 ## 9. What Works Today
 
+Current committed benchmark snapshot:
+
+- Apple page, browser oracle vs WASM: `44.86%` (`192/428`)
+- Apple page, browser oracle vs native: `7.94%` (`34/428`)
+- Apple page, WASM vs native: `10.42%` (`45/432`)
+- Synthetic layout corpus: `83.41%` (`377/452`)
+
 - [x] DOM shim: createElement, appendChild, removeChild, insertBefore, style
 - [x] CSS subset: width, height, backgroundColor, color, fontSize, fontWeight,
       borderRadius, display (flex), flexDirection, gap, alignItems,
@@ -384,11 +391,12 @@ pub fn apply_physics(tree: &mut DocumentTree, dt: f32) {
 - [x] Hit testing (click on rendered elements, get shim element back)
 - [x] Native macOS shell: winit window + QuickJS + softbuffer
 - [x] WASM build: runs in browser, renders to canvas
+- [x] Three-way runtime capture: browser oracle, browser Rendero/WASM, native headless
 - [x] esbuild bundling: JSX, React, DOM shim into single file
 - [x] Multiple demos: design tool, genome browser, earthquake explorer,
       neural net visualizer, 3D splat viewer, React-on-Rendero
-- [ ] CSS: padding, margin (all sides), border, overflow clipping
-- [ ] Text: wrapping, multi-line, real shaping
+- [ ] CSS: full containing-block percentages, border, stacking contexts
+- [ ] Text: constrained wrapping parity and shared font-loading path
 - [ ] Scroll containers
 - [ ] Input elements (TextInput, select, checkbox)
 - [ ] GPU rendering (wgpu)
@@ -413,11 +421,14 @@ Expand the CSS property coverage to handle real-world layouts:
 
 ### Phase 2: Text Shaping
 
-Replace the heuristic text measurer with real text shaping:
+Converge browser and native text measurement without reintroducing browser-only
+layout hacks:
 
-- Integrate fontdb for font resolution (already in renderer)
-- Integrate Parley (or rustybuzz directly) for text shaping
-- Support multi-line text, word wrapping, line height
+- Keep `BrowserTextMeasurer` as the only deliberate WASM-only oracle path
+  until browser font loading exists in the shared Rust text pipeline
+- Keep `ParleyTextMeasurer` as the native path
+- Fix constrained wrapping so text is measured with the correct available width
+- Support multi-line text, line height, and bidi text
 - Bidirectional text (LTR/RTL)
 
 ### Phase 3: GPU Rendering
